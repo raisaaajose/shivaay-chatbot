@@ -31,8 +31,8 @@ export async function sendVerificationEmail({
     to,
     subject: "Verify your email address",
     html: `
-      <div style="background:#18181b;padding:32px 0;min-height:100vh;font-family:'Segoe UI',Arial,sans-serif;color:#fff;">
-        <div style="max-width:420px;margin:40px auto;background:#23232a;border-radius:16px;box-shadow:0 4px 32px #0002;padding:32px 28px 28px 28px;">
+      <div style="background:#000000;padding:32px 0;min-height:100vh;font-family:'Segoe UI',Arial,sans-serif;color:#fff;">
+        <div style="max-width:420px;margin:40px auto;background:#1a1a1a;border-radius:16px;box-shadow:0 4px 32px #0002;padding:32px 28px 28px 28px;">
           <div style="text-align:center;margin-bottom:24px;">
             <img src='https://www.gravatar.com/avatar/${gravatarHash}?d=identicon' alt='avatar' style='width:64px;height:64px;border-radius:50%;margin-bottom:8px;border:2px solid #333;' />
             <h2 style="margin:0 0 8px 0;font-size:1.5rem;font-weight:600;">${

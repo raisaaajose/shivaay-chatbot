@@ -23,6 +23,12 @@
     format("truetype");
 }
 
+@font-face {
+  font-family: "DMSans";
+  src: url("../../public/fonts/DMSans-VariableFont_opsz\,wght.ttf")
+    format("truetype");
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;

@@ -2,9 +2,9 @@ import React from "react";
 
 const Footer: React.FC = () => {
   return (
-    <footer className="hidden md:flex bottom-0 left-0 w-full h-16 border-t-2 border-[#2c313f] bg-[var(--background)]/70 backdrop-blur-sm px-6 py-4 flex-col md:flex-row items-center justify-between text-[#9DA3B3] text-sm font-normal select-none z-50">
+    <footer className="hidden md:flex bottom-0 left-0 w-full h-16 border-t-2 border-[#333333] bg-[var(--background)]/70 backdrop-blur-sm px-6 py-4 flex-col md:flex-row items-center justify-between text-[#9DA3B3] text-sm font-normal select-none z-50">
       <span className="mb-2 md:mb-0">
-        © {new Date().getFullYear()} Deep Shiva Chatbot. All rights reserved.
+        © {new Date().getFullYear()} Deep Shiva Chatbot
       </span>
       <div className="flex space-x-4">
         <a

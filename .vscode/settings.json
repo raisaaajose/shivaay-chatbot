@@ -4,12 +4,14 @@
     "ainvoke",
     "dotenv",
     "groq",
+    "headlessui",
     "hoverable",
     "NEXTAUTH",
     "raisaaajose",
     "superadmin",
     "tini",
     "upayan",
-    "Uttarakhand"
+    "Uttarakhand",
+    "wght"
   ]
 }

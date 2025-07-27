@@ -38,8 +38,8 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
         </label>
       )}
       <div
-        className={`flex flex-row items-start px-[2px] py-2 h-auto w-full bg-[#293040] border ${
-          error ? "border-red-500" : "border-[#7B8191]"
+        className={`flex flex-row items-start px-[2px] py-2 h-auto w-full bg-[#2a2a2a] border ${
+          error ? "border-red-500" : "border-[#555555]"
         } rounded-[4px] box-border transition-all focus-within:ring-2 focus-within:ring-blue-400 ${
           disabled ? "opacity-60 pointer-events-none grayscale" : ""
         }`}
@@ -47,7 +47,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
       >
         <textarea
           ref={ref}
-          className={`flex-1 bg-transparent outline-none text-[#7B8191] placeholder-zinc-500 text-[15px] sm:text-[16px] leading-[19px] font-normal font-inter px-0 py-0 border-none ring-0 focus:ring-0 focus:outline-none resize-y min-h-[40px] max-h-[300px]`}
+          className={`flex-1 bg-transparent outline-none text-[#cccccc] placeholder-zinc-500 text-[15px] sm:text-[16px] leading-[19px] font-normal font-inter px-0 py-0 border-none ring-0 focus:ring-0 focus:outline-none resize-y min-h-[40px] max-h-[300px]`}
           style={{
             border: "none",
             boxShadow: "none",

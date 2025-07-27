@@ -19,7 +19,7 @@ export default function Branding() {
       />
       <span
         className="text-[#11D6D1] ml-2 truncate"
-        style={{ fontFamily: "AirbnbCereal_W_Bd", width: "auto", flex: "none" }}
+        style={{ fontFamily: "DMSans", width: "auto", flex: "none" }}
       >
         Deep Shiva Chatbot
       </span>

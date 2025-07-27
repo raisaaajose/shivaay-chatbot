@@ -37,89 +37,96 @@ export default function AuthForm({
         {isLogin ? (
           <motion.div
             key="login"
-            initial={{ opacity: 0, x: 50 }}
+            initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -50 }}
-            transition={{ duration: 0.3 }}
+            exit={{ opacity: 0, x: -30 }}
+            transition={{ duration: 0.4, ease: "easeInOut" }}
           >
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-6">
               <Input
-                icon={<FaEnvelope />}
-                placeholder="Email"
+                icon={<FaEnvelope className="text-gray-400" />}
+                placeholder="Enter your email"
                 type="email"
                 autoComplete="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={loading}
+                className="w-full"
               />
               <Input
-                icon={<FaLock />}
-                placeholder="Password"
+                icon={<FaLock className="text-gray-400" />}
+                placeholder="Enter your password"
                 type="password"
                 autoComplete="current-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 disabled={loading}
+                className="w-full"
               />
             </div>
           </motion.div>
         ) : (
           <motion.div
             key="signup"
-            initial={{ opacity: 0, x: 50 }}
+            initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -50 }}
-            transition={{ duration: 0.3 }}
+            exit={{ opacity: 0, x: -30 }}
+            transition={{ duration: 0.4, ease: "easeInOut" }}
           >
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-6">
               <Input
-                icon={<FaUserCircle />}
-                placeholder="Full Name"
+                icon={<FaUserCircle className="text-gray-400" />}
+                placeholder="Enter your full name"
                 type="text"
                 autoComplete="name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 disabled={loading}
+                className="w-full"
               />
               <Input
-                icon={<FaUser />}
-                placeholder="Username"
+                icon={<FaUser className="text-gray-400" />}
+                placeholder="Choose a username"
                 type="text"
                 autoComplete="username"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 disabled={loading}
+                className="w-full"
               />
               <Input
-                icon={<FaEnvelope />}
-                placeholder="Email"
+                icon={<FaEnvelope className="text-gray-400" />}
+                placeholder="Enter your email"
                 type="email"
                 autoComplete="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={loading}
+                className="w-full"
               />
               <Input
-                icon={<FaLock />}
-                placeholder="Password (min 6 characters)"
+                icon={<FaLock className="text-gray-400" />}
+                placeholder="Create a password (min 6 characters)"
                 type="password"
                 autoComplete="new-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 disabled={loading}
+                className="w-full"
               />
             </div>
           </motion.div>
         )}
       </AnimatePresence>
-      <div className="flex justify-center mt-6">
+      <div className="flex justify-center mt-8">
         <AnimatedButton
           onClick={handleSubmit}
           disabled={loading}
           type="button"
-          className="w-48 block"
+          className="w-full sm:w-64 h-12 text-lg font-semibold"
+          variant="primary"
         >
-          {loading ? <Loader /> : isLogin ? "Login" : "Sign Up"}
+          {loading ? <Loader /> : isLogin ? "Sign In" : "Create Account"}
         </AnimatedButton>
       </div>
     </motion.div>

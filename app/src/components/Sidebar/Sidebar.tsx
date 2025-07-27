@@ -3,8 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Branding from "./Branding/Branding";
-import { FiBarChart2, FiKey, FiShield, FiUser } from "react-icons/fi";
-import { FaDocker } from "react-icons/fa";
+import { FiBarChart2, FiShield, FiUser } from "react-icons/fi";
 import { useAuth } from "../Auth/AuthProvider/AuthProvider";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -23,9 +22,8 @@ export default function Sidebar() {
   }, [user]);
 
   const navItems = [
-    { href: "/applications", label: "Applications", icon: <FiBarChart2 /> },
-    { href: "/dockerize", label: "Dockerize", icon: <FaDocker /> },
-    { href: "/credentials", label: "Credentials", icon: <FiKey /> },
+    { href: "/xyz", label: "XYZ", icon: <FiBarChart2 /> },
+
     ...(isAdmin
       ? [{ href: "/admin", label: "Admin", icon: <FiShield />, admin: true }]
       : []),
@@ -44,7 +42,7 @@ export default function Sidebar() {
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: -60, opacity: 0 }}
             transition={{ type: "tween", duration: 0.8, ease: "easeInOut" }}
-            className="hidden md:flex fixed top-0 left-0 z-40 h-full w-52 bg-[#242837] border-r border-[#2C313F] shadow-sm flex-col px-4 py-6"
+            className="hidden md:flex fixed top-0 left-0 z-40 h-full w-52 bg-[#1a1a1a] border-r border-[#333333] shadow-sm flex-col px-4 py-6"
           >
             <Branding />
             <nav className="mt-8 flex flex-col space-y-4">
@@ -92,7 +90,7 @@ export default function Sidebar() {
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 30, opacity: 0 }}
             transition={{ type: "spring", stiffness: 200, damping: 25 }}
-            className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#242837] border-t border-[#2C313F] flex h-14"
+            className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#1a1a1a] border-t border-[#333333] flex h-14"
           >
             {navItems.map(({ href, icon, label }) => {
               const isActive =

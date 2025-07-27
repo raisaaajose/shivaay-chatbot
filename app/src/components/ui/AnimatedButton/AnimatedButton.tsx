@@ -44,8 +44,9 @@ const AnimatedButton = ({
       initialBgColor = "#eab308";
       break;
     default:
-      variantClass = "bg-[#2FA2A0] hover:bg-[#27918F] text-white";
-      initialBgColor = "#2FA2A0";
+      variantClass =
+        "bg-blue-600 hover:bg-blue-700 text-white border border-blue-500";
+      initialBgColor = "#2563eb";
   }
   return (
     <motion.button
@@ -54,8 +55,8 @@ const AnimatedButton = ({
         disabled
           ? {}
           : {
-              scale: 1.02, // reduced from 1.05
-              boxShadow: "0 4px 16px rgba(47,162,160,0.15)",
+              scale: 1.02,
+              boxShadow: "0 8px 32px rgba(37,99,235,0.3)",
               backgroundColor:
                 variant === "danger"
                   ? "#dc2626"
@@ -65,7 +66,7 @@ const AnimatedButton = ({
                   ? "#eab308"
                   : variant === "secondary"
                   ? "#374151"
-                  : "#27918F",
+                  : "#1d4ed8",
             }
       }
       whileTap={
@@ -82,15 +83,15 @@ const AnimatedButton = ({
                   ? "#ca8a04"
                   : variant === "secondary"
                   ? "#1f2937"
-                  : "#258C8A",
+                  : "#1e40af",
             }
       }
       transition={{ type: "spring", stiffness: 400, damping: 30 }}
       className={`flex flex-row justify-center items-center ${
         children
           ? "gap-2 sm:gap-[10px] px-4 sm:px-6"
-          : "aspect-square w-[44px] h-[44px] p-0 px-0" // square for icon-only, remove x padding
-      } mx-2 my-3 py-2 sm:py-2 max-w-full rounded-[8px] font-inter font-medium text-[15px] sm:text-[16px] leading-[19px] focus:outline-none focus-visible:ring-2 focus-visible:ring-white/80 focus-visible:ring-offset-2 ${
+          : "aspect-square w-[44px] h-[44px] p-0 px-0"
+      } mx-0 my-0 py-3 sm:py-3 max-w-full rounded-xl font-inter font-semibold text-[15px] sm:text-[16px] leading-[19px] focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/50 focus-visible:ring-offset-2 focus-visible:ring-offset-black transition-all duration-200 ${
         disabled ? "opacity-60 cursor-not-allowed" : ""
       } ${variantClass} ${className}`}
       onClick={disabled ? undefined : onClick}

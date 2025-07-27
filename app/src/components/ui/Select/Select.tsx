@@ -59,15 +59,15 @@ const Select: React.FC<SelectProps> = ({
         {({ open }) => (
           <div className="relative w-full" style={{ maxWidth: "100vw" }}>
             <ListboxButton
-              className={`flex items-center justify-between px-3 py-0 h-[44px] sm:h-[50px] w-full bg-[#293040] border ${
-                error ? "border-red-500" : "border-[#7B8191]"
+              className={`flex items-center justify-between px-3 py-0 h-[44px] sm:h-[50px] w-full bg-[#2a2a2a] border ${
+                error ? "border-red-500" : "border-[#555555]"
               } rounded-[4px] text-left text-[15px] sm:text-[16px] font-inter focus:outline-none transition-all focus-visible:ring-2 focus-visible:ring-blue-400 ${
                 disabled ? "opacity-60 pointer-events-none grayscale" : ""
               }`}
               aria-label={label}
               style={{ maxWidth: "-webkit-fill-available" }}
             >
-              <span className={`${value ? "text-white" : "text-[#7B8191]"}`}>
+              <span className={`${value ? "text-white" : "text-[#cccccc]"}`}>
                 {options.find((opt) => opt.value === value)?.label || (
                   <span className="text-zinc-500">{placeholder}</span>
                 )}
@@ -85,7 +85,7 @@ const Select: React.FC<SelectProps> = ({
                   className="absolute z-50 mt-1 w-full overflow-visible"
                   style={{ maxWidth: "100vw" }}
                 >
-                  <ListboxOptions className="bg-[#23283A] border border-[#7B8191] rounded-[4px] shadow-lg max-h-60 overflow-auto focus:outline-none text-[15px] sm:text-[16px]">
+                  <ListboxOptions className="bg-[#1a1a1a] border border-[#555555] rounded-[4px] shadow-lg max-h-60 overflow-auto focus:outline-none text-[15px] sm:text-[16px]">
                     {options.map((opt) => (
                       <ListboxOption
                         key={opt.value}
@@ -93,10 +93,10 @@ const Select: React.FC<SelectProps> = ({
                         className={({ active, selected }) =>
                           `relative cursor-pointer select-none py-2 pl-3 pr-10 text-[15px] sm:text-[16px] font-inter transition-colors ${
                             active
-                              ? "bg-[#293040] text-white"
+                              ? "bg-[#333333] text-white"
                               : selected
                               ? "text-white"
-                              : "text-[#7B8191]"
+                              : "text-[#cccccc]"
                           } ${selected ? "font-medium" : "font-normal"}`
                         }
                       >

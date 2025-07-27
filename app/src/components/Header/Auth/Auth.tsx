@@ -47,7 +47,7 @@ export default function Auth() {
             {user.name || user.username || user.email}
           </span>
           <span
-            className="ml-1 flex items-center justify-center w-7 h-7 rounded-full hover:bg-[#23283a] transition"
+            className="ml-1 flex items-center justify-center w-7 h-7 rounded-full hover:bg-[#333333] transition"
             onClick={(e) => {
               e.stopPropagation();
               setOpen((v) => !v);
@@ -89,7 +89,7 @@ export default function Auth() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.18 }}
-              className="absolute right-0 mt-2 w-52 min-w-[160px] max-w-[90vw] bg-[#2f3646] border border-[#3a4152] rounded-xl shadow-lg z-50 p-4 flex flex-col gap-2"
+              className="absolute right-0 mt-2 w-52 min-w-[160px] max-w-[90vw] bg-[#1a1a1a] border border-[#444444] rounded-xl shadow-lg z-50 p-4 flex flex-col gap-2"
               style={{
                 color: "var(--foreground)",
                 boxShadow: "var(--box-shadow-default)",
@@ -109,7 +109,7 @@ export default function Auth() {
                   await logout();
                   window.location.href = "/auth";
                 }}
-                className="w-full px-4 py-2 text-sm bg-[#23283a] hover:bg-[#293040] text-red-400 hover:text-red-300 rounded-md transition border border-[#3a4152]"
+                className="w-full px-4 py-2 text-sm bg-[#333333] hover:bg-[#444444] text-red-400 hover:text-red-300 rounded-md transition border border-[#555555]"
               >
                 Logout
               </button>

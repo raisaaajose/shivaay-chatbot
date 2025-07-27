@@ -125,12 +125,12 @@ export default function Authenticate() {
   };
 
   return (
-    <section className="flex items-center justify-center px-6 py-12">
-      <div className="w-full max-w-4xl bg-[var(--card-background)] rounded-3xl p-0 flex flex-col md:flex-row overflow-hidden">
+    <section className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 bg-black">
+      <div className="w-full max-w-5xl bg-gray-950 border border-gray-800 rounded-2xl shadow-2xl p-0 flex flex-col lg:flex-row overflow-hidden backdrop-blur-sm">
         {/* Left Side: Branding/Illustration */}
         <Branding />
         {/* Right Side: Auth Form */}
-        <div className="w-full md:w-1/2 p-6 md:p-10 flex flex-col justify-center">
+        <div className="w-full lg:w-1/2 p-6 sm:p-8 lg:p-12 flex flex-col justify-center min-h-[600px] lg:min-h-[700px]">
           {/* Tabs */}
           <AuthTabs isLogin={isLogin} setIsLogin={setIsLogin} />
 
@@ -149,13 +149,15 @@ export default function Authenticate() {
             handleSubmit={handleSubmit}
           />
 
-          <div className="flex items-center justify-center my-6 gap-3">
-            <div className="h-px flex-grow bg-neutral-700" />
-            <span className="text-xs text-zinc-400">or continue with</span>
-            <div className="h-px flex-grow bg-neutral-700" />
+          <div className="flex items-center justify-center my-8 gap-4">
+            <div className="h-px flex-grow bg-gray-800" />
+            <span className="text-sm text-gray-400 font-medium">
+              or continue with
+            </span>
+            <div className="h-px flex-grow bg-gray-800" />
           </div>
 
-          {/* OAuth Buttons - now compact, icon-only, in a row */}
+          {/* OAuth Buttons */}
           <OAuthButtons
             googleLogin={googleLogin}
             githubLogin={githubLogin}
