@@ -2,13 +2,10 @@
 
 import React from "react";
 import Auth from "./Auth/Auth";
-import { useAuth } from "../Auth/AuthProvider/AuthProvider";
 import Link from "next/link";
 import Breadcrumbs from "./Breadcrumbs/Breadcrumbs";
 
 const Header: React.FC = () => {
-  const { user } = useAuth();
-
   return (
     <header
       className={`
@@ -20,7 +17,6 @@ const Header: React.FC = () => {
         px-4 sm:px-6
         z-50
         transition-all duration-300
-        ${user ? "md:w-[calc(100%-208px)] md:left-[208px] md:z-30" : ""}
       `}
     >
       <h2 className="text-lg sm:text-xl font-bold tracking-tight flex items-center overflow-hidden whitespace-nowrap h-full m-0 flex-1 min-w-0">
