@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseURL = process.env.NEXT_PUBLIC_API_URL || "api.dsh.upayan.dev";
+const baseURL = process.env.NEXT_PUBLIC_API_URL || "https://api.dsh.upayan.dev";
 
 const instance = axios.create({
   baseURL,
