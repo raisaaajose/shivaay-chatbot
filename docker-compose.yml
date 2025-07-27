@@ -1,0 +1,9 @@
+services:
+  web:
+    image: ghcr.io/raisaaajose/deep-shiva-chatbot:latest
+    ports:
+      - "3000:3000"
+      - "5000:5000"
+      - "8000:8000"
+    env_file:
+      - .env
