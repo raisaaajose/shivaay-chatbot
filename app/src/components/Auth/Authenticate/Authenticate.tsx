@@ -125,16 +125,12 @@ export default function Authenticate() {
   };
 
   return (
-    <section className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 bg-black">
+    <section className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-5xl bg-gray-950 border border-gray-800 rounded-2xl shadow-2xl p-0 flex flex-col lg:flex-row overflow-hidden backdrop-blur-sm">
-        {/* Left Side: Branding/Illustration */}
         <Branding />
-        {/* Right Side: Auth Form */}
         <div className="w-full lg:w-1/2 p-6 sm:p-8 lg:p-12 flex flex-col justify-center min-h-[600px] lg:min-h-[700px]">
-          {/* Tabs */}
           <AuthTabs isLogin={isLogin} setIsLogin={setIsLogin} />
 
-          {/* Animated height wrapper for form content */}
           <AuthForm
             isLogin={isLogin}
             email={email}
@@ -157,7 +153,6 @@ export default function Authenticate() {
             <div className="h-px flex-grow bg-gray-800" />
           </div>
 
-          {/* OAuth Buttons */}
           <OAuthButtons
             googleLogin={googleLogin}
             githubLogin={githubLogin}

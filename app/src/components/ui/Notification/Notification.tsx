@@ -58,7 +58,7 @@ export const NotificationProvider = ({ children }: { children: ReactNode }) => {
       removalQueue.current = removalQueue.current.filter(
         (t) => t !== timeoutId
       );
-    }, 4000 + notifications.length * 300);
+    }, 5000);
 
     removalQueue.current.push(timeoutId);
   };
@@ -69,67 +69,159 @@ export const NotificationProvider = ({ children }: { children: ReactNode }) => {
 
   const iconMap: Record<NotificationType, React.ReactElement> = {
     success: (
-      <CheckCircle className="text-emerald-400 drop-shadow-lg" size={24} />
+      <CheckCircle className="w-4 h-4 text-emerald-500" strokeWidth={2.5} />
     ),
-    error: <AlertCircle className="text-rose-400 drop-shadow-lg" size={24} />,
-    info: <Info className="text-sky-400 drop-shadow-lg" size={24} />,
+    error: <AlertCircle className="w-4 h-4 text-red-500" strokeWidth={2.5} />,
+    info: <Info className="w-4 h-4 text-blue-500" strokeWidth={2.5} />,
     warning: (
-      <AlertTriangle className="text-yellow-400 drop-shadow-lg" size={24} />
+      <AlertTriangle className="w-4 h-4 text-amber-500" strokeWidth={2.5} />
     ),
   };
 
   return (
     <NotificationContext.Provider value={{ notify }}>
       {children}
-      <motion.div
-        className="fixed bottom-2 right-2 sm:bottom-6 sm:right-6 z-50 flex flex-col-reverse gap-2 sm:gap-4 w-[95vw] max-w-[380px] sm:w-96"
-        initial={false}
-        animate="animate"
-        exit="exit"
-        layout
-      >
-        <AnimatePresence initial={false}>
-          {notifications.map((n, index) => (
-            <motion.div
-              key={n.id}
-              layout
-              initial={{ opacity: 0, y: 40, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 40, scale: 0.95 }}
-              transition={{
-                duration: 0.5,
-                type: "spring",
-                stiffness: 300,
-                damping: 30,
-                delay: index * 0.08,
-              }}
-              className={clsx(
-                "relative flex items-center gap-2 sm:gap-3 px-2 sm:px-4 py-1.5 rounded-xl w-full shadow-2xl min-h-0 h-auto bg-[rgba(24,24,27,0.65)] backdrop-blur backdrop-saturate-150 border border-white/10",
-                {
-                  "border-emerald-400/40": n.type === "success",
-                  "border-rose-400/40": n.type === "error",
-                  "border-sky-400/40": n.type === "info",
-                  "border-yellow-400/40": n.type === "warning",
-                }
-              )}
-              style={{ boxShadow: "var(--box-shadow-default)" }}
-            >
-              <div className="pt-0.5 flex-shrink-0">{iconMap[n.type]}</div>
-              <span className="flex-1 text-sm sm:text-base font-semibold text-[var(--foreground)] drop-shadow-sm">
-                {n.message}
-              </span>
-              <button
-                onClick={() => removeNotification(n.id)}
-                title="Close notification"
-                aria-label="Close notification"
-                className="ml-1 sm:ml-2 rounded-full p-1 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[var(--text-link-color)] hover:bg-[var(--background)]/30 hover:scale-110"
+      <div className="fixed top-4 right-4 z-50 pointer-events-none">
+        <div className="flex flex-col gap-3 w-80 max-w-[calc(100vw-2rem)]">
+          <AnimatePresence mode="popLayout">
+            {notifications.map((notification, index) => (
+              <motion.div
+                key={notification.id}
+                layout
+                initial={{
+                  opacity: 0,
+                  x: 300,
+                  scale: 0.95,
+                  filter: "blur(4px)",
+                }}
+                animate={{
+                  opacity: 1,
+                  x: 0,
+                  scale: 1,
+                  filter: "blur(0px)",
+                }}
+                exit={{
+                  opacity: 0,
+                  x: 300,
+                  scale: 0.95,
+                  filter: "blur(4px)",
+                }}
+                transition={{
+                  type: "spring",
+                  stiffness: 400,
+                  damping: 40,
+                  mass: 0.8,
+                  delay: index * 0.04,
+                }}
+                layoutId={notification.id}
+                className="pointer-events-auto"
               >
-                <X className="w-5 h-5 text-zinc-400 hover:text-white transition-colors" />
-              </button>
-            </motion.div>
-          ))}
-        </AnimatePresence>
-      </motion.div>
+                <div
+                  className={clsx(
+                    "relative group rounded-2xl p-4 shadow-xl backdrop-blur-xl border transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl",
+                    {
+                      "bg-gray-900/95 border-emerald-500/30 hover:border-emerald-400/50":
+                        notification.type === "success",
+                      "bg-gray-900/95 border-red-500/30 hover:border-red-400/50":
+                        notification.type === "error",
+                      "bg-gray-900/95 border-blue-500/30 hover:border-blue-400/50":
+                        notification.type === "info",
+                      "bg-gray-900/95 border-amber-500/30 hover:border-amber-400/50":
+                        notification.type === "warning",
+                    }
+                  )}
+                >
+                  {/* Subtle glow effect */}
+                  <div
+                    className={clsx(
+                      "absolute inset-0 rounded-2xl opacity-20 transition-opacity duration-300 group-hover:opacity-30 blur-md",
+                      {
+                        "bg-emerald-500/20": notification.type === "success",
+                        "bg-red-500/20": notification.type === "error",
+                        "bg-blue-500/20": notification.type === "info",
+                        "bg-amber-500/20": notification.type === "warning",
+                      }
+                    )}
+                  />
+
+                  <div className="relative flex items-start gap-3">
+                    <div className="flex-shrink-0 mt-0.5">
+                      <motion.div
+                        initial={{ scale: 0, rotate: -180 }}
+                        animate={{ scale: 1, rotate: 0 }}
+                        transition={{
+                          type: "spring",
+                          stiffness: 500,
+                          damping: 25,
+                          delay: index * 0.04 + 0.1,
+                        }}
+                        className={clsx("p-2 rounded-xl", {
+                          "bg-emerald-500/10": notification.type === "success",
+                          "bg-red-500/10": notification.type === "error",
+                          "bg-blue-500/10": notification.type === "info",
+                          "bg-amber-500/10": notification.type === "warning",
+                        })}
+                      >
+                        {iconMap[notification.type]}
+                      </motion.div>
+                    </div>
+
+                    <div className="flex-1 min-w-0 pt-2">
+                      <motion.p
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{
+                          delay: index * 0.04 + 0.15,
+                          duration: 0.3,
+                        }}
+                        className="text-sm font-medium text-gray-200 leading-relaxed"
+                      >
+                        {notification.message}
+                      </motion.p>
+                    </div>
+
+                    <motion.button
+                      initial={{ opacity: 0, scale: 0 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{
+                        delay: index * 0.04 + 0.2,
+                        type: "spring",
+                        stiffness: 400,
+                        damping: 20,
+                      }}
+                      onClick={() => removeNotification(notification.id)}
+                      className="flex-shrink-0 p-2 rounded-xl text-gray-400 hover:text-gray-200 hover:bg-gray-800/50 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-600/50"
+                      aria-label="Dismiss notification"
+                    >
+                      <X className="w-4 h-4" strokeWidth={2} />
+                    </motion.button>
+                  </div>
+
+                  {/* Progress bar */}
+                  <motion.div
+                    className={clsx(
+                      "absolute bottom-0 left-0 h-0.5 rounded-b-2xl",
+                      {
+                        "bg-emerald-400": notification.type === "success",
+                        "bg-red-400": notification.type === "error",
+                        "bg-blue-400": notification.type === "info",
+                        "bg-amber-400": notification.type === "warning",
+                      }
+                    )}
+                    initial={{ width: "100%" }}
+                    animate={{ width: "0%" }}
+                    transition={{
+                      duration: 5,
+                      ease: "linear",
+                      delay: index * 0.04 + 0.3,
+                    }}
+                  />
+                </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </div>
+      </div>
     </NotificationContext.Provider>
   );
 };
