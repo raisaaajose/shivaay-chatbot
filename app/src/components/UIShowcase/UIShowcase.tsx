@@ -300,32 +300,8 @@ export default function UIPage() {
         </div>
       </section>
       <section style={{ marginTop: 40 }}>
-        <h2>Simulate Loader & Modal</h2>
+        <h2>Simulate Modal</h2>
         <div className="responsive-flex-row" style={{ marginBottom: 24 }}>
-          <AnimatedButton
-            variant="primary"
-            onClick={async () => {
-              setLoading(true);
-              notify("Loading for 3 seconds...", "info");
-              await new Promise((res) => setTimeout(res, 3000));
-              setLoading(false);
-              notify("3s Loader finished!", "success");
-            }}
-          >
-            Simulate 3s Loader
-          </AnimatedButton>
-          <AnimatedButton
-            variant="warning"
-            onClick={async () => {
-              setLoading(true);
-              notify("Loading for 30 seconds...", "warning");
-              await new Promise((res) => setTimeout(res, 30000));
-              setLoading(false);
-              notify("30s Loader finished!", "success");
-            }}
-          >
-            Simulate 30s Loader
-          </AnimatedButton>
           <AnimatedButton
             variant="secondary"
             onClick={() => setModalOpen(true)}
