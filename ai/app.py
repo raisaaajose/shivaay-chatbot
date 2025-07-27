@@ -1,29 +1,27 @@
 import operator
-from typing import Annotated, Sequence, TypedDict
-
-from langchain_core.messages import BaseMessage, HumanMessage, AIMessage
-from langchain_core.prompts import ChatPromptTemplate
-# Removed tool import as this version is purely conversational
-# from langchain_core.tools import tool
-from langchain_groq import ChatGroq
-from langgraph.graph import StateGraph, END
-from typing import Dict, List
+from typing import Annotated, Sequence, TypedDict, Dict, List
 from fastapi import FastAPI, Request
 from pydantic import BaseModel
 import uvicorn
 import os
 from dotenv import load_dotenv
 from pathlib import Path
+from langchain_core.messages import BaseMessage, HumanMessage, AIMessage
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_groq import ChatGroq
+from langgraph.graph import StateGraph, END
+from ai.pinecone_utils import search_top_k 
 
-# Load .env from project root
+
 project_root = Path(__file__).parent.parent
 load_dotenv(project_root / ".env")
-
 
 class AgentState(TypedDict):
     messages: Annotated[Sequence[BaseMessage], operator.add]
 
+
 llm = ChatGroq(temperature=0, model_name="llama-3.1-8b-instant")
+
 
 prompt = ChatPromptTemplate.from_messages(
     [
@@ -31,7 +29,11 @@ prompt = ChatPromptTemplate.from_messages(
             "system",
             "You are a friendly and helpful AI assistant for tourism in Uttarakhand. "
             "Engage in conversation, provide information, and answer questions to the best of your ability. "
-            "Always be polite and informative."
+            "Always be polite and informative." 
+            "Your knowledge is strictly limited to tourism in Uttarakhand, India."
+            "If a user asks about topics outside of Uttarakhand tourism (e.g., politics, health, personal advice, other regions/countries), "
+            "politely state that you can only assist with Uttarakhand tourism-related inquiries."
+            "\n\nHere is relevant tourism information to help you answer the user's query:\n{context_info}" # context_info placeholder
         ),
         ("placeholder", "{messages}"), 
     ]
@@ -41,12 +43,14 @@ conversational_llm = prompt | llm
 
 async def call_llm(state: AgentState):
     """
-    Node to call the LLM with the current conversation history to generate a response.
+    Node to call the LLM with the current conversation history and context to generate a response.
     """
     messages = state["messages"]
-    response = await conversational_llm.ainvoke({"messages": messages})
+    context_info = state.get("context_info", "") 
+    llm_input = {"messages": messages, "context_info": context_info}
+    
+    response = await conversational_llm.ainvoke(llm_input)
     return {"messages": [response]}
-
 
 def should_continue(state: AgentState):
     """
@@ -97,13 +101,22 @@ async def chat_endpoint(request: ChatRequest):
     current_history = chat_sessions[session_id]
     current_history.append(HumanMessage(content=user_message_content))
 
+    
+    context_docs = search_top_k(user_message_content)
+    context_str = "\n".join([
+        f"{doc['metadata'].get('name', 'N/A')}: {doc['metadata'].get('description', 'N/A')}"
+        for doc in context_docs
+    ])
+  
+
     final_response_content = "I'm sorry, I couldn't generate a response."
     
     try:
         
-        final_state = await app_graph.ainvoke({"messages": current_history})
+        final_state = await app_graph.ainvoke({"messages": current_history, "context_info": context_str})
+        
         if final_state and "messages" in final_state and final_state["messages"]:
-            for msg in reversed(final_state["messages"]):
+            for msg in reversed(final_state["messages"]): 
                 if isinstance(msg, AIMessage):
                     final_response_content = msg.content
                     break
@@ -122,5 +135,5 @@ async def read_root():
 
 if __name__ == "__main__":
     if "GROQ_API_KEY" not in os.environ:
-        print("WARNING: LLAMA_API_KEY environment variable not set. Chatbot may not function.")
+        print("WARNING: GROQ_API_KEY environment variable not set. Chatbot may not function.")
     uvicorn.run(app, host="0.0.0.0", port=8000)
