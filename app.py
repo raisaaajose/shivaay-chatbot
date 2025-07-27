@@ -15,10 +15,6 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
-# --- 1. Define Tools for the Agent ---
-# In this "regular chatbot" version, we remove tools as it focuses purely on conversation.
-# No tools are defined or used.
-
 
 class AgentState(TypedDict):
     messages: Annotated[Sequence[BaseMessage], operator.add]
@@ -47,20 +43,16 @@ async def call_llm(state: AgentState):
     response = await conversational_llm.ainvoke({"messages": messages})
     return {"messages": [response]}
 
-# Removed call_tool node as this is a purely conversational chatbot.
-
 
 def should_continue(state: AgentState):
     """
     In a regular chatbot, after the LLM generates a response, the turn ends.
     """
-    # Since there are no tools, the LLM's response is always the final one for the turn.
     return "end_conversation"
 
 workflow = StateGraph(AgentState)
 
 workflow.add_node("llm_response", call_llm)
-# Removed "tool_execution" node
 workflow.set_entry_point("llm_response")
 
 workflow.add_conditional_edges(
@@ -70,8 +62,6 @@ workflow.add_conditional_edges(
         "end_conversation": END,
     },
 )
-
-# Removed edge from tool_execution as there are no tools.
 
 app_graph = workflow.compile()
 
@@ -87,7 +77,7 @@ class ChatRequest(BaseModel):
     session_id: str
     user_message: str
 
-@app.post("/chat", response_model=str) # Response model is str for simplicity, could be more complex
+@app.post("/chat", response_model=str)
 async def chat_endpoint(request: ChatRequest):
     """
     API endpoint for the chatbot.
@@ -109,7 +99,7 @@ async def chat_endpoint(request: ChatRequest):
         
         final_state = await app_graph.ainvoke({"messages": current_history})
         if final_state and "messages" in final_state and final_state["messages"]:
-            for msg in reversed(final_state["messages"]): # Look for the last AI message
+            for msg in reversed(final_state["messages"]):
                 if isinstance(msg, AIMessage):
                     final_response_content = msg.content
                     break
