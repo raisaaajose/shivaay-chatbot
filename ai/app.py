@@ -13,7 +13,11 @@ from pydantic import BaseModel
 import uvicorn
 import os
 from dotenv import load_dotenv
-load_dotenv()
+from pathlib import Path
+
+# Load .env from project root
+project_root = Path(__file__).parent.parent
+load_dotenv(project_root / ".env")
 
 
 class AgentState(TypedDict):
