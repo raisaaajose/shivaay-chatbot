@@ -6,20 +6,22 @@ export default function Branding() {
       <div className="flex flex-col items-center gap-6">
         <Image
           src="/icon.svg"
-          alt="TITLE Logo"
+          alt="Deep Shiva Chatbot Logo"
           width={96}
           height={96}
           className="w-24 h-24"
           style={{ boxShadow: "none" }}
         />
-        <h2 className="text-3xl font-bold tracking-tight">Welcome to TITLE</h2>
+        <h2 className="text-3xl font-bold tracking-tight">
+          Welcome to Deep Shiva Chatbot
+        </h2>
         <p className="text-lg text-sky-200 text-center max-w-xs">
           Deploy, manage, and scale your applications with ease. Login or create
           an account to get started!
         </p>
       </div>
       <div className="absolute bottom-6 left-0 w-full text-center text-xs text-sky-300 opacity-60">
-        © {new Date().getFullYear()} TITLE
+        © {new Date().getFullYear()} Deep Shiva Chatbot
       </div>
     </div>
   );

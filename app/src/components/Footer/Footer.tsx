@@ -1,5 +1,4 @@
 import React from "react";
-import Link from "next/link";
 
 const Footer: React.FC = () => {
   return (
@@ -9,16 +8,13 @@ const Footer: React.FC = () => {
       </span>
       <div className="flex space-x-4">
         <a
-          href="https://github.com/upayanmazumder-DevLabs/nextjs-mongo-cookie-template"
+          href="https://github.com/raisaaajose/deep-shiva-chatbot"
           target="_blank"
           rel="noopener noreferrer"
           style={{ color: "lightgray" }}
         >
           GitHub
         </a>
-        <Link href="/docs" style={{ color: "lightgray" }}>
-          Docs
-        </Link>
       </div>
     </footer>
   );

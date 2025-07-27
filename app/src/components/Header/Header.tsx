@@ -12,7 +12,7 @@ const Header: React.FC = () => {
   const { user } = useAuth();
 
   const headerClass = `
-    fixed top-0 right-0
+    top-0 right-0
     border-b-2 border-[#2c313f]
     flex items-center justify-between
     bg-[var(--background)]/50 backdrop-blur-sm

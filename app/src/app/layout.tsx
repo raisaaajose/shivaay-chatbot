@@ -7,12 +7,12 @@ import Footer from "../components/Footer/Footer";
 import Sidebar from "../components/Sidebar/Sidebar";
 import AcceptCookies from "../components/AcceptCookies/AcceptCookies";
 import LayoutWrapper from "../components/LayoutWrapper/LayoutWrapper";
-import ServiceWorkerRegister from "../components/ServiceWorkerRegister/ServiceWorkerRegister";
+// import ServiceWorkerRegister from "../components/ServiceWorkerRegister/ServiceWorkerRegister";
 
 export const metadata: Metadata = {
-  title: "TITLE",
+  title: "Deep Shiva Chatbot",
   description:
-    "TITLE lets you deploy containerized applications with full flexibility — AI-powered setup, secure infrastructure, and Kubernetes-native scaling, all from a powerful web interface.",
+    "Deep Shiva Chatbot lets you deploy containerized applications with full flexibility — AI-powered setup, secure infrastructure, and Kubernetes-native scaling, all from a powerful web interface.",
 };
 
 export default function RootLayout({
@@ -40,7 +40,7 @@ export default function RootLayout({
               <Header />
               {children}
               <Footer />
-              <ServiceWorkerRegister />
+              {/* <ServiceWorkerRegister /> */}
             </LayoutWrapper>
             <AcceptCookies />
           </AuthProvider>
