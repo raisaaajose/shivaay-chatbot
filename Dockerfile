@@ -60,7 +60,7 @@ COPY --from=build-ai /ai ./ai
 
 # Install Python dependencies in the final stage
 COPY ai/requirements.txt ./ai/
-RUN pip3 install --upgrade pip && pip3 install -r ./ai/requirements.txt
+RUN pip3 install --upgrade pip --break-system-packages && pip3 install -r ./ai/requirements.txt --break-system-packages
 
 # Copy PM2 ecosystem config
 COPY ecosystem.config.js ./
