@@ -5,3 +5,5 @@ fastapi
 uvicorn[standard]
 python-dotenv
 pydantic
+pinecone 
+huggingface-hub
