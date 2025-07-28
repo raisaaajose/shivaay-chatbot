@@ -4,7 +4,6 @@ import { IUser, IOAuth } from "../types/user.types";
 const oauthSchema = new Schema<IOAuth>(
   {
     googleId: { type: String },
-    githubId: { type: String },
   },
   { _id: false }
 );

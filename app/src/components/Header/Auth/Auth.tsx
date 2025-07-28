@@ -39,7 +39,7 @@ export default function Auth() {
             <img
               src={user.profilePicture}
               alt={user.name || user.username || "User"}
-              className="w-8 h-8 rounded-full object-cover border border-gray-300"
+              className="w-8 h-8 rounded object-cover"
               onError={() => setImageError(true)}
             />
           )}

@@ -10,13 +10,12 @@ const REQUIRED_ENV_VARS = [
   "NEXTAUTH_SECRET",
   "GOOGLE_CLIENT_ID",
   "GOOGLE_CLIENT_SECRET",
-  "GITHUB_CLIENT_ID",
-  "GITHUB_CLIENT_SECRET",
   "SMTP_HOST",
   "SMTP_PORT",
   "SMTP_USER",
   "SMTP_PASS",
   "SMTP_FROM",
+  "CUSTOM_DOMAIN",
 ];
 
 const env = {
@@ -36,10 +35,6 @@ const env = {
   // OAuth credentials for Google
   GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
   GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
-
-  // OAuth credentials for GitHub
-  GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID,
-  GITHUB_CLIENT_SECRET: process.env.GITHUB_CLIENT_SECRET,
 
   // SMTP configuration for sending emails
   SMTP_HOST: process.env.SMTP_HOST,

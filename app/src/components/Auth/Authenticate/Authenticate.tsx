@@ -119,11 +119,6 @@ export default function Authenticate() {
     window.location.href = `${baseURL}/api/auth/google`;
   };
 
-  const githubLogin = () => {
-    setOauthLoading(true);
-    window.location.href = `${baseURL}/api/auth/github`;
-  };
-
   return (
     <section className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-5xl bg-gray-950 border border-gray-800 rounded-2xl shadow-2xl p-0 flex flex-col lg:flex-row overflow-hidden backdrop-blur-sm">
@@ -153,11 +148,7 @@ export default function Authenticate() {
             <div className="h-px flex-grow bg-gray-800" />
           </div>
 
-          <OAuthButtons
-            googleLogin={googleLogin}
-            githubLogin={githubLogin}
-            oauthLoading={oauthLoading}
-          />
+          <OAuthButtons googleLogin={googleLogin} oauthLoading={oauthLoading} />
         </div>
       </div>
     </section>
