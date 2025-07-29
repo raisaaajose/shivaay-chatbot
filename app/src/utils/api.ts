@@ -4,7 +4,7 @@ const baseURL =
   process.env.NEXT_PUBLIC_API_URL || "https://api.shivaay.upayan.dev";
 
 const aiBaseURL =
-  process.env.NEXT_PUBLIC_AI_API_URL || "http://ai.shivaay.upayan.dev";
+  process.env.NEXT_PUBLIC_AI_API_URL || "https://ai.shivaay.upayan.dev";
 
 const instance = axios.create({
   baseURL,
