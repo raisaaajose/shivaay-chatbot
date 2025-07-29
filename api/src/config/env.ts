@@ -42,7 +42,7 @@ const env = {
   SMTP_USER: process.env.SMTP_USER,
   SMTP_PASS: process.env.SMTP_PASS,
   SMTP_FROM: process.env.SMTP_FROM,
-  CUSTOM_DOMAIN: process.env.CUSTOM_DOMAIN || "dsh.upayan.dev",
+  CUSTOM_DOMAIN: process.env.CUSTOM_DOMAIN || "shivaay.upayan.dev",
 };
 
 const missingVars = REQUIRED_ENV_VARS.filter(

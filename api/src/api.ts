@@ -44,7 +44,7 @@ if (!sessionSecret) {
 
 app.use(
   session({
-    name: "dsh.sid",
+    name: "shivaay.sid",
     secret: sessionSecret,
     resave: false,
     saveUninitialized: false,
@@ -53,7 +53,7 @@ app.use(
           httpOnly: true,
           secure: true,
           sameSite: "none",
-          domain: ".dsh.upayan.dev",
+          domain: ".shivaay.upayan.dev",
           maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
         }
       : {
