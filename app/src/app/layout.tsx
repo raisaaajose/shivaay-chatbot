@@ -10,9 +10,103 @@ import LayoutWrapper from "../components/LayoutWrapper/LayoutWrapper";
 // import ServiceWorkerRegister from "../components/ServiceWorkerRegister/ServiceWorkerRegister";
 
 export const metadata: Metadata = {
-  title: "Deep Shiva Chatbot",
+  title: "Shivaay",
   description:
-    "Deep Shiva Chatbot lets you deploy containerized applications with full flexibility — AI-powered setup, secure infrastructure, and Kubernetes-native scaling, all from a powerful web interface.",
+    "Shivaay is a multilingual, context-aware AI chatbot designed to address the unique challenges faced by tourists in Uttarakhand. Our mission is to bridge the information gap by providing a seamless, interactive guide that connects travelers with the region's rich cultural heritage, spiritual significance, and natural beauty. Shivaay serves as a personal travel assistant, a cultural expert, and a wellness guide, all in one.",
+  icons: {
+    icon: "/icon.svg",
+    apple: "/icon.svg",
+    shortcut: "/icon.svg",
+  },
+  openGraph: {
+    title: "Shivaay",
+    description:
+      "Shivaay is a multilingual, context-aware AI chatbot designed to address the unique challenges faced by tourists in Uttarakhand. Our mission is to bridge the information gap by providing a seamless, interactive guide that connects travelers with the region's rich cultural heritage, spiritual significance, and natural beauty. Shivaay serves as a personal travel assistant, a cultural expert, and a wellness guide, all in one.",
+    url: "https://shivaay.upayan.dev",
+    siteName: "Shivaay",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Shivaay Open Graph Image",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Shivaay",
+    description:
+      "Ever wanted to form a music band but found it too hard to find fellow band members? Shivaay is here to help!",
+    images: ["/og-image.png"],
+  },
+  manifest: "/manifest",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+    },
+  },
+  appleWebApp: {
+    capable: true,
+    title: "Shivaay",
+    statusBarStyle: "default",
+  },
+  formatDetection: {
+    telephone: false,
+    address: false,
+    email: false,
+  },
+  metadataBase: new URL("https://Shivaay.upayan.dev"),
+  alternates: {
+    canonical: "https://Shivaay.upayan.dev",
+    types: {
+      "application/rss+xml": "/feed.xml",
+      "application/atom+xml": "/feed.atom",
+    },
+    languages: {
+      "en-US": "/",
+      "en-GB": "/gb",
+      "fr-FR": "/fr",
+      "es-ES": "/es",
+      "de-DE": "/de",
+    },
+  },
+  keywords: [
+    "Shivaay",
+    "music",
+    "band",
+    "find band members",
+    "musicians",
+    "collaboration",
+    "music community",
+    "join band",
+    "musical collaboration",
+  ],
+  authors: [
+    {
+      name: "Raisa Jose",
+      url: "https://github.com/raisaaajose",
+    },
+    {
+      name: "Upayan Mazumder",
+      url: "https://upayan.dev",
+    },
+    {
+      name: "Aditya Rohilla",
+      url: "https://github.com/Rohilalala",
+    },
+    {
+      name: "Maneet Gupta",
+      url: "https://www.linkedin.com/in/maneet-gupta/",
+    },
+  ],
+  applicationName: "Shivaay",
+  category: "Entertainment",
 };
 
 export default function RootLayout({
