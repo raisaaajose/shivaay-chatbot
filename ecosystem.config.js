@@ -27,6 +27,7 @@ module.exports = {
       args: "app.py",
       env: {
         PORT: 8000,
+        PYTHONPATH: "/workspace",
       },
     },
   ],

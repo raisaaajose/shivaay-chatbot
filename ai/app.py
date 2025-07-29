@@ -11,7 +11,7 @@ from langchain_core.messages import BaseMessage, HumanMessage, AIMessage
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_groq import ChatGroq
 from langgraph.graph import StateGraph, END
-from ai.pinecone_utils import search_top_k 
+from pinecone_utils import search_top_k 
 
 
 project_root = Path(__file__).parent.parent
