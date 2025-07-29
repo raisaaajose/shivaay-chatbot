@@ -8,7 +8,7 @@ const Footer: React.FC = () => {
       </span>
       <div className="flex space-x-4">
         <a
-          href="https://github.com/raisaaajose/deep-shiva-chatbot"
+          href="https://github.com/raisaaajose/shivaay-chatbot"
           target="_blank"
           rel="noopener noreferrer"
           style={{ color: "lightgray" }}

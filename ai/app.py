@@ -1,6 +1,7 @@
 import operator
 from typing import Annotated, Sequence, TypedDict, Dict, List
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import uvicorn
 import os
@@ -81,6 +82,20 @@ app = FastAPI(
     title="Deep-Shiva Conversational Chatbot API",
     description="A simple API for the Deep-Shiva chatbot using LangChain and LangGraph.",
     version="1.0.0",
+)
+
+# Get frontend URL from environment variables
+frontend_url = os.getenv("FRONTEND_URL", "http://localhost:3000")
+
+print(f"CORS configured for frontend URL: {frontend_url}")
+
+# Configure CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[frontend_url],  # Allow requests from frontend URL
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_headers=["*"],
 )
 
 def load_sessions() -> Dict[str, List[Dict]]:

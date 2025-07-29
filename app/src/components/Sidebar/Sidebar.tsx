@@ -3,10 +3,11 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Branding from "./Branding/Branding";
-import { FiBarChart2, FiShield, FiUser } from "react-icons/fi";
+import { FiShield, FiUser } from "react-icons/fi";
 import { useAuth } from "../Auth/AuthProvider/AuthProvider";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
+import { AiFillRobot } from "react-icons/ai";
 
 export default function Sidebar() {
   const { user, loading } = useAuth();
@@ -22,7 +23,7 @@ export default function Sidebar() {
   }, [user]);
 
   const navItems = [
-    { href: "/xyz", label: "XYZ", icon: <FiBarChart2 /> },
+    { href: "/ai", label: "AI", icon: <AiFillRobot /> },
 
     ...(isAdmin
       ? [{ href: "/admin", label: "Admin", icon: <FiShield />, admin: true }]
