@@ -1,4 +1,5 @@
 import React from "react";
+import { baseURL, aiBaseURL } from "../../utils/api";
 
 const Footer: React.FC = () => {
   return (
@@ -7,6 +8,22 @@ const Footer: React.FC = () => {
         © {new Date().getFullYear()} Deep Shiva Chatbot
       </span>
       <div className="flex space-x-4">
+        <a
+          style={{ color: "lightgray" }}
+          href={baseURL}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          API
+        </a>
+        <a
+          style={{ color: "lightgray" }}
+          href={aiBaseURL}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          AI
+        </a>
         <a
           href="https://github.com/raisaaajose/shivaay-chatbot"
           target="_blank"

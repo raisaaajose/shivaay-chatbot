@@ -21,7 +21,7 @@ export default function Branding() {
         className="text-[#11D6D1] ml-2 truncate"
         style={{ fontFamily: "DMSans", width: "auto", flex: "none" }}
       >
-        Deep Shiva Chatbot
+        Shivaay
       </span>
     </Link>
   );
