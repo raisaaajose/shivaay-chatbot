@@ -32,6 +32,8 @@
 :root {
   --background: #0a0a0a;
   --foreground: #ededed;
+  --shivaay-blue: #002c7e;
+  --shivaay-blue-hover: #023696;
 }
 
 @theme inline {
@@ -319,4 +321,12 @@ section table {
 
 ::-webkit-scrollbar {
   display: none;
+}
+
+.shivaay-blue {
+  color: var(--shivaay-blue);
+}
+
+.shivaay-blue:hover {
+  color: var(--shivaay-blue-hover);
 }

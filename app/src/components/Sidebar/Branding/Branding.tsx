@@ -18,8 +18,13 @@ export default function Branding() {
         className="h-8 w-auto"
       />
       <span
-        className="text-[#11D6D1] ml-2 truncate"
-        style={{ fontFamily: "DMSans", width: "auto", flex: "none" }}
+        className="ml-2 truncate"
+        style={{
+          width: "auto",
+          flex: "none",
+          letterSpacing: "0.02em",
+          fontSize: "1.2em",
+        }}
       >
         Shivaay
       </span>

@@ -26,7 +26,7 @@ const Header: React.FC = () => {
           style={{ textDecoration: "none" }}
         >
           <span className="text-[#9DA3B3] text-sm sm:text-base font-normal select-none mr-1 pl-2 sm:pl-5 flex items-center h-full tracking-wide truncate">
-            Deep Shiva Chatbot
+            Shivaay
           </span>
         </Link>
         <div className="hidden sm:block">
