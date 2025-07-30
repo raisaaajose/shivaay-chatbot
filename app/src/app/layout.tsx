@@ -61,7 +61,7 @@ export const metadata: Metadata = {
     address: false,
     email: false,
   },
-  metadataBase: new URL("https://Shivaay.upayan.dev"),
+  metadataBase: new URL("https://shivaay.upayan.dev"),
   alternates: {
     canonical: "https://Shivaay.upayan.dev",
     types: {
@@ -126,7 +126,7 @@ export default function RootLayout({
           href="/apple-touch-icon.webp"
         />
       </head>
-      <body className={`antialiased`}>
+      <body>
         <NotificationProvider>
           <AuthProvider>
             <Sidebar />
