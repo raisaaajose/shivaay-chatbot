@@ -2,7 +2,7 @@
 > Conversational AI for Tourism in Uttarakhand, India
 
 <p align="center">
-  <img src="https://shivaay.upayan.dev/icon-full.svg" alt="Deep-Shiva Full Logo" width="360" />
+  <img src="./app/public/icon-full.svg" alt="Deep-Shiva Full Logo" width="360" />
 </p>
 
 A conversational AI assistant focused on tourism in Uttarakhand, India. Built with FastAPI, LangChain, LangGraph, and Groq LLM, it leverages Pinecone for vector search and BAAI/bge-m3 embeddings. The project consists of two backends: a main Node.js/TypeScript backend for data management and authentication, and a Python AI backend for conversational AI functionality.
