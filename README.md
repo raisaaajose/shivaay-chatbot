@@ -1,4 +1,4 @@
-# 🕉️ Deep-Shiva Chatbot
+# Deep-Shiva Chatbot
 > Conversational AI for Tourism in Uttarakhand, India
 
 <p align="center">
@@ -35,7 +35,7 @@ A conversational AI assistant focused on tourism in Uttarakhand, India. Built wi
 
 ## Project Structure
 
-
+```
 deep-shiva-chatbot/
   ai/
     app.py                # FastAPI backend for chatbot
@@ -46,7 +46,7 @@ deep-shiva-chatbot/
   .env                    # Environment variables (not committed)
   example.env             # Example environment variables
   ...
-
+```
 
 ---
 
@@ -101,19 +101,17 @@ deep-shiva-chatbot/
 ## Setup Instructions
 
 ### 1. Clone the Repository
-
-bash
+```bash
 git clone <repo-url>
 cd deep-shiva-chatbot
 
-
+```
 ### 2. Set Up Environment Variables
 
 Copy the example file and fill in your API keys:
-
-bash
+```bash
 cp example.env .env
-
+```
 
 Edit .env and set:
 
@@ -123,26 +121,25 @@ Edit .env and set:
 - Other keys as needed for Node.js backend and frontend
 
 ### 3. Install Python Dependencies
-
-bash
+```bash
 cd ai
 pip install -r requirements.txt
-
+```
 
 ---
 
 ## Running the Application
 
 ### Start the FastAPI Backend
-
-bash
+```bash
 cd ai
 python app.py
-
+```
 Or, for hot-reload during development:
-bash
-uvicorn app:app --host 0.0.0.0 --port 8000 --reload
 
+```bash
+uvicorn app:app --host 0.0.0.0 --port 8000 --reload
+```
 
 The API will be available at [http://localhost:8000](http://localhost:8000).
 
