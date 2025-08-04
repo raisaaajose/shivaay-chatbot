@@ -1,11 +1,12 @@
 from contextlib import asynccontextmanager
 import operator
 from typing import Annotated, Sequence, TypedDict, Dict, List
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import uvicorn
 import os
+import aiohttp
 from dotenv import load_dotenv
 from pathlib import Path
 from langchain_core.messages import BaseMessage, HumanMessage, AIMessage
@@ -25,6 +26,9 @@ MONGO_URI = os.getenv("MONGO_URI")
 if not MONGO_URI:
     raise ValueError("MONGO_URI environment variable not set.")
 
+# API configuration
+API_BASE_URL = os.getenv("API_BASE_URL", "http://localhost:5000")
+
 # Initialize MongoDB client
 client = AsyncIOMotorClient(MONGO_URI)
 db = client.shivaay_chatbot
@@ -32,6 +36,77 @@ sessions_collection = db.chat_sessions
 
 class AgentState(TypedDict):
     messages: Annotated[Sequence[BaseMessage], operator.add]
+    context_info: str
+
+# API integration functions
+async def sync_with_api(session_id: str, user_message: str, ai_response: str):
+    """Sync chat messages with the API backend"""
+    try:
+        async with aiohttp.ClientSession() as session:
+            # Send both messages in a batch for better performance
+            messages_data = {
+                "messages": [
+                    {
+                        "id": f"user_{int(datetime.now().timestamp() * 1000)}",
+                        "content": user_message,
+                        "sender": "user",
+                        "timestamp": datetime.now().isoformat()
+                    },
+                    {
+                        "id": f"ai_{int(datetime.now().timestamp() * 1000) + 1}",
+                        "content": ai_response,
+                        "sender": "ai",
+                        "timestamp": datetime.now().isoformat()
+                    }
+                ]
+            }
+            
+            async with session.post(
+                f"{API_BASE_URL}/api/chat/{session_id}/messages/ai/batch",
+                json=messages_data,
+                headers={"Content-Type": "application/json"}
+            ) as response:
+                if response.status != 200:
+                    print(f"Failed to sync messages with API: {response.status}")
+    except Exception as e:
+        print(f"Failed to sync with API: {e}")
+
+async def create_session_in_api(session_id: str, user_id: str, title: str = "New Chat") -> bool:
+    """Create a new session in the API backend"""
+    try:
+        async with aiohttp.ClientSession() as session:
+            session_data = {
+                "sessionId": session_id,
+                "userId": user_id,
+                "title": title
+            }
+            
+            async with session.post(
+                f"{API_BASE_URL}/api/chat/ai/create",
+                json=session_data,
+                headers={"Content-Type": "application/json"}
+            ) as response:
+                return response.status in [200, 201]
+    except Exception as e:
+        print(f"Error creating session in API: {e}")
+        return False
+
+async def get_session_from_api(session_id: str) -> List[Dict]:
+    """Get session from API backend"""
+    try:
+        async with aiohttp.ClientSession() as session:
+            async with session.get(f"{API_BASE_URL}/api/chat/{session_id}") as response:
+                if response.status == 200:
+                    data = await response.json()
+                    if "session" in data and "messages" in data["session"]:
+                        return data["session"]["messages"]
+                elif response.status == 404:
+                    # Session doesn't exist yet, that's fine
+                    return []
+        return []
+    except Exception as e:
+        print(f"Failed to get session from API: {e}")
+        return []
 
 
 llm = ChatGroq(temperature=0, model_name="llama-3.1-8b-instant")
@@ -185,6 +260,7 @@ def dict_to_message(message_dict: Dict) -> BaseMessage:
 class ChatRequest(BaseModel):
     session_id: str
     user_message: str
+    user_id: str = None  # Optional for existing sessions
 
 @app.post("/chat", response_model=str)
 async def chat_endpoint(request: ChatRequest):
@@ -194,15 +270,29 @@ async def chat_endpoint(request: ChatRequest):
     """
     session_id = request.session_id
     user_message_content = request.user_message
+    user_id = request.user_id
 
-    # Load session from MongoDB
-    session_messages = await load_session(session_id)
+    # Try to get session from API first, fallback to MongoDB
+    api_messages = await get_session_from_api(session_id)
+    current_history = []
     
-    if not session_messages:
-        print(f"New session created: {session_id}")
+    # If no API messages and this is a new session, try to create it
+    if not api_messages and user_id:
+        await create_session_in_api(session_id, user_id, f"Chat {user_message_content[:30]}...")
     
-    # Convert stored message dicts back to BaseMessage objects
-    current_history = [dict_to_message(msg_dict) for msg_dict in session_messages]
+    if api_messages:
+        # Convert API messages to BaseMessage objects
+        for msg in api_messages:
+            if msg["sender"] == "user":
+                current_history.append(HumanMessage(content=msg["content"]))
+            elif msg["sender"] == "ai":
+                current_history.append(AIMessage(content=msg["content"]))
+    else:
+        # Fallback to MongoDB session
+        session_messages = await load_session(session_id)
+        current_history = [dict_to_message(msg_dict) for msg_dict in session_messages]
+    
+    # Add current user message
     current_history.append(HumanMessage(content=user_message_content))
 
     # Get context from Pinecone
@@ -223,9 +313,11 @@ async def chat_endpoint(request: ChatRequest):
                     final_response_content = msg.content
                     break
         
+        # Sync with API backend
+        await sync_with_api(session_id, user_message_content, final_response_content)
+        
+        # Also save to MongoDB as backup
         current_history.append(AIMessage(content=final_response_content))
-
-        # Convert messages back to dicts and save to MongoDB
         session_messages_dict = [message_to_dict(msg) for msg in current_history]
         await save_session(session_id, session_messages_dict)
 

@@ -2,14 +2,24 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, Variants } from "framer-motion";
+import { useAuth } from "@/components/Auth/AuthProvider/AuthProvider";
 import {
   sendChatMessage,
   checkAIHealth,
   generateSessionId,
 } from "@/utils/aiApi";
+import {
+  getChatSession,
+  createChatSession,
+  updateChatSession,
+  shareChatSession,
+  deleteChatSession,
+  addMessage,
+} from "@/utils/chatApi";
 import Card from "@/components/ui/Card/Card";
 import Input from "@/components/ui/Input/Input";
 import AnimatedButton from "@/components/ui/AnimatedButton/AnimatedButton";
+import useNotification from "@/components/ui/Notification/Notification";
 import {
   FiSend,
   FiMessageCircle,
@@ -17,21 +27,34 @@ import {
   FiUser,
   FiWifi,
   FiWifiOff,
+  FiShare2,
+  FiEdit3,
+  FiTrash2,
 } from "react-icons/fi";
+import type { Message, ChatSession } from "@/types/Chat/chat.types";
 
-interface Message {
-  id: string;
-  content: string;
-  sender: "user" | "ai";
-  timestamp: Date;
+interface ChatInterfaceProps {
+  sessionId?: string;
+  onSessionChange?: (session: ChatSession | null) => void;
 }
 
-export default function AI() {
+export default function ChatInterface({
+  sessionId: propSessionId,
+  onSessionChange,
+}: ChatInterfaceProps) {
+  const { user } = useAuth();
+  const { notify } = useNotification();
+
+  const [currentSession, setCurrentSession] = useState<ChatSession | null>(
+    null
+  );
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputMessage, setInputMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [sessionId, setSessionId] = useState<string>("");
   const [isAIHealthy, setIsAIHealthy] = useState<boolean | null>(null);
+  const [sessionTitle, setSessionTitle] = useState("New Chat");
+  const [isEditingTitle, setIsEditingTitle] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Animation variants
@@ -85,29 +108,43 @@ export default function AI() {
   // Initialize session and check AI health
   useEffect(() => {
     const initSession = async () => {
-      const newSessionId = generateSessionId();
+      const newSessionId = propSessionId || generateSessionId();
       setSessionId(newSessionId);
 
       // Check AI backend health
       const healthy = await checkAIHealth();
       setIsAIHealthy(healthy);
 
-      // Add welcome message
-      if (healthy) {
-        setMessages([
-          {
-            id: "welcome",
-            content:
-              "नमस्ते ! I'm Shivaay, your AI guide for Uttarakhand tourism. How can I help you explore the beautiful state of Uttarakhand today?",
-            sender: "ai",
-            timestamp: new Date(),
-          },
-        ]);
+      if (propSessionId) {
+        // Load existing session
+        try {
+          const session = await getChatSession(propSessionId);
+          setCurrentSession(session);
+          setMessages(session.messages || []);
+          setSessionTitle(session.title);
+          onSessionChange?.(session);
+        } catch (error) {
+          console.error("Failed to load session:", error);
+          notify("Failed to load chat session", "error");
+        }
+      } else {
+        // Add welcome message for new sessions
+        if (healthy) {
+          setMessages([
+            {
+              id: "welcome",
+              content:
+                "नमस्ते ! I'm Shivaay, your AI guide for Uttarakhand tourism. How can I help you explore the beautiful state of Uttarakhand today?",
+              sender: "ai",
+              timestamp: new Date(),
+            },
+          ]);
+        }
       }
     };
 
     initSession();
-  }, []);
+  }, [propSessionId, notify, onSessionChange]);
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
@@ -115,7 +152,7 @@ export default function AI() {
   }, [messages]);
 
   const handleSendMessage = async () => {
-    if (!inputMessage.trim() || isLoading || !isAIHealthy) return;
+    if (!inputMessage.trim() || isLoading || !isAIHealthy || !user) return;
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -129,7 +166,27 @@ export default function AI() {
     setIsLoading(true);
 
     try {
-      const aiResponse = await sendChatMessage(sessionId, userMessage.content);
+      // Create session if it doesn't exist
+      let session = currentSession;
+      if (!session) {
+        const title =
+          inputMessage.trim().slice(0, 50) +
+          (inputMessage.length > 50 ? "..." : "");
+        session = await createChatSession({
+          sessionId,
+          title,
+        });
+        setCurrentSession(session);
+        setSessionTitle(session.title);
+        onSessionChange?.(session);
+      }
+
+      // Get AI response
+      const aiResponse = await sendChatMessage(
+        sessionId,
+        userMessage.content,
+        user._id?.toString()
+      );
 
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
@@ -139,6 +196,12 @@ export default function AI() {
       };
 
       setMessages((prev) => [...prev, aiMessage]);
+
+      // Update session with new messages
+      if (session) {
+        await addMessage(session.sessionId, userMessage);
+        await addMessage(session.sessionId, aiMessage);
+      }
     } catch (error) {
       console.error("Failed to get AI response:", error);
 
@@ -151,6 +214,7 @@ export default function AI() {
       };
 
       setMessages((prev) => [...prev, errorMessage]);
+      notify("Failed to send message", "error");
     } finally {
       setIsLoading(false);
     }
@@ -163,119 +227,206 @@ export default function AI() {
     }
   };
 
-  const formatTime = (date: Date) => {
-    return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  const handleUpdateTitle = async (newTitle: string) => {
+    if (!currentSession || !newTitle.trim()) return;
+
+    try {
+      const updatedSession = await updateChatSession(currentSession.sessionId, {
+        title: newTitle.trim(),
+      });
+      setCurrentSession(updatedSession);
+      setSessionTitle(updatedSession.title);
+      onSessionChange?.(updatedSession);
+      notify("Session title updated", "success");
+    } catch (error) {
+      console.error("Failed to update title:", error);
+      notify("Failed to update title", "error");
+    }
   };
+
+  const handleShareSession = async () => {
+    if (!currentSession) return;
+
+    try {
+      const result = await shareChatSession(currentSession.sessionId);
+      await navigator.clipboard.writeText(result.shareUrl);
+      notify("Share link copied to clipboard", "success");
+    } catch (error) {
+      console.error("Failed to share session:", error);
+      notify("Failed to share session", "error");
+    }
+  };
+
+  const handleDeleteSession = async () => {
+    if (!currentSession) return;
+    if (!confirm("Are you sure you want to delete this chat session?")) return;
+
+    try {
+      await deleteChatSession(currentSession.sessionId);
+      setCurrentSession(null);
+      setMessages([]);
+      onSessionChange?.(null);
+      notify("Chat session deleted", "success");
+    } catch (error) {
+      console.error("Failed to delete session:", error);
+      notify("Failed to delete session", "error");
+    }
+  };
+
+  const formatTime = (date: Date | string) => {
+    return new Date(date).toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+
+  if (!user) {
+    return (
+      <div className="h-full flex items-center justify-center">
+        <p className="text-gray-400">Please log in to use the chat feature.</p>
+      </div>
+    );
+  }
 
   return (
     <motion.div
-      className="min-h-screen py-8 px-4"
-      variants={containerVariants}
+      className="h-full flex flex-col bg-gradient-to-br from-gray-900 via-gray-800 to-indigo-900"
       initial="hidden"
       animate="visible"
+      variants={containerVariants}
     >
-      <div className="max-w-4xl mx-auto">
-        <motion.div className="text-center mb-8" variants={itemVariants}>
-          <motion.div
-            className="flex items-center justify-center gap-3 mb-4"
-            variants={headerVariants}
-          >
+      {/* Header */}
+      <motion.div
+        className="p-4 border-b border-gray-700 bg-gray-800/50 backdrop-blur"
+        variants={headerVariants}
+      >
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
             <motion.div
-              initial={{ rotate: 0, scale: 1 }}
-              animate={{
-                rotate: [0, 10, -10, 0],
-                scale: [1, 1.1, 1],
-              }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                repeatDelay: 3,
-              }}
+              className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
             >
-              <FiMessageCircle className="text-4xl text-indigo-400" />
+              <FiMessageCircle className="text-white" />
             </motion.div>
-            <motion.h1
-              className="text-4xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent"
-              initial={{ opacity: 0, scale: 0.5 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{
-                duration: 0.8,
-                ease: "easeOut",
-                delay: 0.3,
-              }}
-            >
-              Chat with Shivaay
-            </motion.h1>
-          </motion.div>
-          <motion.div
-            className="flex items-center justify-center gap-2"
-            variants={statusVariants}
-          >
-            {isAIHealthy === null ? (
-              <motion.div
-                className="text-gray-400"
-                animate={{ opacity: [0.5, 1, 0.5] }}
-                transition={{ duration: 1.5, repeat: Infinity }}
-              >
-                Connecting...
-              </motion.div>
-            ) : isAIHealthy ? (
-              <motion.div
-                className="flex items-center gap-2"
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{
-                  type: "spring",
-                  stiffness: 500,
-                  damping: 30,
+            {isEditingTitle ? (
+              <Input
+                value={sessionTitle}
+                onChange={(e) => setSessionTitle(e.target.value)}
+                onBlur={() => {
+                  setIsEditingTitle(false);
+                  handleUpdateTitle(sessionTitle);
                 }}
-              >
-                <motion.div
-                  animate={{ scale: [1, 1.2, 1] }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                >
-                  <FiWifi className="text-green-400" />
-                </motion.div>
-                <span className="text-green-400 font-medium">AI Connected</span>
-              </motion.div>
+                onKeyPress={(e) => {
+                  if (e.key === "Enter") {
+                    setIsEditingTitle(false);
+                    handleUpdateTitle(sessionTitle);
+                  }
+                }}
+                className="text-lg font-bold"
+                autoFocus
+              />
             ) : (
-              <motion.div
-                className="flex items-center gap-2"
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{
-                  type: "spring",
-                  stiffness: 500,
-                  damping: 30,
-                }}
+              <h1
+                className="text-xl font-bold text-white cursor-pointer hover:text-blue-300 transition-colors"
+                onClick={() => setIsEditingTitle(true)}
               >
+                {sessionTitle}
+              </h1>
+            )}
+          </div>
+
+          <div className="flex items-center gap-2">
+            <motion.div
+              className="flex items-center gap-2"
+              variants={statusVariants}
+            >
+              {isAIHealthy === null ? (
                 <motion.div
-                  animate={{ opacity: [1, 0.5, 1] }}
-                  transition={{ duration: 1, repeat: Infinity }}
+                  className="text-gray-400"
+                  animate={{ opacity: [0.5, 1, 0.5] }}
+                  transition={{ duration: 1.5, repeat: Infinity }}
+                >
+                  Connecting...
+                </motion.div>
+              ) : isAIHealthy ? (
+                <motion.div
+                  className="flex items-center gap-2"
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 500,
+                    damping: 30,
+                  }}
+                >
+                  <motion.div
+                    animate={{ scale: [1, 1.2, 1] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                  >
+                    <FiWifi className="text-green-400" />
+                  </motion.div>
+                  <span className="text-green-400 font-medium">
+                    AI Connected
+                  </span>
+                </motion.div>
+              ) : (
+                <motion.div
+                  className="flex items-center gap-2"
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 500,
+                    damping: 30,
+                  }}
                 >
                   <FiWifiOff className="text-red-400" />
+                  <span className="text-red-400 font-medium">
+                    AI Disconnected
+                  </span>
                 </motion.div>
-                <span className="text-red-400 font-medium">
-                  AI Disconnected
-                </span>
-              </motion.div>
-            )}
-          </motion.div>
-        </motion.div>
+              )}
+            </motion.div>
 
-        <motion.div variants={itemVariants}>
-          <Card
-            className="h-[600px] flex flex-col bg-gray-800/30 border-gray-600"
-            elevation={1}
-          >
-            <div className="flex-1 overflow-y-auto p-4 space-y-4">
+            {currentSession && (
+              <div className="flex items-center gap-1">
+                <AnimatedButton
+                  onClick={() => setIsEditingTitle(true)}
+                  variant="secondary"
+                  icon={<FiEdit3 />}
+                  className="text-sm"
+                />
+                <AnimatedButton
+                  onClick={handleShareSession}
+                  variant="secondary"
+                  icon={<FiShare2 />}
+                  className="text-sm"
+                />
+                <AnimatedButton
+                  onClick={handleDeleteSession}
+                  variant="danger"
+                  icon={<FiTrash2 />}
+                  className="text-sm"
+                />
+              </div>
+            )}
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Messages Area */}
+      <motion.div className="flex-1 overflow-hidden" variants={itemVariants}>
+        <Card className="h-full rounded-none border-none">
+          <div className="h-full flex flex-col">
+            <div className="flex-1 overflow-y-auto p-6 space-y-4">
               <AnimatePresence>
                 {messages.map((message) => (
                   <motion.div
                     key={message.id}
-                    initial={{ opacity: 0, y: 20, scale: 0.95 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: -20, scale: 0.95 }}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
                     transition={{
                       duration: 0.4,
                       ease: "easeOut",
@@ -341,7 +492,7 @@ export default function AI() {
                         <p
                           className={`text-xs mt-2 ${
                             message.sender === "user"
-                              ? "text-indigo-200"
+                              ? "text-blue-200"
                               : "text-gray-400"
                           }`}
                         >
@@ -357,18 +508,12 @@ export default function AI() {
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ duration: 0.3 }}
                   className="flex justify-start"
                 >
                   <div className="flex items-start gap-3 max-w-[80%]">
-                    <motion.div
-                      className="w-8 h-8 rounded-full bg-emerald-600 text-white flex items-center justify-center"
-                      animate={{ scale: [1, 1.1, 1] }}
-                      transition={{ duration: 1, repeat: Infinity }}
-                    >
-                      <FiCpu size={16} />
-                    </motion.div>
+                    <div className="w-8 h-8 rounded-full bg-emerald-600 flex items-center justify-center">
+                      <FiCpu size={16} className="text-white" />
+                    </div>
                     <motion.div
                       className="bg-gray-700 text-gray-100 rounded-lg px-4 py-3"
                       animate={{ scale: [1, 1.02, 1] }}
@@ -398,6 +543,7 @@ export default function AI() {
               <div ref={messagesEndRef} />
             </div>
 
+            {/* Input Area */}
             <motion.div
               className="border-t border-gray-600 p-4"
               initial={{ opacity: 0, y: 20 }}
@@ -448,13 +594,16 @@ export default function AI() {
                 </p>
               )}
             </motion.div>
-          </Card>
-        </motion.div>
+          </div>
+        </Card>
+      </motion.div>
 
-        <motion.div
-          className="mt-8 text-center text-gray-300"
-          variants={itemVariants}
-        >
+      {/* Session Info */}
+      <motion.div
+        className="p-4 border-t border-gray-700 bg-gray-800/30"
+        variants={itemVariants}
+      >
+        <div className="text-center text-gray-300">
           <p className="text-sm">
             Shivaay is your AI guide for Uttarakhand tourism. Ask about places
             to visit, cultural insights, travel tips, and more!
@@ -465,8 +614,8 @@ export default function AI() {
               {sessionId}
             </code>
           </p>
-        </motion.div>
-      </div>
+        </div>
+      </motion.div>
     </motion.div>
   );
 }

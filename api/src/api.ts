@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 import morgan from "morgan";
 import authRoutes from "./routes/auth.routes";
 import userRoutes from "./routes/user.routes";
+import chatRoutes from "./routes/chat.routes";
 import { log } from "./utils/logging/logger";
 import env from "./config/env";
 import "./auth/passport";
@@ -77,5 +78,6 @@ app.get("/", (_req: Request, res: Response) => {
 
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/chat", chatRoutes);
 
 export default app;

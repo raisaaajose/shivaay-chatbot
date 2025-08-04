@@ -9,3 +9,4 @@ pinecone
 huggingface-hub
 motor
 pymongo
+aiohttp
