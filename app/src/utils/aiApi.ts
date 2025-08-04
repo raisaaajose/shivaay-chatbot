@@ -3,22 +3,26 @@ import { aiInstance } from "./api";
 interface ChatRequest {
   session_id: string;
   user_message: string;
+  user_id?: string;
 }
 
 /**
  * Send a chat message to the AI backend
  * @param sessionId - Unique session identifier
  * @param userMessage - The user's message
+ * @param userId - Optional user ID for session creation
  * @returns Promise<string> - The AI's response
  */
 export const sendChatMessage = async (
   sessionId: string,
-  userMessage: string
+  userMessage: string,
+  userId?: string
 ): Promise<string> => {
   try {
     const response = await aiInstance.post<string>("/chat", {
       session_id: sessionId,
       user_message: userMessage,
+      user_id: userId,
     } as ChatRequest);
 
     return response.data;

@@ -7,3 +7,6 @@ python-dotenv
 pydantic
 pinecone 
 huggingface-hub
+motor
+pymongo
+aiohttp

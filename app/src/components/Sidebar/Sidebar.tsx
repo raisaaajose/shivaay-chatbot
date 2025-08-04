@@ -3,16 +3,17 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Branding from "./Branding/Branding";
-import { FiShield, FiUser } from "react-icons/fi";
+import { FiShield, FiUser, FiHome } from "react-icons/fi";
 import { useAuth } from "../Auth/AuthProvider/AuthProvider";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { AiFillRobot } from "react-icons/ai";
+import ChatSessionsList from "../Chat/ChatSessionsList/ChatSessionsList";
 
 export default function Sidebar() {
   const { user, loading } = useAuth();
   const [isAdmin, setIsAdmin] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
 
   useEffect(() => {
     if (!user) {
@@ -23,15 +24,20 @@ export default function Sidebar() {
   }, [user]);
 
   const navItems = [
-    { href: "/ai", label: "AI", icon: <AiFillRobot /> },
-
     ...(isAdmin
       ? [{ href: "/admin", label: "Admin", icon: <FiShield />, admin: true }]
       : []),
+    { href: "/", label: "Home", icon: <FiHome /> },
     { href: "/profile", label: "Profile", icon: <FiUser /> },
   ];
 
+  const handleSelectSession = (sessionId: string) => {
+    router.push(`/chat/${sessionId}`);
+  };
+
   if (loading || !user) return null;
+
+  const sidebarWidth = "w-80";
 
   return (
     <>
@@ -43,42 +49,54 @@ export default function Sidebar() {
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: -60, opacity: 0 }}
             transition={{ type: "tween", duration: 0.8, ease: "easeInOut" }}
-            className="hidden md:flex fixed top-0 left-0 z-40 h-full w-52 bg-[#1a1a1a] border-r border-[#333333] shadow-sm flex-col px-4 py-6"
+            className={`hidden md:flex fixed top-0 left-0 z-40 h-full ${sidebarWidth} bg-[#1a1a1a] border-r border-[#333333] shadow-sm flex-col`}
           >
-            <Branding />
-            <nav className="mt-8 flex flex-col space-y-4">
-              {navItems.map(({ href, label, icon, admin }) => {
-                // Allow nested route highlighting
-                const isActive =
-                  href === "/" ? pathname === href : pathname.startsWith(href);
-                return (
-                  <Link
-                    key={label}
-                    href={href}
-                    className={`sidebar-link flex items-center gap-3 px-3 py-2 text-sm rounded-md transition
-                      ${
-                        isActive
-                          ? "bg-gray-700 text-white"
-                          : admin
-                          ? "text-amber-400 hover:bg-amber-500/20 hover:text-white"
-                          : "text-white"
+            <div className="px-4 py-6 border-b border-[#333333]">
+              <Branding />
+              <nav className="mt-8 flex flex-col space-y-4">
+                {navItems.map(({ href, label, icon, admin }) => {
+                  const isActive =
+                    href === "/"
+                      ? pathname === href
+                      : pathname.startsWith(href);
+                  return (
+                    <Link
+                      key={label}
+                      href={href}
+                      className={`sidebar-link flex items-center gap-3 px-3 py-2 text-sm rounded-md transition
+                        ${
+                          isActive
+                            ? "bg-gray-700 text-white"
+                            : admin
+                            ? "text-amber-400 hover:bg-amber-500/20 hover:text-white"
+                            : "text-white"
+                        }
+                        hover:bg-gray-700 hover:text-white
+                      `}
+                      style={
+                        !isActive && !admin
+                          ? { opacity: 0.7 }
+                          : !isActive && admin
+                          ? { opacity: 0.7 }
+                          : undefined
                       }
-                      hover:bg-gray-700 hover:text-white
-                    `}
-                    style={
-                      !isActive && !admin
-                        ? { opacity: 0.7 }
-                        : !isActive && admin
-                        ? { opacity: 0.7 }
-                        : undefined
-                    }
-                  >
-                    <span className="text-lg">{icon}</span>
-                    <span>{label}</span>
-                  </Link>
-                );
-              })}
-            </nav>
+                    >
+                      <span className="text-lg">{icon}</span>
+                      <span>{label}</span>
+                    </Link>
+                  );
+                })}
+              </nav>
+            </div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3, duration: 0.5 }}
+              className="flex-1 overflow-hidden"
+            >
+              <ChatSessionsList onSelectSession={handleSelectSession} />
+            </motion.div>
           </motion.aside>
         )}
       </AnimatePresence>

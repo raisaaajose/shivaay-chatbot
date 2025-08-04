@@ -1,28 +1,112 @@
+from contextlib import asynccontextmanager
 import operator
 from typing import Annotated, Sequence, TypedDict, Dict, List
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import uvicorn
 import os
-import json
+import aiohttp
 from dotenv import load_dotenv
 from pathlib import Path
 from langchain_core.messages import BaseMessage, HumanMessage, AIMessage
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_groq import ChatGroq
 from langgraph.graph import StateGraph, END
-from pinecone_utils import search_top_k 
+from pinecone_utils import search_top_k
+from motor.motor_asyncio import AsyncIOMotorClient
+from datetime import datetime 
 
 
 project_root = Path(__file__).parent.parent
 load_dotenv(project_root / ".env")
 
-# JSON file path for storing sessions
-SESSIONS_FILE = project_root / "sessions.json"
+# MongoDB configuration
+MONGO_URI = os.getenv("MONGO_URI")
+if not MONGO_URI:
+    raise ValueError("MONGO_URI environment variable not set.")
+
+# API configuration
+API_BASE_URL = os.getenv("API_BASE_URL", "http://localhost:5000")
+
+# Initialize MongoDB client
+client = AsyncIOMotorClient(MONGO_URI)
+db = client.shivaay_chatbot
+sessions_collection = db.chat_sessions
 
 class AgentState(TypedDict):
     messages: Annotated[Sequence[BaseMessage], operator.add]
+    context_info: str
+
+# API integration functions
+async def sync_with_api(session_id: str, user_message: str, ai_response: str):
+    """Sync chat messages with the API backend"""
+    try:
+        async with aiohttp.ClientSession() as session:
+            # Send both messages in a batch for better performance
+            messages_data = {
+                "messages": [
+                    {
+                        "id": f"user_{int(datetime.now().timestamp() * 1000)}",
+                        "content": user_message,
+                        "sender": "user",
+                        "timestamp": datetime.now().isoformat()
+                    },
+                    {
+                        "id": f"ai_{int(datetime.now().timestamp() * 1000) + 1}",
+                        "content": ai_response,
+                        "sender": "ai",
+                        "timestamp": datetime.now().isoformat()
+                    }
+                ]
+            }
+            
+            async with session.post(
+                f"{API_BASE_URL}/api/chat/{session_id}/messages/ai/batch",
+                json=messages_data,
+                headers={"Content-Type": "application/json"}
+            ) as response:
+                if response.status != 200:
+                    print(f"Failed to sync messages with API: {response.status}")
+    except Exception as e:
+        print(f"Failed to sync with API: {e}")
+
+async def create_session_in_api(session_id: str, user_id: str, title: str = "New Chat") -> bool:
+    """Create a new session in the API backend"""
+    try:
+        async with aiohttp.ClientSession() as session:
+            session_data = {
+                "sessionId": session_id,
+                "userId": user_id,
+                "title": title
+            }
+            
+            async with session.post(
+                f"{API_BASE_URL}/api/chat/ai/create",
+                json=session_data,
+                headers={"Content-Type": "application/json"}
+            ) as response:
+                return response.status in [200, 201]
+    except Exception as e:
+        print(f"Error creating session in API: {e}")
+        return False
+
+async def get_session_from_api(session_id: str) -> List[Dict]:
+    """Get session from API backend"""
+    try:
+        async with aiohttp.ClientSession() as session:
+            async with session.get(f"{API_BASE_URL}/api/chat/{session_id}") as response:
+                if response.status == 200:
+                    data = await response.json()
+                    if "session" in data and "messages" in data["session"]:
+                        return data["session"]["messages"]
+                elif response.status == 404:
+                    # Session doesn't exist yet, that's fine
+                    return []
+        return []
+    except Exception as e:
+        print(f"Failed to get session from API: {e}")
+        return []
 
 
 llm = ChatGroq(temperature=0, model_name="llama-3.1-8b-instant")
@@ -76,12 +160,29 @@ workflow.add_conditional_edges(
     },
 )
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Startup
+    try:
+        await sessions_collection.create_index("session_id", unique=True)
+        await sessions_collection.create_index("updated_at")
+        print("MongoDB indexes created successfully")
+    except Exception as e:
+        print(f"Error creating indexes: {e}")
+    
+    yield
+    
+    # Shutdown
+    client.close()
+    print("MongoDB connection closed")
+
 app_graph = workflow.compile()
 
 app = FastAPI(
     title="Deep-Shiva Conversational Chatbot API",
     description="A simple API for the Deep-Shiva chatbot using LangChain and LangGraph.",
     version="1.0.0",
+    lifespan=lifespan,
 )
 
 # Get frontend URL from environment variables
@@ -98,32 +199,38 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-def load_sessions() -> Dict[str, List[Dict]]:
+async def load_session(session_id: str) -> List[Dict]:
     """
-    Load sessions from JSON file.
-    Returns a dictionary with session_id as key and list of message dicts as value.
+    Load session messages from MongoDB.
+    Returns a list of message dictionaries.
     """
     try:
-        if SESSIONS_FILE.exists():
-            with open(SESSIONS_FILE, 'r', encoding='utf-8') as f:
-                return json.load(f)
-        return {}
+        session_doc = await sessions_collection.find_one({"session_id": session_id})
+        if session_doc:
+            return session_doc.get("messages", [])
+        return []
     except Exception as e:
-        print(f"Error loading sessions: {e}")
-        return {}
+        print(f"Error loading session {session_id}: {e}")
+        return []
 
-def save_sessions(sessions: Dict[str, List[Dict]]):
+async def save_session(session_id: str, messages: List[Dict]):
     """
-    Save sessions to JSON file.
+    Save session messages to MongoDB.
     """
     try:
-        # Ensure the directory exists
-        SESSIONS_FILE.parent.mkdir(parents=True, exist_ok=True)
-        
-        with open(SESSIONS_FILE, 'w', encoding='utf-8') as f:
-            json.dump(sessions, f, indent=2, ensure_ascii=False)
+        await sessions_collection.update_one(
+            {"session_id": session_id},
+            {
+                "$set": {
+                    "session_id": session_id,
+                    "messages": messages,
+                    "updated_at": datetime.utcnow(),
+                }
+            },
+            upsert=True
+        )
     except Exception as e:
-        print(f"Error saving sessions: {e}")
+        print(f"Error saving session {session_id}: {e}")
 
 def message_to_dict(message: BaseMessage) -> Dict:
     """
@@ -131,7 +238,8 @@ def message_to_dict(message: BaseMessage) -> Dict:
     """
     return {
         "type": message.__class__.__name__,
-        "content": message.content
+        "content": message.content,
+        "timestamp": datetime.utcnow().isoformat()
     }
 
 def dict_to_message(message_dict: Dict) -> BaseMessage:
@@ -152,6 +260,7 @@ def dict_to_message(message_dict: Dict) -> BaseMessage:
 class ChatRequest(BaseModel):
     session_id: str
     user_message: str
+    user_id: str = None  # Optional for existing sessions
 
 @app.post("/chat", response_model=str)
 async def chat_endpoint(request: ChatRequest):
@@ -161,30 +270,41 @@ async def chat_endpoint(request: ChatRequest):
     """
     session_id = request.session_id
     user_message_content = request.user_message
+    user_id = request.user_id
 
-    # Load sessions from JSON file
-    sessions_data = load_sessions()
+    # Try to get session from API first, fallback to MongoDB
+    api_messages = await get_session_from_api(session_id)
+    current_history = []
     
-    if session_id not in sessions_data:
-        sessions_data[session_id] = []
-        print(f"New session created: {session_id}")
+    # If no API messages and this is a new session, try to create it
+    if not api_messages and user_id:
+        await create_session_in_api(session_id, user_id, f"Chat {user_message_content[:30]}...")
     
-    # Convert stored message dicts back to BaseMessage objects
-    current_history = [dict_to_message(msg_dict) for msg_dict in sessions_data[session_id]]
+    if api_messages:
+        # Convert API messages to BaseMessage objects
+        for msg in api_messages:
+            if msg["sender"] == "user":
+                current_history.append(HumanMessage(content=msg["content"]))
+            elif msg["sender"] == "ai":
+                current_history.append(AIMessage(content=msg["content"]))
+    else:
+        # Fallback to MongoDB session
+        session_messages = await load_session(session_id)
+        current_history = [dict_to_message(msg_dict) for msg_dict in session_messages]
+    
+    # Add current user message
     current_history.append(HumanMessage(content=user_message_content))
 
-    
+    # Get context from Pinecone
     context_docs = search_top_k(user_message_content)
     context_str = "\n".join([
         f"{doc['metadata'].get('name', 'N/A')}: {doc['metadata'].get('description', 'N/A')}"
         for doc in context_docs
     ])
-  
 
     final_response_content = "I'm sorry, I couldn't generate a response."
     
     try:
-        
         final_state = await app_graph.ainvoke({"messages": current_history, "context_info": context_str})
         
         if final_state and "messages" in final_state and final_state["messages"]:
@@ -193,11 +313,13 @@ async def chat_endpoint(request: ChatRequest):
                     final_response_content = msg.content
                     break
         
+        # Sync with API backend
+        await sync_with_api(session_id, user_message_content, final_response_content)
+        
+        # Also save to MongoDB as backup
         current_history.append(AIMessage(content=final_response_content))
-
-        # Convert messages back to dicts and save to JSON
-        sessions_data[session_id] = [message_to_dict(msg) for msg in current_history]
-        save_sessions(sessions_data)
+        session_messages_dict = [message_to_dict(msg) for msg in current_history]
+        await save_session(session_id, session_messages_dict)
 
     except Exception as e:
         print(f"Error during chatbot invocation: {e}")
@@ -208,6 +330,38 @@ async def chat_endpoint(request: ChatRequest):
 @app.get("/")
 async def read_root():
     return {"message": "Deep-Shiva Chatbot API is running!"}
+
+@app.get("/sessions/{session_id}")
+async def get_session(session_id: str):
+    """
+    Get session history for a specific session ID.
+    """
+    try:
+        session_doc = await sessions_collection.find_one({"session_id": session_id})
+        if session_doc:
+            return {
+                "session_id": session_id,
+                "messages": session_doc.get("messages", []),
+                "updated_at": session_doc.get("updated_at")
+            }
+        return {"session_id": session_id, "messages": [], "updated_at": None}
+    except Exception as e:
+        print(f"Error retrieving session {session_id}: {e}")
+        return {"error": "Failed to retrieve session"}
+
+@app.delete("/sessions/{session_id}")
+async def delete_session(session_id: str):
+    """
+    Delete a specific session.
+    """
+    try:
+        result = await sessions_collection.delete_one({"session_id": session_id})
+        if result.deleted_count > 0:
+            return {"message": f"Session {session_id} deleted successfully"}
+        return {"message": f"Session {session_id} not found"}
+    except Exception as e:
+        print(f"Error deleting session {session_id}: {e}")
+        return {"error": "Failed to delete session"}
 
 if __name__ == "__main__":
     if "GROQ_API_KEY" not in os.environ:

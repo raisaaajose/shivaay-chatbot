@@ -144,4 +144,3 @@ __pycache__/
 *.egg-info/
 dist/
 build/
-sessions.json

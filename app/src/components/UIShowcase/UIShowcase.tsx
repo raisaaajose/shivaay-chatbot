@@ -24,7 +24,7 @@ export default function UIPage() {
     { value: "two", label: "Option Two" },
   ];
   const { notify } = useNotification();
-  const [loading, setLoading] = React.useState(false);
+  const [loading] = React.useState(false);
   const [modalOpen, setModalOpen] = React.useState(false);
 
   const [selectedOption1, setSelectedOption1] = React.useState("");

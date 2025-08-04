@@ -30,6 +30,35 @@ instance.interceptors.request.use((config) => {
   return config;
 });
 
+// Add response interceptor for error handling
+instance.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    // Enhance error object with better error information
+    if (error.response) {
+      // Server responded with error status
+      const enhancedError = {
+        ...error,
+        message: error.response.data?.message || error.message,
+        status: error.response.status,
+        data: error.response.data,
+      };
+      return Promise.reject(enhancedError);
+    } else if (error.request) {
+      // Network error
+      const enhancedError = {
+        ...error,
+        message: "Network error. Please check your connection.",
+        code: "NETWORK_ERROR",
+      };
+      return Promise.reject(enhancedError);
+    } else {
+      // Other error
+      return Promise.reject(error);
+    }
+  }
+);
+
 // AI instance doesn't need authentication for now, but can be added if needed
 aiInstance.interceptors.request.use((config) => {
   // Add any AI-specific headers or authentication here if needed

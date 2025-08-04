@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 import morgan from "morgan";
 import authRoutes from "./routes/auth.routes";
 import userRoutes from "./routes/user.routes";
+import chatRoutes from "./routes/chat.routes";
 import { log } from "./utils/logging/logger";
 import env from "./config/env";
 import "./auth/passport";
@@ -77,5 +78,42 @@ app.get("/", (_req: Request, res: Response) => {
 
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/chat", chatRoutes);
+
+app.use(
+  (
+    err: any,
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) => {
+    log({
+      type: "error",
+      message: `Global error handler: ${err.message}`,
+      meta: {
+        url: req.url,
+        method: req.method,
+        stack: err.stack,
+        body: req.body,
+      },
+    });
+
+    const statusCode = err.status || err.statusCode || 500;
+    const message = err.message || "Internal server error";
+
+    res.status(statusCode).json({
+      message,
+      error: statusCode >= 500 ? "SERVER_ERROR" : "CLIENT_ERROR",
+      ...(env.NODE_ENV === "development" && { stack: err.stack }),
+    });
+  }
+);
+
+app.use((req: Request, res: Response) => {
+  res.status(404).json({
+    message: "Route not found",
+    error: "NOT_FOUND",
+  });
+});
 
 export default app;
