@@ -5,7 +5,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
 import { motion } from "framer-motion";
-import "highlight.js/styles/github-dark.css"; // Import syntax highlighting theme
+import "highlight.js/styles/github-dark.css";
 
 interface FormattedMessageProps {
   content: string;
@@ -25,14 +25,11 @@ const FormattedMessage: React.FC<FormattedMessageProps> = ({
   sender,
   className = "",
 }) => {
-  // Custom components for markdown rendering
   const components = {
-    // Paragraphs
     p: ({ children }: MarkdownComponentProps) => (
       <p className="mb-2 last:mb-0 leading-relaxed">{children}</p>
     ),
 
-    // Headings
     h1: ({ children }: MarkdownComponentProps) => (
       <h1 className="text-lg font-bold mb-2 mt-3 first:mt-0">{children}</h1>
     ),
@@ -43,7 +40,6 @@ const FormattedMessage: React.FC<FormattedMessageProps> = ({
       <h3 className="text-sm font-semibold mb-2 mt-2 first:mt-0">{children}</h3>
     ),
 
-    // Code blocks
     code: ({ inline, className, children }: MarkdownComponentProps) => {
       if (inline) {
         return (
@@ -79,7 +75,6 @@ const FormattedMessage: React.FC<FormattedMessageProps> = ({
       );
     },
 
-    // Lists
     ul: ({ children }: MarkdownComponentProps) => (
       <ul className="list-disc list-inside mb-2 space-y-1 ml-2">{children}</ul>
     ),
@@ -92,7 +87,6 @@ const FormattedMessage: React.FC<FormattedMessageProps> = ({
       <li className="leading-relaxed">{children}</li>
     ),
 
-    // Links
     a: ({ href, children }: MarkdownComponentProps) => (
       <motion.a
         href={href}
@@ -110,7 +104,6 @@ const FormattedMessage: React.FC<FormattedMessageProps> = ({
       </motion.a>
     ),
 
-    // Blockquotes
     blockquote: ({ children }: MarkdownComponentProps) => (
       <motion.blockquote
         initial={{ opacity: 0, x: -10 }}
@@ -126,7 +119,6 @@ const FormattedMessage: React.FC<FormattedMessageProps> = ({
       </motion.blockquote>
     ),
 
-    // Horizontal rules
     hr: () => (
       <hr
         className={`my-3 border-0 h-px ${
@@ -135,7 +127,6 @@ const FormattedMessage: React.FC<FormattedMessageProps> = ({
       />
     ),
 
-    // Tables
     table: ({ children }: MarkdownComponentProps) => (
       <div className="overflow-x-auto my-3">
         <table
@@ -173,7 +164,6 @@ const FormattedMessage: React.FC<FormattedMessageProps> = ({
       </td>
     ),
 
-    // Strong and emphasis
     strong: ({ children }: MarkdownComponentProps) => (
       <strong className="font-semibold">{children}</strong>
     ),
@@ -182,24 +172,21 @@ const FormattedMessage: React.FC<FormattedMessageProps> = ({
     ),
   };
 
-  // Pre-process content to handle special cases
   const processContent = (text: string): string => {
-    // Convert line breaks to proper markdown
     let processed = text
-      .replace(/\n\n+/g, "\n\n") // Multiple line breaks to double
-      .replace(/(?<!\n)\n(?!\n)/g, "  \n"); // Single line breaks to markdown line breaks
+      .replace(/\n\n+/g, "\n\n")
+      .replace(/(?<!\n)\n(?!\n)/g, "  \n");
 
-    // Auto-detect and format common patterns
     processed = processed
-      // Auto-format numbered lists that aren't already formatted
+
       .replace(/^(\d+)\.\s+/gm, "$1. ")
-      // Auto-format bullet points
+
       .replace(/^[•\-\*]\s+/gm, "- ")
-      // Auto-format inline code (single backticks)
+
       .replace(/`([^`]+)`/g, "`$1`")
-      // Auto-format bold text
+
       .replace(/\*\*([^*]+)\*\*/g, "**$1**")
-      // Auto-format italic text
+
       .replace(/\*([^*]+)\*/g, "*$1*");
 
     return processed;
