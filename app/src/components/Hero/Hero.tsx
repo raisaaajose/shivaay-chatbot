@@ -181,7 +181,7 @@ export default function Hero() {
             transition={{ type: "spring", stiffness: 400, damping: 30 }}
           >
             <Link
-              href="/ai"
+              href="/chat"
               className="inline-flex items-center px-8 py-4 text-lg font-semibold text-white bg-gradient-to-r from-blue-600 to-purple-600 rounded-full hover:from-blue-700 hover:to-purple-700 transform transition-all duration-200 shadow-lg hover:shadow-xl"
             >
               Get Started

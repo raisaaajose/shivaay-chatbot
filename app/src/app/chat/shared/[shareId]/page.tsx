@@ -198,7 +198,7 @@ export default function SharedChatPage() {
             </div>
 
             {/* Footer */}
-            <div className="border-t border-gray-600 p-4 bg-gray-800/30">
+            <div className="border-t border-gray-600 p-4">
               <div className="text-center text-gray-400">
                 <p className="text-sm">
                   This is a shared view of a chat session with Shivaay AI.

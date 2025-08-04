@@ -5,27 +5,15 @@ import { motion } from "framer-motion";
 import ChatInterface from "@/components/Chat/ChatInterface/ChatInterface";
 import PageHeading from "@/components/ui/PageHeading/PageHeading";
 import { FiMessageSquare } from "react-icons/fi";
-import { useParams, useRouter } from "next/navigation";
-import AnimatedButton from "@/components/ui/AnimatedButton/AnimatedButton";
-import { FiArrowLeft } from "react-icons/fi";
+import { useParams } from "next/navigation";
 
 export default function ChatSessionPage() {
   const params = useParams();
-  const router = useRouter();
   const sessionId = params?.sessionId as string;
 
   return (
     <main className="h-full flex flex-col">
       <div className="flex items-center gap-4 mb-6">
-        <AnimatedButton
-          onClick={() => router.push("/chat")}
-          variant="secondary"
-          icon={<FiArrowLeft />}
-          className="text-sm"
-        >
-          Back to Chats
-        </AnimatedButton>
-
         <PageHeading
           title="Chat Session"
           subtitle="Continue your conversation with Shivaay"

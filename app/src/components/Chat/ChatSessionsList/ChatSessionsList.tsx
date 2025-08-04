@@ -51,6 +51,10 @@ export default function ChatSessionsList({
     session: ChatSession;
     shareUrl: string;
   } | null>(null);
+  const [deleteModal, setDeleteModal] = useState<{
+    sessionId: string;
+    title: string;
+  } | null>(null);
 
   useEffect(() => {
     const loadSessionsOnMount = async () => {
@@ -106,15 +110,29 @@ export default function ChatSessionsList({
   };
 
   const handleDeleteSession = async (sessionId: string) => {
-    if (!confirm("Are you sure you want to delete this chat session?")) return;
+    const session = sessions.find((s) => s.sessionId === sessionId);
+    if (!session) return;
+
+    setDeleteModal({
+      sessionId,
+      title: session.title || "Untitled Chat",
+    });
+  };
+
+  const confirmDeleteSession = async () => {
+    if (!deleteModal) return;
 
     try {
-      await deleteChatSession(sessionId);
-      setSessions((prev) => prev.filter((s) => s.sessionId !== sessionId));
+      await deleteChatSession(deleteModal.sessionId);
+      setSessions((prev) =>
+        prev.filter((s) => s.sessionId !== deleteModal.sessionId)
+      );
       notify("Chat session deleted", "success");
     } catch (error) {
       console.error("Failed to delete session:", error);
       notify("Failed to delete session", "error");
+    } finally {
+      setDeleteModal(null);
     }
   };
 
@@ -395,6 +413,35 @@ export default function ChatSessionsList({
             This session is now publicly accessible. You can remove sharing at
             any time.
           </p>
+        </div>
+      </Modal>
+
+      {/* Delete Confirmation Modal */}
+      <Modal
+        open={!!deleteModal}
+        onClose={() => setDeleteModal(null)}
+        title="Delete Chat Session"
+      >
+        <div className="space-y-4">
+          <p className="text-gray-300">
+            Are you sure you want to delete the chat session &ldquo;
+            {deleteModal?.title}&rdquo;?
+          </p>
+          <p className="text-sm text-gray-400">
+            This action cannot be undone. All messages in this session will be
+            permanently deleted.
+          </p>
+          <div className="flex gap-2 justify-end">
+            <AnimatedButton
+              onClick={() => setDeleteModal(null)}
+              variant="secondary"
+            >
+              Cancel
+            </AnimatedButton>
+            <AnimatedButton onClick={confirmDeleteSession} variant="danger">
+              Delete Session
+            </AnimatedButton>
+          </div>
         </div>
       </Modal>
     </div>

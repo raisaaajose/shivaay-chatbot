@@ -19,6 +19,7 @@ import {
 import Card from "@/components/ui/Card/Card";
 import Input from "@/components/ui/Input/Input";
 import AnimatedButton from "@/components/ui/AnimatedButton/AnimatedButton";
+import Modal from "@/components/ui/Modal/Modal";
 import useNotification from "@/components/ui/Notification/Notification";
 import {
   FiSend,
@@ -55,6 +56,7 @@ export default function ChatInterface({
   const [isAIHealthy, setIsAIHealthy] = useState<boolean | null>(null);
   const [sessionTitle, setSessionTitle] = useState("New Chat");
   const [isEditingTitle, setIsEditingTitle] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Animation variants
@@ -259,7 +261,11 @@ export default function ChatInterface({
 
   const handleDeleteSession = async () => {
     if (!currentSession) return;
-    if (!confirm("Are you sure you want to delete this chat session?")) return;
+    setShowDeleteModal(true);
+  };
+
+  const confirmDeleteSession = async () => {
+    if (!currentSession) return;
 
     try {
       await deleteChatSession(currentSession.sessionId);
@@ -270,6 +276,8 @@ export default function ChatInterface({
     } catch (error) {
       console.error("Failed to delete session:", error);
       notify("Failed to delete session", "error");
+    } finally {
+      setShowDeleteModal(false);
     }
   };
 
@@ -569,7 +577,7 @@ export default function ChatInterface({
                   onClick={handleSendMessage}
                   disabled={!inputMessage.trim() || isLoading || !isAIHealthy}
                   variant="primary"
-                  className="px-4 py-2"
+                  className="px-4 py-2 self-center"
                   icon={
                     <motion.div
                       animate={{ x: [0, 3, 0] }}
@@ -616,6 +624,34 @@ export default function ChatInterface({
           </p>
         </div>
       </motion.div>
+
+      {/* Delete Confirmation Modal */}
+      <Modal
+        open={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        title="Delete Chat Session"
+      >
+        <div className="space-y-4">
+          <p className="text-gray-300">
+            Are you sure you want to delete this chat session?
+          </p>
+          <p className="text-sm text-gray-400">
+            This action cannot be undone. All messages in this session will be
+            permanently deleted.
+          </p>
+          <div className="flex gap-2 justify-end">
+            <AnimatedButton
+              onClick={() => setShowDeleteModal(false)}
+              variant="secondary"
+            >
+              Cancel
+            </AnimatedButton>
+            <AnimatedButton onClick={confirmDeleteSession} variant="danger">
+              Delete Session
+            </AnimatedButton>
+          </div>
+        </div>
+      </Modal>
     </motion.div>
   );
 }

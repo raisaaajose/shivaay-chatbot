@@ -51,12 +51,10 @@ export default function Sidebar() {
             transition={{ type: "tween", duration: 0.8, ease: "easeInOut" }}
             className={`hidden md:flex fixed top-0 left-0 z-40 h-full ${sidebarWidth} bg-[#1a1a1a] border-r border-[#333333] shadow-sm flex-col`}
           >
-            {/* Branding and Navigation */}
             <div className="px-4 py-6 border-b border-[#333333]">
               <Branding />
               <nav className="mt-8 flex flex-col space-y-4">
                 {navItems.map(({ href, label, icon, admin }) => {
-                  // Allow nested route highlighting
                   const isActive =
                     href === "/"
                       ? pathname === href
@@ -91,12 +89,6 @@ export default function Sidebar() {
               </nav>
             </div>
 
-            {/* Chats Section */}
-            <div className="px-4 py-4 border-b border-[#333333]">
-              <h3 className="text-white text-sm font-semibold mb-4">Chats</h3>
-            </div>
-
-            {/* Chat Sessions */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
