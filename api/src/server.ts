@@ -7,8 +7,13 @@ const PORT = 5000;
 
 async function startServer() {
   try {
-    await mongoose.connect(env.MONGO_URI!);
-    log({ type: "success", message: "MongoDB connected" });
+    await mongoose.connect(env.MONGO_URI!, {
+      dbName: "shivaay_chatbot",
+    });
+    log({
+      type: "success",
+      message: "MongoDB connected to shivaay_chatbot database",
+    });
 
     api.listen(PORT, () => {
       log({ type: "success", message: `Server running on port ${PORT}` });
