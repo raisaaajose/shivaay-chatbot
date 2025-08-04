@@ -80,7 +80,6 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/chat", chatRoutes);
 
-// Global error handler
 app.use(
   (
     err: any,
@@ -99,7 +98,6 @@ app.use(
       },
     });
 
-    // Default error response
     const statusCode = err.status || err.statusCode || 500;
     const message = err.message || "Internal server error";
 
@@ -111,7 +109,6 @@ app.use(
   }
 );
 
-// 404 handler for unmatched routes
 app.use((req: Request, res: Response) => {
   res.status(404).json({
     message: "Route not found",

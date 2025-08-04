@@ -9,7 +9,6 @@ import { FiMessageSquare } from "react-icons/fi";
 export default function ChatPage() {
   return (
     <main className="h-full flex flex-col">
-      {/* Page Header */}
       <div className="mb-4">
         <PageHeading
           title="AI Chat"
@@ -18,7 +17,6 @@ export default function ChatPage() {
         />
       </div>
 
-      {/* Chat Interface */}
       <motion.div
         className="flex-1 min-h-0"
         initial={{ opacity: 0, y: 20 }}

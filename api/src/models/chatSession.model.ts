@@ -24,7 +24,6 @@ const chatSessionSchema = new Schema<IChatSession & Document>(
   { timestamps: true }
 );
 
-// Index for faster queries
 chatSessionSchema.index({ userId: 1, lastActivity: -1 });
 chatSessionSchema.index({ shareId: 1 });
 chatSessionSchema.index({ sessionId: 1 });

@@ -58,12 +58,12 @@ export default function ChatSessionsList({
 
   useEffect(() => {
     const loadSessionsOnMount = async () => {
-      if (!user) return; // Don't load if no user
+      if (!user) return;
 
       try {
         setLoading(true);
         const result = await getChatSessions();
-        // Ensure sessions have proper structure with messages array
+
         const sessionsWithDefaults = (result.sessions || []).map((session) => ({
           ...session,
           messages: session.messages || [],
@@ -72,7 +72,6 @@ export default function ChatSessionsList({
       } catch (error: unknown) {
         console.error("Failed to load chat sessions:", error);
 
-        // Handle specific error cases
         const errorObj = error as { response?: { status?: number } };
         if (errorObj?.response?.status === 401) {
           notify("Authentication required to load chat sessions", "error");
@@ -84,7 +83,7 @@ export default function ChatSessionsList({
         } else {
           notify("Failed to load chat sessions", "error");
         }
-        setSessions([]); // Set empty array on error
+        setSessions([]);
       } finally {
         setLoading(false);
       }
@@ -101,7 +100,6 @@ export default function ChatSessionsList({
         title: "New Chat",
       });
 
-      // Ensure the new session has a messages array
       const sessionWithDefaults = {
         ...newSession,
         messages: newSession.messages || [],
@@ -143,11 +141,10 @@ export default function ChatSessionsList({
     } catch (error: unknown) {
       console.error("Failed to delete session:", error);
 
-      // Handle specific error cases
       const errorObj = error as { response?: { status?: number } };
       if (errorObj?.response?.status === 404) {
         notify("Chat session not found or already deleted", "error");
-        // Remove from local state even if backend says not found
+
         setSessions((prev) =>
           prev.filter((s) => s.sessionId !== deleteModal.sessionId)
         );
@@ -169,7 +166,6 @@ export default function ChatSessionsList({
     } catch (error: unknown) {
       console.error("Failed to share session:", error);
 
-      // Handle specific error cases
       const errorObj = error as { response?: { status?: number } };
       if (errorObj?.response?.status === 404) {
         notify("Chat session not found or no longer available", "error");
@@ -195,14 +191,13 @@ export default function ChatSessionsList({
     } catch (error: unknown) {
       console.error("Failed to unshare session:", error);
 
-      // Handle specific error cases
       const errorObj = error as { response?: { status?: number } };
       if (errorObj?.response?.status === 404) {
         notify(
           "Chat session not found, but removing share status locally",
           "warning"
         );
-        // Still update the local state since the session might not exist on server
+
         setSessions((prev) =>
           prev.map((s) =>
             s.sessionId === session.sessionId
@@ -238,7 +233,6 @@ export default function ChatSessionsList({
     } catch (error: unknown) {
       console.error("Failed to update session:", error);
 
-      // Handle specific error cases
       const errorObj = error as { response?: { status?: number } };
       if (errorObj?.response?.status === 404) {
         notify("Chat session not found or no longer available", "error");
@@ -290,7 +284,6 @@ export default function ChatSessionsList({
 
   return (
     <div className="h-full flex flex-col bg-transparent">
-      {/* Search and New Chat */}
       <div className="px-4 pb-3">
         <div className="flex items-center gap-2 mb-3">
           <Input
@@ -309,7 +302,6 @@ export default function ChatSessionsList({
         </div>
       </div>
 
-      {/* Sessions List */}
       <div className="flex-1 overflow-y-auto px-4 space-y-2">
         {loading ? (
           <div className="text-center py-4 text-gray-400 text-xs">
@@ -408,7 +400,6 @@ export default function ChatSessionsList({
         )}
       </div>
 
-      {/* Edit Title Modal */}
       <Modal
         open={!!editingSession}
         onClose={() => {
@@ -448,7 +439,6 @@ export default function ChatSessionsList({
         </div>
       </Modal>
 
-      {/* Share Modal */}
       <Modal
         open={!!shareModal}
         onClose={() => setShareModal(null)}
@@ -479,7 +469,6 @@ export default function ChatSessionsList({
         </div>
       </Modal>
 
-      {/* Delete Confirmation Modal */}
       <Modal
         open={!!deleteModal}
         onClose={() => setDeleteModal(null)}

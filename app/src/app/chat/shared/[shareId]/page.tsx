@@ -30,7 +30,6 @@ export default function SharedChatPage() {
 
   useEffect(() => {
     const loadSharedSession = async () => {
-      // Validate shareId format
       if (
         !shareId ||
         typeof shareId !== "string" ||
@@ -45,7 +44,6 @@ export default function SharedChatPage() {
         return;
       }
 
-      // Check for obviously invalid shareId patterns
       if (
         shareId.length < 8 ||
         shareId.includes(" ") ||
@@ -65,7 +63,6 @@ export default function SharedChatPage() {
         setError(null);
         const sharedSession = await getSharedChatSession(shareId);
 
-        // Additional validation for the returned session
         if (!sharedSession || !sharedSession.sessionId) {
           setError({
             type: "not_found",
@@ -79,7 +76,6 @@ export default function SharedChatPage() {
       } catch (err: unknown) {
         console.error("Failed to load shared session:", err);
 
-        // Handle different types of errors with more specific detection
         const errorObj = err as {
           response?: {
             status?: number;
@@ -92,7 +88,6 @@ export default function SharedChatPage() {
           message?: string;
         };
 
-        // Handle specific API error responses
         if (errorObj.response?.data?.error) {
           switch (errorObj.response.data.error) {
             case "INVALID_SHARE_ID":
@@ -136,9 +131,7 @@ export default function SharedChatPage() {
                   "An unexpected error occurred while loading the chat session.",
               });
           }
-        }
-        // Handle HTTP status codes
-        else if (errorObj.response?.status) {
+        } else if (errorObj.response?.status) {
           if (errorObj.response.status === 400) {
             setError({
               type: "invalid_id",
@@ -168,9 +161,7 @@ export default function SharedChatPage() {
                 "An unexpected error occurred while loading the chat session.",
             });
           }
-        }
-        // Handle network and other errors
-        else if (
+        } else if (
           errorObj.code === "NETWORK_ERROR" ||
           errorObj.message?.includes("network") ||
           errorObj.message?.includes("ERR_NETWORK") ||
@@ -363,7 +354,6 @@ export default function SharedChatPage() {
       >
         <Card className="h-full rounded-lg border border-gray-700">
           <div className="h-full flex flex-col">
-            {/* Messages Area */}
             <div className="flex-1 overflow-y-auto p-6 space-y-4">
               {!session.messages || session.messages.length === 0 ? (
                 <div className="text-center py-8 text-gray-400">
@@ -380,7 +370,7 @@ export default function SharedChatPage() {
                   .filter(
                     (message: Message) =>
                       message && message.id && message.content
-                  ) // Filter out invalid messages
+                  )
                   .map((message: Message) => (
                     <motion.div
                       key={message.id}
@@ -440,7 +430,6 @@ export default function SharedChatPage() {
               )}
             </div>
 
-            {/* Footer */}
             <div className="border-t border-gray-600 p-4">
               <div className="text-center text-gray-400">
                 <p className="text-sm">

@@ -59,7 +59,6 @@ export default function ChatInterface({
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Animation variants
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
@@ -107,22 +106,18 @@ export default function ChatInterface({
     },
   };
 
-  // Initialize session and check AI health
   useEffect(() => {
     const initSession = async () => {
       const newSessionId = propSessionId || generateSessionId();
       setSessionId(newSessionId);
 
-      // Check AI backend health
       const healthy = await checkAIHealth();
       setIsAIHealthy(healthy);
 
       if (propSessionId) {
-        // Load existing session
         try {
           const session = await getChatSession(propSessionId);
 
-          // Validate session structure
           if (!session || !session.sessionId) {
             notify("Chat session data is corrupted or invalid", "error");
             return;
@@ -135,7 +130,6 @@ export default function ChatInterface({
         } catch (error: unknown) {
           console.error("Failed to load session:", error);
 
-          // Handle specific error cases
           const errorObj = error as { response?: { status?: number } };
           if (errorObj?.response?.status === 404) {
             notify("Chat session not found or no longer available", "error");
@@ -151,7 +145,6 @@ export default function ChatInterface({
           }
         }
       } else {
-        // Add welcome message for new sessions
         if (healthy) {
           setMessages([
             {
@@ -169,7 +162,6 @@ export default function ChatInterface({
     initSession();
   }, [propSessionId, notify, onSessionChange]);
 
-  // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
@@ -189,7 +181,6 @@ export default function ChatInterface({
     setIsLoading(true);
 
     try {
-      // Create session if it doesn't exist
       let session = currentSession;
       if (!session) {
         const title =
@@ -204,7 +195,6 @@ export default function ChatInterface({
         onSessionChange?.(session);
       }
 
-      // Get AI response
       const aiResponse = await sendChatMessage(
         sessionId,
         userMessage.content,
@@ -220,7 +210,6 @@ export default function ChatInterface({
 
       setMessages((prev) => [...prev, aiMessage]);
 
-      // Update session with new messages
       if (session) {
         await addMessage(session.sessionId, userMessage);
         await addMessage(session.sessionId, aiMessage);
@@ -324,7 +313,6 @@ export default function ChatInterface({
       animate="visible"
       variants={containerVariants}
     >
-      {/* Header */}
       <motion.div
         className="p-4 border-b border-gray-700 bg-gray-800/50 backdrop-blur"
         variants={headerVariants}
@@ -444,7 +432,6 @@ export default function ChatInterface({
         </div>
       </motion.div>
 
-      {/* Messages Area */}
       <motion.div className="flex-1 overflow-hidden" variants={itemVariants}>
         <Card className="h-full rounded-none border-none">
           <div className="h-full flex flex-col">
@@ -572,7 +559,6 @@ export default function ChatInterface({
               <div ref={messagesEndRef} />
             </div>
 
-            {/* Input Area */}
             <motion.div
               className="border-t border-gray-600 p-4"
               initial={{ opacity: 0, y: 20 }}
@@ -627,7 +613,6 @@ export default function ChatInterface({
         </Card>
       </motion.div>
 
-      {/* Session Info */}
       <motion.div
         className="p-4 border-t border-gray-700 bg-gray-800/30"
         variants={itemVariants}
@@ -646,7 +631,6 @@ export default function ChatInterface({
         </div>
       </motion.div>
 
-      {/* Delete Confirmation Modal */}
       <Modal
         open={showDeleteModal}
         onClose={() => setShowDeleteModal(false)}
