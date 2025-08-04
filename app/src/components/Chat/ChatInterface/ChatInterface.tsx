@@ -32,6 +32,8 @@ import {
   FiTrash2,
 } from "react-icons/fi";
 import { BotIcon } from "@/components/Icons/BotIcon";
+
+import FormattedMessage from "../FormattedMessage/FormattedMessage";
 import type { Message, ChatSession } from "@/types/Chat/chat.types";
 
 interface ChatInterfaceProps {
@@ -502,9 +504,10 @@ export default function ChatInterface({
                           transition: { duration: 0.2 },
                         }}
                       >
-                        <p className="text-sm md:text-base leading-relaxed">
-                          {message.content}
-                        </p>
+                        <FormattedMessage
+                          content={message.content}
+                          sender={message.sender}
+                        />
                         <p
                           className={`text-xs mt-2 ${
                             message.sender === "user"
