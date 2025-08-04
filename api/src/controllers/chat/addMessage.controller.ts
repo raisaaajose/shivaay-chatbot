@@ -35,11 +35,9 @@ const addMessage = async (req: Request, res: Response, next: NextFunction) => {
         .json(formatNotification("Chat session not found", "error"));
     }
 
-    // Add message to session
     session.messages.push(message);
     session.lastActivity = new Date();
 
-    // Update title if it's the first user message and title is still "New Chat"
     if (
       session.title === "New Chat" &&
       message.sender === "user" &&
@@ -53,9 +51,15 @@ const addMessage = async (req: Request, res: Response, next: NextFunction) => {
     await session.save();
 
     log({ type: "success", message: `Message added to session: ${sessionId}` });
+
+    const sessionWithCount = {
+      ...session.toObject(),
+      messageCount: session.messages ? session.messages.length : 0,
+    };
+
     res.json({
       ...formatNotification("Message added successfully", "success"),
-      session,
+      session: sessionWithCount,
     });
   } catch (err) {
     log({ type: "error", message: "Failed to add message", meta: err });

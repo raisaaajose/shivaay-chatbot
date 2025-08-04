@@ -28,16 +28,39 @@ const getChatSessions = async (
       .select("sessionId title lastActivity createdAt isShared shareId")
       .sort({ lastActivity: -1 })
       .limit(limit)
-      .skip(skip);
+      .skip(skip)
+      .lean();
+
+    // Get message counts using aggregation for better performance
+    const sessionIds = sessions.map((session) => session.sessionId);
+    const messageCounts = await ChatSession.aggregate([
+      { $match: { sessionId: { $in: sessionIds } } },
+      {
+        $project: {
+          sessionId: 1,
+          messageCount: { $size: "$messages" },
+        },
+      },
+    ]);
+
+    const messageCountMap = new Map(
+      messageCounts.map((item) => [item.sessionId, item.messageCount])
+    );
+
+    const sessionsWithCount = sessions.map((session) => ({
+      ...session,
+      messageCount: messageCountMap.get(session.sessionId) || 0,
+      messages: [], // Don't send full messages in list view for performance
+    }));
 
     const total = await ChatSession.countDocuments({ userId: user._id });
 
     log({
       type: "info",
-      message: `Retrieved ${sessions.length} chat sessions for user ${user._id}`,
+      message: `Retrieved ${sessionsWithCount.length} chat sessions for user ${user._id}`,
     });
     res.json({
-      sessions,
+      sessions: sessionsWithCount,
       pagination: {
         page,
         limit,

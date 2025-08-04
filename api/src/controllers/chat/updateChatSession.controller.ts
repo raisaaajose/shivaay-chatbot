@@ -56,9 +56,16 @@ const updateChatSession = async (
     await session.save();
 
     log({ type: "success", message: `Chat session updated: ${sessionId}` });
+
+    // Add message count to the response
+    const sessionWithCount = {
+      ...session.toObject(),
+      messageCount: session.messages ? session.messages.length : 0,
+    };
+
     res.json({
       ...formatNotification("Chat session updated successfully", "success"),
-      session,
+      session: sessionWithCount,
     });
   } catch (err) {
     log({ type: "error", message: "Failed to update chat session", meta: err });

@@ -58,8 +58,14 @@ const addMessagesBatchForAI = async (
       message: `Added ${messages.length} messages to session: ${sessionId} via AI`,
     });
 
+    // Add message count to the response
+    const sessionWithCount = {
+      ...chatSession.toObject(),
+      messageCount: chatSession.messages ? chatSession.messages.length : 0,
+    };
+
     res.json({
-      session: chatSession,
+      session: sessionWithCount,
       ...formatNotification(
         `Added ${messages.length} messages successfully`,
         "success"

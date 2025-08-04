@@ -46,8 +46,15 @@ const shareChatSession = async (
     await chatSession.save();
 
     log({ type: "success", message: `Chat session shared: ${sessionId}` });
+
+    // Add message count to the response
+    const sessionWithCount = {
+      ...chatSession.toObject(),
+      messageCount: chatSession.messages ? chatSession.messages.length : 0,
+    };
+
     res.json({
-      session: chatSession,
+      session: sessionWithCount,
       shareUrl: `${process.env.FRONTEND_URL}/chat/shared/${chatSession.shareId}`,
       ...formatNotification("Chat session shared successfully", "success"),
     });

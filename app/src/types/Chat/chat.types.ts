@@ -11,6 +11,7 @@ export interface ChatSession {
   userId: string;
   title: string;
   messages: Message[];
+  messageCount?: number;
   isShared: boolean;
   shareId?: string;
   lastActivity: Date;

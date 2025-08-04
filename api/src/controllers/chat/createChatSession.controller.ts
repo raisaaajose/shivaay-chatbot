@@ -54,9 +54,16 @@ const createChatSession = async (
     await chatSession.save();
 
     log({ type: "success", message: `Chat session created: ${sessionId}` });
+
+    // Add message count to the response
+    const sessionWithCount = {
+      ...chatSession.toObject(),
+      messageCount: chatSession.messages ? chatSession.messages.length : 0,
+    };
+
     res.status(201).json({
       ...formatNotification("Chat session created successfully", "success"),
-      session: chatSession,
+      session: sessionWithCount,
     });
   } catch (err) {
     log({ type: "error", message: "Failed to create chat session", meta: err });

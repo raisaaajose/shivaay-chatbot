@@ -77,7 +77,14 @@ const getChatSession = async (
     }
 
     log({ type: "info", message: `Retrieved chat session: ${sessionId}` });
-    res.json({ session });
+
+    // Add message count to the response
+    const sessionWithCount = {
+      ...session.toObject(),
+      messageCount: session.messages ? session.messages.length : 0,
+    };
+
+    res.json({ session: sessionWithCount });
   } catch (err) {
     log({ type: "error", message: "Failed to get chat session", meta: err });
     next(err);

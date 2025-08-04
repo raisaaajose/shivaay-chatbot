@@ -64,10 +64,12 @@ export default function ChatSessionsList({
         setLoading(true);
         const result = await getChatSessions();
 
-        const sessionsWithDefaults = (result.sessions || []).map((session) => ({
-          ...session,
-          messages: session.messages || [],
-        }));
+        const sessionsWithDefaults = (result.sessions || []).map((session) =>
+          ensureMessageCount({
+            ...session,
+            messages: session.messages || [],
+          })
+        );
         setSessions(sessionsWithDefaults);
       } catch (error: unknown) {
         console.error("Failed to load chat sessions:", error);
@@ -100,10 +102,10 @@ export default function ChatSessionsList({
         title: "New Chat",
       });
 
-      const sessionWithDefaults = {
+      const sessionWithDefaults = ensureMessageCount({
         ...newSession,
         messages: newSession.messages || [],
-      };
+      });
 
       setSessions((prev) => [sessionWithDefaults, ...prev]);
       notify("New chat session created", "success");
@@ -223,7 +225,9 @@ export default function ChatSessionsList({
 
       setSessions((prev) =>
         prev.map((s) =>
-          s.sessionId === editingSession.sessionId ? updatedSession : s
+          s.sessionId === editingSession.sessionId
+            ? ensureMessageCount(updatedSession)
+            : s
         )
       );
 
@@ -258,6 +262,24 @@ export default function ChatSessionsList({
         msg.content?.toLowerCase().includes(searchQuery.toLowerCase())
       )
   );
+
+  const getMessageCount = (session: ChatSession): number => {
+    if (typeof session.messageCount === "number") {
+      return session.messageCount;
+    }
+
+    return (session.messages || []).length;
+  };
+
+  const ensureMessageCount = (session: ChatSession): ChatSession => {
+    return {
+      ...session,
+      messageCount:
+        session.messageCount !== undefined
+          ? session.messageCount
+          : (session.messages || []).length,
+    };
+  };
 
   const formatDate = (date: Date | string) => {
     const d = new Date(date);
@@ -344,7 +366,8 @@ export default function ChatSessionsList({
                       )}
                     </div>
                     <p className="text-xs text-gray-500 ml-4">
-                      {(session.messages || []).length} msg •{" "}
+                      {getMessageCount(session)} message
+                      {getMessageCount(session) !== 1 ? "s" : ""} •{" "}
                       {formatDate(session.lastActivity)}
                     </p>
                   </div>

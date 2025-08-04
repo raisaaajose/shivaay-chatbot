@@ -62,9 +62,16 @@ const createChatSessionForAI = async (
       type: "success",
       message: `Chat session created by AI: ${sessionId}`,
     });
+
+    // Add message count to the response
+    const sessionWithCount = {
+      ...chatSession.toObject(),
+      messageCount: chatSession.messages ? chatSession.messages.length : 0,
+    };
+
     res.status(201).json({
       ...formatNotification("Chat session created successfully", "success"),
-      session: chatSession,
+      session: sessionWithCount,
     });
   } catch (err) {
     log({

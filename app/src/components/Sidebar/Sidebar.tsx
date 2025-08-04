@@ -37,7 +37,6 @@ export default function Sidebar() {
 
   if (loading || !user) return null;
 
-  // Always use wider sidebar since we're showing chats
   const sidebarWidth = "w-80";
 
   return (

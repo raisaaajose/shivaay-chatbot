@@ -41,8 +41,15 @@ const unshareChatSession = async (
     await chatSession.save();
 
     log({ type: "success", message: `Chat session unshared: ${sessionId}` });
+
+    // Add message count to the response
+    const sessionWithCount = {
+      ...chatSession.toObject(),
+      messageCount: chatSession.messages ? chatSession.messages.length : 0,
+    };
+
     res.json({
-      session: chatSession,
+      session: sessionWithCount,
       ...formatNotification("Chat session unshared successfully", "success"),
     });
   } catch (error) {

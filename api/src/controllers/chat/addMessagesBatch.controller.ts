@@ -19,7 +19,6 @@ const addMessagesBatch = async (
         .json(formatNotification("Messages array is required", "error"));
     }
 
-    // Validate message structure
     for (const message of messages) {
       if (
         !message.id ||
@@ -42,7 +41,6 @@ const addMessagesBatch = async (
         .json(formatNotification("Chat session not found", "error"));
     }
 
-    // Add all messages
     chatSession.messages.push(...messages);
     chatSession.lastActivity = new Date();
 
@@ -53,8 +51,13 @@ const addMessagesBatch = async (
       message: `Added ${messages.length} messages to session: ${sessionId}`,
     });
 
+    const sessionWithCount = {
+      ...chatSession.toObject(),
+      messageCount: chatSession.messages ? chatSession.messages.length : 0,
+    };
+
     res.json({
-      session: chatSession,
+      session: sessionWithCount,
       ...formatNotification(
         `Added ${messages.length} messages successfully`,
         "success"
