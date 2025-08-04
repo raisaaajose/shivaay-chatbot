@@ -24,7 +24,6 @@ import useNotification from "@/components/ui/Notification/Notification";
 import {
   FiSend,
   FiMessageCircle,
-  FiCpu,
   FiUser,
   FiWifi,
   FiWifiOff,
@@ -32,6 +31,7 @@ import {
   FiEdit3,
   FiTrash2,
 } from "react-icons/fi";
+import { BotIcon } from "@/components/Icons/BotIcon";
 import type { Message, ChatSession } from "@/types/Chat/chat.types";
 
 interface ChatInterfaceProps {
@@ -464,7 +464,7 @@ export default function ChatInterface({
                         className={`w-8 h-8 rounded-full flex items-center justify-center ${
                           message.sender === "user"
                             ? "bg-indigo-500 text-white"
-                            : "bg-emerald-600 text-white"
+                            : "text-white"
                         }`}
                         initial={{ scale: 0, rotate: -180 }}
                         animate={{ scale: 1, rotate: 0 }}
@@ -479,7 +479,7 @@ export default function ChatInterface({
                         {message.sender === "user" ? (
                           <FiUser size={16} />
                         ) : (
-                          <FiCpu size={16} />
+                          <BotIcon size={16} />
                         )}
                       </motion.div>
 
@@ -528,7 +528,7 @@ export default function ChatInterface({
                 >
                   <div className="flex items-start gap-3 max-w-[80%]">
                     <div className="w-8 h-8 rounded-full bg-emerald-600 flex items-center justify-center">
-                      <FiCpu size={16} className="text-white" />
+                      <BotIcon size={16} />
                     </div>
                     <motion.div
                       className="bg-gray-700 text-gray-100 rounded-lg px-4 py-3"
