@@ -60,32 +60,38 @@ export default function ChatInterface({
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const sessionInitialized = useRef(false);
 
   const saveMessagesToSession = useCallback(
-    (messages: Message[]) => {
+    (messages: Message[], currentSessionId: string) => {
       if (!user && typeof window !== "undefined") {
         sessionStorage.setItem(
-          `chat_messages_${sessionId}`,
+          `chat_messages_${currentSessionId}`,
           JSON.stringify(messages)
         );
       }
     },
-    [user, sessionId]
+    [user]
   );
 
-  const loadMessagesFromSession = useCallback((): Message[] => {
-    if (!user && typeof window !== "undefined") {
-      const saved = sessionStorage.getItem(`chat_messages_${sessionId}`);
-      if (saved) {
-        try {
-          return JSON.parse(saved);
-        } catch (error) {
-          console.error("Failed to parse saved messages:", error);
+  const loadMessagesFromSession = useCallback(
+    (currentSessionId: string): Message[] => {
+      if (!user && typeof window !== "undefined") {
+        const saved = sessionStorage.getItem(
+          `chat_messages_${currentSessionId}`
+        );
+        if (saved) {
+          try {
+            return JSON.parse(saved);
+          } catch (error) {
+            console.error("Failed to parse saved messages:", error);
+          }
         }
       }
-    }
-    return [];
-  }, [user, sessionId]);
+      return [];
+    },
+    [user]
+  );
 
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
@@ -135,7 +141,13 @@ export default function ChatInterface({
   };
 
   useEffect(() => {
+    sessionInitialized.current = false;
+  }, [user]);
+
+  useEffect(() => {
     const initSession = async () => {
+      if (sessionInitialized.current) return;
+
       const newSessionId = propSessionId || generateSessionId();
       setSessionId(newSessionId);
 
@@ -183,18 +195,20 @@ export default function ChatInterface({
           };
 
           if (!user) {
-            const savedMessages = loadMessagesFromSession();
+            const savedMessages = loadMessagesFromSession(newSessionId);
             if (savedMessages.length > 0) {
               setMessages(savedMessages);
             } else {
               setMessages([welcomeMessage]);
-              saveMessagesToSession([welcomeMessage]);
+              saveMessagesToSession([welcomeMessage], newSessionId);
             }
           } else {
             setMessages([welcomeMessage]);
           }
         }
       }
+
+      sessionInitialized.current = true;
     };
 
     initSession();
@@ -235,7 +249,7 @@ export default function ChatInterface({
     setIsLoading(true);
 
     if (!user) {
-      saveMessagesToSession(newMessages);
+      saveMessagesToSession(newMessages, sessionId);
     }
 
     try {
@@ -274,7 +288,7 @@ export default function ChatInterface({
         await addMessage(session.sessionId, userMessage);
         await addMessage(session.sessionId, aiMessage);
       } else if (!user) {
-        saveMessagesToSession(finalMessages);
+        saveMessagesToSession(finalMessages, sessionId);
       }
     } catch (error) {
       console.error("Failed to get AI response:", error);
@@ -291,7 +305,7 @@ export default function ChatInterface({
       setMessages(errorMessages);
 
       if (!user) {
-        saveMessagesToSession(errorMessages);
+        saveMessagesToSession(errorMessages, sessionId);
       }
 
       notify("Failed to send message", "error");
