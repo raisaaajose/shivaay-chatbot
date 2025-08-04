@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Branding from "./Branding/Branding";
-import { FiShield, FiUser } from "react-icons/fi";
+import { FiShield, FiUser, FiHome } from "react-icons/fi";
 import { useAuth } from "../Auth/AuthProvider/AuthProvider";
 import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -27,6 +27,7 @@ export default function Sidebar() {
     ...(isAdmin
       ? [{ href: "/admin", label: "Admin", icon: <FiShield />, admin: true }]
       : []),
+    { href: "/", label: "Home", icon: <FiHome /> },
     { href: "/profile", label: "Profile", icon: <FiUser /> },
   ];
 

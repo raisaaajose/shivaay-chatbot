@@ -18,13 +18,31 @@ const getChatSession = async (
         .json(formatNotification("Session ID is required", "error"));
     }
 
-    // First try to find by shareId (for shared sessions)
-    let session = await ChatSession.findOne({ shareId: sessionId });
+    // Validate sessionId format
+    if (typeof sessionId !== "string" || sessionId.trim().length === 0) {
+      log({
+        type: "error",
+        message: `Invalid session ID format: ${sessionId}`,
+      });
+      return res
+        .status(400)
+        .json(formatNotification("Invalid session ID format", "error"));
+    }
 
-    // If not found and user is authenticated, try to find by sessionId and userId
-    if (!session && req.isAuthenticated?.() && req.user) {
+    let session = null;
+
+    // If user is authenticated, try to find by sessionId and userId first (for owned sessions)
+    if (req.isAuthenticated?.() && req.user) {
       const user = req.user as IUser;
       session = await ChatSession.findOne({ sessionId, userId: user._id });
+    }
+
+    // If not found as owned session, try to find by shareId (for shared sessions)
+    if (!session) {
+      session = await ChatSession.findOne({
+        shareId: sessionId,
+        isShared: true,
+      });
     }
 
     if (!session) {
@@ -34,7 +52,18 @@ const getChatSession = async (
         .json(formatNotification("Chat session not found", "error"));
     }
 
-    // If session is not shared and user is not the owner, deny access
+    // Validate session structure
+    if (!session.sessionId) {
+      log({
+        type: "error",
+        message: `Chat session has invalid structure: ${sessionId}`,
+      });
+      return res
+        .status(404)
+        .json(formatNotification("Chat session data is corrupted", "error"));
+    }
+
+    // Access control: If session is not shared and user is not the owner, deny access
     if (
       !session.isShared &&
       (!req.user ||

@@ -80,4 +80,43 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/chat", chatRoutes);
 
+// Global error handler
+app.use(
+  (
+    err: any,
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) => {
+    log({
+      type: "error",
+      message: `Global error handler: ${err.message}`,
+      meta: {
+        url: req.url,
+        method: req.method,
+        stack: err.stack,
+        body: req.body,
+      },
+    });
+
+    // Default error response
+    const statusCode = err.status || err.statusCode || 500;
+    const message = err.message || "Internal server error";
+
+    res.status(statusCode).json({
+      message,
+      error: statusCode >= 500 ? "SERVER_ERROR" : "CLIENT_ERROR",
+      ...(env.NODE_ENV === "development" && { stack: err.stack }),
+    });
+  }
+);
+
+// 404 handler for unmatched routes
+app.use((req: Request, res: Response) => {
+  res.status(404).json({
+    message: "Route not found",
+    error: "NOT_FOUND",
+  });
+});
+
 export default app;

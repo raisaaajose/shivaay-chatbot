@@ -121,13 +121,34 @@ export default function ChatInterface({
         // Load existing session
         try {
           const session = await getChatSession(propSessionId);
+
+          // Validate session structure
+          if (!session || !session.sessionId) {
+            notify("Chat session data is corrupted or invalid", "error");
+            return;
+          }
+
           setCurrentSession(session);
           setMessages(session.messages || []);
           setSessionTitle(session.title);
           onSessionChange?.(session);
-        } catch (error) {
+        } catch (error: unknown) {
           console.error("Failed to load session:", error);
-          notify("Failed to load chat session", "error");
+
+          // Handle specific error cases
+          const errorObj = error as { response?: { status?: number } };
+          if (errorObj?.response?.status === 404) {
+            notify("Chat session not found or no longer available", "error");
+          } else if (errorObj?.response?.status === 403) {
+            notify("Access denied to this chat session", "error");
+          } else if (
+            errorObj?.response?.status &&
+            errorObj.response.status >= 500
+          ) {
+            notify("Server error while loading chat session", "error");
+          } else {
+            notify("Failed to load chat session", "error");
+          }
         }
       } else {
         // Add welcome message for new sessions

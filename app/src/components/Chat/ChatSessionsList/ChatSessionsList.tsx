@@ -69,9 +69,21 @@ export default function ChatSessionsList({
           messages: session.messages || [],
         }));
         setSessions(sessionsWithDefaults);
-      } catch (error) {
+      } catch (error: unknown) {
         console.error("Failed to load chat sessions:", error);
-        notify("Failed to load chat sessions", "error");
+
+        // Handle specific error cases
+        const errorObj = error as { response?: { status?: number } };
+        if (errorObj?.response?.status === 401) {
+          notify("Authentication required to load chat sessions", "error");
+        } else if (
+          errorObj?.response?.status &&
+          errorObj.response.status >= 500
+        ) {
+          notify("Server error while loading chat sessions", "error");
+        } else {
+          notify("Failed to load chat sessions", "error");
+        }
         setSessions([]); // Set empty array on error
       } finally {
         setLoading(false);
@@ -128,9 +140,22 @@ export default function ChatSessionsList({
         prev.filter((s) => s.sessionId !== deleteModal.sessionId)
       );
       notify("Chat session deleted", "success");
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Failed to delete session:", error);
-      notify("Failed to delete session", "error");
+
+      // Handle specific error cases
+      const errorObj = error as { response?: { status?: number } };
+      if (errorObj?.response?.status === 404) {
+        notify("Chat session not found or already deleted", "error");
+        // Remove from local state even if backend says not found
+        setSessions((prev) =>
+          prev.filter((s) => s.sessionId !== deleteModal.sessionId)
+        );
+      } else if (errorObj?.response?.status === 403) {
+        notify("Access denied to delete this chat session", "error");
+      } else {
+        notify("Failed to delete session", "error");
+      }
     } finally {
       setDeleteModal(null);
     }
@@ -141,9 +166,18 @@ export default function ChatSessionsList({
       const result = await shareChatSession(session.sessionId);
       setShareModal(result);
       notify("Chat session shared", "success");
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Failed to share session:", error);
-      notify("Failed to share session", "error");
+
+      // Handle specific error cases
+      const errorObj = error as { response?: { status?: number } };
+      if (errorObj?.response?.status === 404) {
+        notify("Chat session not found or no longer available", "error");
+      } else if (errorObj?.response?.status === 403) {
+        notify("Access denied to share this chat session", "error");
+      } else {
+        notify("Failed to share session", "error");
+      }
     }
   };
 
@@ -158,9 +192,29 @@ export default function ChatSessionsList({
         )
       );
       notify("Chat session unshared", "success");
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Failed to unshare session:", error);
-      notify("Failed to unshare session", "error");
+
+      // Handle specific error cases
+      const errorObj = error as { response?: { status?: number } };
+      if (errorObj?.response?.status === 404) {
+        notify(
+          "Chat session not found, but removing share status locally",
+          "warning"
+        );
+        // Still update the local state since the session might not exist on server
+        setSessions((prev) =>
+          prev.map((s) =>
+            s.sessionId === session.sessionId
+              ? { ...s, isShared: false, shareId: undefined }
+              : s
+          )
+        );
+      } else if (errorObj?.response?.status === 403) {
+        notify("Access denied to unshare this chat session", "error");
+      } else {
+        notify("Failed to unshare session", "error");
+      }
     }
   };
 
@@ -181,9 +235,18 @@ export default function ChatSessionsList({
       setEditingSession(null);
       setNewTitle("");
       notify("Session title updated", "success");
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Failed to update session:", error);
-      notify("Failed to update session title", "error");
+
+      // Handle specific error cases
+      const errorObj = error as { response?: { status?: number } };
+      if (errorObj?.response?.status === 404) {
+        notify("Chat session not found or no longer available", "error");
+      } else if (errorObj?.response?.status === 403) {
+        notify("Access denied to update this chat session", "error");
+      } else {
+        notify("Failed to update session title", "error");
+      }
     }
   };
 
