@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence, Variants } from "framer-motion";
 import { useAuth } from "@/components/Auth/AuthProvider/AuthProvider";
 import {
@@ -61,6 +61,32 @@ export default function ChatInterface({
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  const saveMessagesToSession = useCallback(
+    (messages: Message[]) => {
+      if (!user && typeof window !== "undefined") {
+        sessionStorage.setItem(
+          `chat_messages_${sessionId}`,
+          JSON.stringify(messages)
+        );
+      }
+    },
+    [user, sessionId]
+  );
+
+  const loadMessagesFromSession = useCallback((): Message[] => {
+    if (!user && typeof window !== "undefined") {
+      const saved = sessionStorage.getItem(`chat_messages_${sessionId}`);
+      if (saved) {
+        try {
+          return JSON.parse(saved);
+        } catch (error) {
+          console.error("Failed to parse saved messages:", error);
+        }
+      }
+    }
+    return [];
+  }, [user, sessionId]);
+
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
@@ -116,7 +142,7 @@ export default function ChatInterface({
       const healthy = await checkAIHealth();
       setIsAIHealthy(healthy);
 
-      if (propSessionId) {
+      if (user && propSessionId) {
         try {
           const session = await getChatSession(propSessionId);
 
@@ -148,28 +174,53 @@ export default function ChatInterface({
         }
       } else {
         if (healthy) {
-          setMessages([
-            {
-              id: "welcome",
-              content:
-                "नमस्ते ! I'm Shivaay, your AI guide for Uttarakhand tourism. How can I help you explore the beautiful state of Uttarakhand today?",
-              sender: "ai",
-              timestamp: new Date(),
-            },
-          ]);
+          const welcomeMessage: Message = {
+            id: "welcome",
+            content:
+              "नमस्ते ! I'm Shivaay, your AI guide for Uttarakhand tourism. How can I help you explore the beautiful state of Uttarakhand today?",
+            sender: "ai",
+            timestamp: new Date(),
+          };
+
+          if (!user) {
+            const savedMessages = loadMessagesFromSession();
+            if (savedMessages.length > 0) {
+              setMessages(savedMessages);
+            } else {
+              setMessages([welcomeMessage]);
+              saveMessagesToSession([welcomeMessage]);
+            }
+          } else {
+            setMessages([welcomeMessage]);
+          }
         }
       }
     };
 
     initSession();
-  }, [propSessionId, notify, onSessionChange]);
+  }, [
+    propSessionId,
+    notify,
+    onSessionChange,
+    user,
+    loadMessagesFromSession,
+    saveMessagesToSession,
+  ]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  useEffect(() => {
+    if (!currentSession && !user) {
+      setSessionTitle("Guest Chat");
+    } else if (!currentSession && user) {
+      setSessionTitle("New Chat");
+    }
+  }, [user, currentSession]);
+
   const handleSendMessage = async () => {
-    if (!inputMessage.trim() || isLoading || !isAIHealthy || !user) return;
+    if (!inputMessage.trim() || isLoading || !isAIHealthy) return;
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -178,13 +229,19 @@ export default function ChatInterface({
       timestamp: new Date(),
     };
 
-    setMessages((prev) => [...prev, userMessage]);
+    const newMessages = [...messages, userMessage];
+    setMessages(newMessages);
     setInputMessage("");
     setIsLoading(true);
 
+    if (!user) {
+      saveMessagesToSession(newMessages);
+    }
+
     try {
       let session = currentSession;
-      if (!session) {
+
+      if (user && !session) {
         const title =
           inputMessage.trim().slice(0, 50) +
           (inputMessage.length > 50 ? "..." : "");
@@ -200,7 +257,7 @@ export default function ChatInterface({
       const aiResponse = await sendChatMessage(
         sessionId,
         userMessage.content,
-        user._id?.toString()
+        user?._id?.toString()
       );
 
       const aiMessage: Message = {
@@ -210,11 +267,14 @@ export default function ChatInterface({
         timestamp: new Date(),
       };
 
-      setMessages((prev) => [...prev, aiMessage]);
+      const finalMessages = [...newMessages, aiMessage];
+      setMessages(finalMessages);
 
-      if (session) {
+      if (user && session) {
         await addMessage(session.sessionId, userMessage);
         await addMessage(session.sessionId, aiMessage);
+      } else if (!user) {
+        saveMessagesToSession(finalMessages);
       }
     } catch (error) {
       console.error("Failed to get AI response:", error);
@@ -227,7 +287,13 @@ export default function ChatInterface({
         timestamp: new Date(),
       };
 
-      setMessages((prev) => [...prev, errorMessage]);
+      const errorMessages = [...newMessages, errorMessage];
+      setMessages(errorMessages);
+
+      if (!user) {
+        saveMessagesToSession(errorMessages);
+      }
+
       notify("Failed to send message", "error");
     } finally {
       setIsLoading(false);
@@ -300,14 +366,6 @@ export default function ChatInterface({
     });
   };
 
-  if (!user) {
-    return (
-      <div className="h-full flex items-center justify-center">
-        <p className="text-gray-400">Please log in to use the chat feature.</p>
-      </div>
-    );
-  }
-
   return (
     <motion.div
       className="h-full flex flex-col bg-gradient-to-br from-gray-900 via-gray-800 to-indigo-900"
@@ -328,7 +386,7 @@ export default function ChatInterface({
             >
               <FiMessageCircle className="text-white" />
             </motion.div>
-            {isEditingTitle ? (
+            {user && isEditingTitle ? (
               <Input
                 value={sessionTitle}
                 onChange={(e) => setSessionTitle(e.target.value)}
@@ -347,8 +405,10 @@ export default function ChatInterface({
               />
             ) : (
               <h1
-                className="text-xl font-bold text-white cursor-pointer hover:text-blue-300 transition-colors"
-                onClick={() => setIsEditingTitle(true)}
+                className={`text-xl font-bold text-white transition-colors ${
+                  user ? "cursor-pointer hover:text-blue-300" : ""
+                }`}
+                onClick={() => user && setIsEditingTitle(true)}
               >
                 {sessionTitle}
               </h1>
@@ -408,7 +468,7 @@ export default function ChatInterface({
               )}
             </motion.div>
 
-            {currentSession && (
+            {user && currentSession && (
               <div className="flex items-center gap-1">
                 <AnimatedButton
                   onClick={() => setIsEditingTitle(true)}
@@ -625,12 +685,20 @@ export default function ChatInterface({
             Shivaay is your AI guide for Uttarakhand tourism. Ask about places
             to visit, cultural insights, travel tips, and more!
           </p>
-          <p className="text-xs mt-2">
-            Session ID:{" "}
-            <code className="bg-gray-700 text-gray-200 px-2 py-1 rounded text-xs">
-              {sessionId}
-            </code>
-          </p>
+          {!user && (
+            <p className="text-xs mt-2 text-blue-400 bg-blue-400/10 px-3 py-2 rounded-lg border border-blue-400/20">
+              🎯 Guest mode: Chat freely with Shivaay! Your conversation will be
+              saved locally and cleared when you close the browser.
+            </p>
+          )}
+          {user && (
+            <p className="text-xs mt-2">
+              Session ID:{" "}
+              <code className="bg-gray-700 text-gray-200 px-2 py-1 rounded text-xs">
+                {sessionId}
+              </code>
+            </p>
+          )}
         </div>
       </motion.div>
 

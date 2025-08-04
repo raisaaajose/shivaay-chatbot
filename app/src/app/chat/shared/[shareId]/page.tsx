@@ -6,6 +6,7 @@ import { useParams, useRouter } from "next/navigation";
 import { getSharedChatSession } from "@/utils/chatApi";
 import Card from "@/components/ui/Card/Card";
 import AnimatedButton from "@/components/ui/AnimatedButton/AnimatedButton";
+import FormattedMessage from "@/components/Chat/FormattedMessage/FormattedMessage";
 import {
   FiShare2,
   FiUser,
@@ -411,9 +412,12 @@ export default function SharedChatPage() {
                               : "bg-gray-700 text-gray-100"
                           }`}
                         >
-                          <p className="text-sm md:text-base leading-relaxed whitespace-pre-wrap">
-                            {message.content || "Message content unavailable"}
-                          </p>
+                          <FormattedMessage
+                            content={
+                              message.content || "Message content unavailable"
+                            }
+                            sender={message.sender}
+                          />
                           <p
                             className={`text-xs mt-2 ${
                               message.sender === "user"
