@@ -381,6 +381,7 @@ export default function ChatSessionsList({
                       variant="secondary"
                       icon={<FiEdit3 />}
                       className="text-xs p-0.5"
+                      size="icon"
                     />
 
                     {session.isShared ? (
@@ -392,6 +393,7 @@ export default function ChatSessionsList({
                         variant="warning"
                         icon={<FiEyeOff />}
                         className="text-xs p-0.5"
+                        size="icon"
                       />
                     ) : (
                       <AnimatedButton
@@ -402,6 +404,7 @@ export default function ChatSessionsList({
                         variant="secondary"
                         icon={<FiShare2 />}
                         className="text-xs p-0.5"
+                        size="icon"
                       />
                     )}
 
@@ -413,6 +416,7 @@ export default function ChatSessionsList({
                       variant="danger"
                       icon={<FiTrash2 />}
                       className="text-xs p-0.5"
+                      size="icon"
                     />
                   </div>
                 </div>
@@ -447,6 +451,7 @@ export default function ChatSessionsList({
                 setNewTitle("");
               }}
               variant="secondary"
+              size="icon"
             >
               Cancel
             </AnimatedButton>
@@ -454,6 +459,7 @@ export default function ChatSessionsList({
               onClick={handleEditTitle}
               variant="primary"
               disabled={!newTitle.trim()}
+              size="icon"
             >
               Save
             </AnimatedButton>
