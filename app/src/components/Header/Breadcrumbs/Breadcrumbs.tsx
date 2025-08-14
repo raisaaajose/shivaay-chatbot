@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { MdArrowForwardIos } from "react-icons/md";
+import { MdArrowForwardIos, MdHome } from "react-icons/md";
 import { usePathname } from "next/navigation";
 
 const Breadcrumbs: React.FC = () => {
@@ -10,16 +10,41 @@ const Breadcrumbs: React.FC = () => {
   const pathSegments =
     typeof pathname === "string" ? pathname.split("/").filter(Boolean) : [];
 
+  // Don't show breadcrumbs on home page
+  if (pathSegments.length === 0) {
+    return null;
+  }
+
   return (
-    <div className="flex items-center overflow-hidden">
-      <span className="flex items-center">
+    <nav className="flex items-center overflow-hidden" aria-label="Breadcrumbs">
+      {/* Home Link */}
+      <Link href="/" className="flex items-center group" aria-label="Home">
+        <MdHome className="text-[#9DA3B3] group-hover:text-white text-sm transition-colors duration-200" />
+      </Link>
+
+      {/* Path Segments */}
+      <div className="flex items-center overflow-hidden">
         {pathSegments.map((segment, idx) => {
           const href = "/" + pathSegments.slice(0, idx + 1).join("/");
+          const isLast = idx === pathSegments.length - 1;
+
           return (
             <React.Fragment key={idx}>
-              <MdArrowForwardIos className="text-xs mx-1 text-[#9DA3B3] flex-shrink-0" />
-              <Link href={href} className="max-w-[120px] md:max-w-[200px]">
-                <span className="text-[#9DA3B3] text-sm md:text-base font-normal select-none mx-1 flex items-center h-full tracking-wide truncate hover:text-white transition-colors duration-200">
+              <MdArrowForwardIos className="text-xs mx-1.5 sm:mx-2 text-[#9DA3B3]/60 flex-shrink-0 transition-colors duration-200" />
+              <Link
+                href={href}
+                className={`max-w-[80px] sm:max-w-[120px] md:max-w-[200px] group ${
+                  isLast ? "pointer-events-none" : ""
+                }`}
+                aria-current={isLast ? "page" : undefined}
+              >
+                <span
+                  className={`text-sm md:text-base font-normal select-none flex items-center h-full tracking-wide truncate transition-all duration-200 ${
+                    isLast
+                      ? "text-white font-medium"
+                      : "text-[#9DA3B3] hover:text-white group-hover:scale-105 transform"
+                  }`}
+                >
                   {segment
                     .split("-")
                     .map((s: string) => s.charAt(0).toUpperCase() + s.slice(1))
@@ -29,8 +54,8 @@ const Breadcrumbs: React.FC = () => {
             </React.Fragment>
           );
         })}
-      </span>
-    </div>
+      </div>
+    </nav>
   );
 };
 

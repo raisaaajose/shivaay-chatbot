@@ -489,18 +489,21 @@ export default function ChatInterface({
                   variant="secondary"
                   icon={<FiEdit3 />}
                   className="text-sm"
+                  size="icon"
                 />
                 <AnimatedButton
                   onClick={handleShareSession}
                   variant="secondary"
                   icon={<FiShare2 />}
                   className="text-sm"
+                  size="icon"
                 />
                 <AnimatedButton
                   onClick={handleDeleteSession}
                   variant="danger"
                   icon={<FiTrash2 />}
                   className="text-sm"
+                  size="icon"
                 />
               </div>
             )}

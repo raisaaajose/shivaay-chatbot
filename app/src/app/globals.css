@@ -43,6 +43,26 @@
   --font-mono: var(--font-geist-mono);
 }
 
+:root {
+  --padding-tiny: 0.25rem 0.5rem;
+  --padding-small: 0.5rem 1rem;
+  --padding-medium: 1rem 1.5rem;
+  --padding-large: 1.5rem 2rem;
+  --padding-huge: 2rem 2.5rem;
+
+  --margin-tiny: 0.25rem 0.5rem;
+  --margin-small: 0.5rem 1rem;
+  --margin-medium: 1rem 1.5rem;
+  --margin-large: 1.5rem 2rem;
+  --margin-huge: 2rem 2.5rem;
+
+  --border-radius-tiny: 0.0625rem;
+  --border-radius-small: 0.125rem;
+  --border-radius-medium: 0.25rem;
+  --border-radius-large: 0.5rem;
+  --border-radius-huge: 1rem;
+}
+
 html,
 body {
   background: var(--background);
@@ -96,11 +116,13 @@ select {
   color: var(--foreground);
   width: 100%;
   padding: var(--padding-tiny) var(--padding-small);
-  border: 2px solid #7b8191;
-  ::placeholder {
-    color: #a0aec0;
-    opacity: 1;
-  }
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border: none;
 }
 
 input:-webkit-autofill,

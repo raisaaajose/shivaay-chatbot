@@ -313,13 +313,12 @@ export default function ChatSessionsList({
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             icon={<FiSearch />}
-            className="text-xs flex-1"
           />
           <AnimatedButton
             onClick={handleCreateNewSession}
             variant="primary"
             icon={<FiPlus />}
-            className="text-xs p-2 shrink-0"
+            size="icon"
           />
         </div>
       </div>

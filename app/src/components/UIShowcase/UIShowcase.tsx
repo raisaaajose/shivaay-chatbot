@@ -6,13 +6,10 @@ import Card from "../ui/Card/Card";
 import Input from "../ui/Input/Input";
 import Select from "../ui/Select/Select";
 import Textarea from "../ui/Textarea/Textarea";
-import {
-  FaSave,
-  FaTrash,
-  FaCheck,
-  FaExclamationTriangle,
-  FaCode,
-} from "react-icons/fa";
+import Badge from "../ui/Badge/Badge";
+import LoadingSkeleton from "../ui/LoadingSkeleton/LoadingSkeleton";
+import ErrorBoundary from "../ui/ErrorBoundary/ErrorBoundary";
+import { Save, Trash2, Check, Code, Star, Heart, Zap } from "lucide-react";
 import useNotification from "../ui/Notification/Notification";
 import Loader from "../ui/Loader/Loader";
 import Modal from "../ui/Modal/Modal";
@@ -22,6 +19,7 @@ export default function UIPage() {
     { value: "", label: "Select an option" },
     { value: "one", label: "Option One" },
     { value: "two", label: "Option Two" },
+    { value: "three", label: "Option Three", disabled: true },
   ];
   const { notify } = useNotification();
   const [loading] = React.useState(false);
@@ -33,29 +31,43 @@ export default function UIPage() {
   const [selectedOption4, setSelectedOption4] = React.useState("");
 
   return (
-    <>
-      {loading && <Loader />}
+    <div className="max-w-6xl mx-auto p-6 space-y-12">
+      {loading && <Loader variant="overlay" text="Loading components..." />}
 
       <Modal
         open={modalOpen}
         onClose={() => setModalOpen(false)}
-        title="Demo Modal"
+        title="Enhanced Demo Modal"
       >
-        <div style={{ minHeight: 60 }}>
-          <p>
-            This is a simulated modal. You can close it using the close button
-            or outside click.
+        <div className="space-y-4">
+          <p className="text-slate-300">
+            This is an improved modal with better styling and accessibility. It
+            includes proper focus management and can be closed using the escape
+            key or clicking outside.
           </p>
+          <div className="flex gap-2">
+            <Badge variant="primary">New</Badge>
+            <Badge variant="success">Improved</Badge>
+            <Badge variant="outline">Beta</Badge>
+          </div>
         </div>
       </Modal>
 
-      <section>
-        <h2>Animated Button</h2>
-        <div className="responsive-flex-row">
-          <AnimatedButton
-            onClick={() => notify("Primary button clicked", "info")}
-            icon={<FaCode />}
-          ></AnimatedButton>
+      <section className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <Badge variant="primary">Primary</Badge>
+          <Badge variant="secondary">Secondary</Badge>
+          <Badge variant="success">Success</Badge>
+          <Badge variant="warning">Warning</Badge>
+          <Badge variant="danger">Danger</Badge>
+          <Badge variant="outline">Outline</Badge>
+        </div>
+      </section>
+
+      <section className="space-y-6">
+        <h2 className="text-2xl font-bold text-white">Animated Buttons</h2>
+
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           <AnimatedButton
             variant="primary"
             onClick={() => notify("Primary button clicked", "info")}
@@ -86,230 +98,324 @@ export default function UIPage() {
           >
             Warning
           </AnimatedButton>
-          <AnimatedButton variant="primary" disabled>
+          <AnimatedButton variant="ghost" disabled>
             Disabled
           </AnimatedButton>
           <AnimatedButton
-            variant="primary"
-            icon={<FaSave />}
+            variant="outline"
+            icon={<Save />}
             onClick={() => notify("Saved!", "success")}
           >
-            With Icon
+            Save
           </AnimatedButton>
           <AnimatedButton
             variant="danger"
-            icon={<FaTrash />}
+            icon={<Trash2 />}
             onClick={() => notify("Deleted!", "error")}
+            size="lg"
           >
-            Danger + Icon
+            Delete
           </AnimatedButton>
-          <AnimatedButton variant="success" icon={<FaCheck />} disabled>
-            Success Disabled + Icon
+          <AnimatedButton variant="success" icon={<Check />} loading size="sm">
+            Loading...
           </AnimatedButton>
           <AnimatedButton
-            variant="warning"
-            icon={<FaExclamationTriangle />}
-            onClick={() => notify("Warning with icon!", "warning")}
-          >
-            Warning + Icon
-          </AnimatedButton>
+            onClick={() => notify("Icon button clicked!", "info")}
+            icon={<Code />}
+            size="icon"
+            variant="primary"
+          />
         </div>
       </section>
-      <section style={{ marginTop: 40 }}>
-        <h2>Card</h2>
-        <div className="responsive-flex-row">
-          <Card elevation={1} aria-label="Simple card">
-            <div>Simple Card Content</div>
-          </Card>
-          <Card hoverable elevation={2} aria-label="Hoverable card">
-            <div>
-              <h4>Hoverable Card</h4>
-              <p>Hover over this card to see the effect.</p>
+
+      <section className="space-y-6">
+        <h2 className="text-2xl font-bold text-white">Cards</h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <Card variant="default" padding="md">
+            <div className="space-y-2">
+              <h4 className="font-semibold text-white">Default Card</h4>
+              <p className="text-slate-400 text-sm">
+                A simple card with default styling and padding.
+              </p>
             </div>
           </Card>
+
+          <Card variant="elevated" padding="lg" hoverable>
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <Star className="h-5 w-5 text-yellow-400" />
+                <h4 className="font-semibold text-white">Elevated Card</h4>
+              </div>
+              <p className="text-slate-400 text-sm">
+                An elevated card with hover effects and more padding.
+              </p>
+            </div>
+          </Card>
+
           <Card
-            onClick={() => notify("Card clicked!", "info")}
-            elevation={3}
-            aria-label="Clickable card"
+            variant="interactive"
+            padding="lg"
+            clickable
+            onClick={() => notify("Interactive card clicked!", "info")}
           >
-            <div>
-              <h4>Clickable Card</h4>
-              <p>Click this card to trigger a notification.</p>
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <Zap className="h-5 w-5 text-blue-400" />
+                <h4 className="font-semibold text-white">Interactive Card</h4>
+              </div>
+              <p className="text-slate-400 text-sm">
+                Click this card to see the interaction feedback.
+              </p>
             </div>
           </Card>
-          <Card
-            hoverable
-            onClick={() => notify("Hoverable & Clickable Card!", "success")}
-            elevation={4}
-            aria-label="Hoverable and clickable card"
-            animationDuration={1}
-            animationEasing={[0.4, 0, 0.2, 1]}
-          >
-            <div>
-              <h4>Hoverable & Clickable Card</h4>
-              <p>Hover and click to see both effects in action.</p>
-            </div>
-          </Card>
-          <Card disabled elevation={5} aria-label="Disabled card">
-            <div>
-              <h4>Disabled Card</h4>
-              <p>This card is disabled and not interactive.</p>
-            </div>
-          </Card>
-          <Card>
-            <div className="responsive-flex-center">
-              <ul style={{ textAlign: "center" }}>
-                <li>List item 1</li>
-                <li>List item 2</li>
-                <li>List item 3</li>
-              </ul>
+
+          <Card variant="default" padding="sm" disabled>
+            <div className="space-y-2">
+              <h4 className="font-semibold text-white">Disabled Card</h4>
+              <p className="text-slate-400 text-sm">
+                This card is disabled and not interactive.
+              </p>
             </div>
           </Card>
         </div>
       </section>
-      <section style={{ marginTop: 40 }}>
-        <h2>Input</h2>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: 16,
-            maxWidth: 400,
-          }}
-        >
-          <Input placeholder="No label" helperText="This is a basic input." />
-          <Input
-            label="With label"
-            placeholder="With label"
-            helperText="Labelled input."
-          />
-          <Input
-            label="With value"
-            value="Value"
-            readOnly
-            helperText="Read-only input."
-          />
-          <Input
-            label="With icon"
-            icon={<FaSave />}
-            placeholder="With icon"
-            helperText="Input with icon."
-          />
-          <Input
-            label="Error"
-            error="This is an error"
-            placeholder="Error state"
-            helperText="Helper text will not show if error is present."
-          />
-          <Input
-            label="Disabled"
-            disabled
-            placeholder="Disabled"
-            helperText="Disabled input."
-          />
-          <Input
-            label="Password"
-            type="password"
-            placeholder="Password"
-            helperText="Password input with toggle."
-          />
+
+      <section className="space-y-6">
+        <h2 className="text-2xl font-bold text-white">Form Inputs</h2>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="space-y-6">
+            <Input
+              placeholder="Enter your email"
+              helperText="We'll never share your email address."
+            />
+
+            <Input
+              id="email"
+              label="Email Address"
+              type="email"
+              placeholder="john@example.com"
+              helperText="Required for account creation."
+              required
+            />
+
+            <Input
+              label="Current Value"
+              value="Read-only value"
+              readOnly
+              helperText="This field cannot be edited."
+            />
+
+            <Input
+              label="With Icon"
+              icon={<Heart className="h-4 w-4" />}
+              placeholder="Enter your favorite thing"
+              helperText="Tell us what you love most."
+            />
+
+            <Input
+              label="Error State"
+              error="This email address is already taken"
+              placeholder="john@example.com"
+              helperText="This won't show when there's an error."
+            />
+
+            <Input
+              label="Disabled Input"
+              disabled
+              placeholder="This is disabled"
+              helperText="Cannot interact with this field."
+            />
+
+            <Input
+              label="Password"
+              type="password"
+              placeholder="Enter your password"
+              helperText="Must be at least 8 characters long."
+            />
+          </div>
+
+          <div className="space-y-6">
+            <Select
+              options={selectOptions}
+              value={selectedOption1}
+              onChange={setSelectedOption1}
+              helperText="Choose from available options."
+            />
+
+            <Select
+              id="country"
+              label="Country"
+              options={selectOptions}
+              value={selectedOption2}
+              onChange={setSelectedOption2}
+              helperText="Select your country of residence."
+              required
+            />
+
+            <Select
+              label="Pre-selected"
+              options={selectOptions}
+              value={selectedOption3}
+              onChange={setSelectedOption3}
+              helperText="This select has a default value."
+            />
+
+            <Select
+              label="Error State"
+              error="Please select a valid option"
+              options={selectOptions}
+              value={selectedOption4}
+              onChange={setSelectedOption4}
+              helperText="This won't show when there's an error."
+            />
+
+            <Select
+              label="Disabled Select"
+              options={selectOptions}
+              value=""
+              onChange={() => {}}
+              disabled
+              helperText="This select is disabled."
+            />
+
+            <Textarea
+              placeholder="Tell us about yourself..."
+              helperText="Maximum 500 characters."
+              resize="vertical"
+            />
+
+            <Textarea
+              id="bio"
+              label="Biography"
+              placeholder="Write a short bio..."
+              helperText="This will be displayed on your profile."
+              required
+              resize="none"
+            />
+          </div>
         </div>
       </section>
-      <section style={{ marginTop: 40 }}>
-        <h2>Select</h2>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: 16,
-            maxWidth: 400,
-          }}
-        >
-          <Select
-            options={selectOptions}
-            value={selectedOption1}
-            onChange={setSelectedOption1}
-            helperText="Basic select."
-          />
-          <Select
-            label="With label"
-            options={selectOptions}
-            value={selectedOption2}
-            onChange={setSelectedOption2}
-            helperText="Labelled select."
-          />
-          <Select
-            label="With value"
-            options={selectOptions}
-            value={selectedOption3}
-            onChange={setSelectedOption3}
-            helperText="Select with default value."
-          />
-          <Select
-            label="Error"
-            error="This is an error"
-            options={selectOptions}
-            value={selectedOption4}
-            onChange={setSelectedOption4}
-            helperText="Helper text will not show if error is present."
-          />
-          <Select
-            label="Disabled"
-            options={selectOptions}
-            value={""}
-            onChange={() => {}}
-            disabled
-            helperText="Disabled select."
-          />
+
+      <section className="space-y-6">
+        <h2 className="text-2xl font-bold text-white">Loaders</h2>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="space-y-3">
+            <h4 className="text-sm font-medium text-slate-300">Small</h4>
+            <Loader variant="inline" size="sm" />
+          </div>
+          <div className="space-y-3">
+            <h4 className="text-sm font-medium text-slate-300">Medium</h4>
+            <Loader variant="inline" size="md" />
+          </div>
+          <div className="space-y-3">
+            <h4 className="text-sm font-medium text-slate-300">Large</h4>
+            <Loader variant="inline" size="lg" />
+          </div>
+          <div className="space-y-3">
+            <h4 className="text-sm font-medium text-slate-300">Extra Large</h4>
+            <Loader variant="inline" size="xl" />
+          </div>
+        </div>
+
+        <div className="space-y-4">
+          <Loader variant="inline" text="Loading with text..." />
         </div>
       </section>
-      <section style={{ marginTop: 40 }}>
-        <h2>Textarea</h2>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: 16,
-            maxWidth: 400,
-          }}
-        >
-          <Textarea placeholder="No label" helperText="Basic textarea." />
-          <Textarea
-            label="With label"
-            placeholder="With label"
-            helperText="Labelled textarea."
-          />
-          <Textarea
-            label="With value"
-            value="Value"
-            readOnly
-            helperText="Read-only textarea."
-          />
-          <Textarea
-            label="Error"
-            error="This is an error"
-            placeholder="Error state"
-            helperText="Helper text will not show if error is present."
-          />
-          <Textarea
-            label="Disabled"
-            disabled
-            placeholder="Disabled"
-            helperText="Disabled textarea."
-          />
+
+      <section className="space-y-6">
+        <h2 className="text-2xl font-bold text-white">Loading Skeletons</h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <Card padding="md">
+            <div className="space-y-3">
+              <LoadingSkeleton variant="circular" width={48} height={48} />
+              <LoadingSkeleton variant="text" lines={3} />
+              <div className="flex gap-2">
+                <LoadingSkeleton variant="rounded" width={80} height={32} />
+                <LoadingSkeleton variant="rounded" width={80} height={32} />
+              </div>
+            </div>
+          </Card>
+
+          <Card padding="md">
+            <div className="space-y-3">
+              <LoadingSkeleton
+                variant="rectangular"
+                width="100%"
+                height={120}
+              />
+              <LoadingSkeleton variant="text" lines={2} />
+            </div>
+          </Card>
+
+          <Card padding="md">
+            <div className="space-y-4">
+              <div className="flex items-center gap-3">
+                <LoadingSkeleton variant="circular" width={40} height={40} />
+                <div className="flex-1 space-y-2">
+                  <LoadingSkeleton variant="text" width="60%" />
+                  <LoadingSkeleton variant="text" width="40%" />
+                </div>
+              </div>
+              <LoadingSkeleton variant="text" lines={3} />
+            </div>
+          </Card>
         </div>
       </section>
-      <section style={{ marginTop: 40 }}>
-        <h2>Simulate Modal</h2>
-        <div className="responsive-flex-row" style={{ marginBottom: 24 }}>
+
+      <section className="space-y-6">
+        <h2 className="text-2xl font-bold text-white">Error Boundary</h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <Card padding="md">
+            <div className="space-y-3">
+              <h4 className="font-semibold text-white">Normal Component</h4>
+              <p className="text-slate-400 text-sm">
+                This component works normally and won&apos;t trigger the error
+                boundary.
+              </p>
+              <div className="flex gap-2">
+                <Badge variant="success">Working</Badge>
+                <Badge variant="primary">Normal</Badge>
+              </div>
+            </div>
+          </Card>
+
+          <Card padding="md">
+            <div className="space-y-3">
+              <h4 className="font-semibold text-white">Error Boundary Demo</h4>
+              <p className="text-slate-400 text-sm">
+                Error boundaries catch JavaScript errors anywhere in the
+                component tree and display a fallback UI instead of crashing the
+                entire app.
+              </p>
+              <ErrorBoundary>
+                <div className="p-3 bg-slate-800 rounded">
+                  <p className="text-green-400 text-sm">
+                    ✓ Protected by ErrorBoundary
+                  </p>
+                </div>
+              </ErrorBoundary>
+            </div>
+          </Card>
+        </div>
+      </section>
+
+      <section className="space-y-6">
+        <h2 className="text-2xl font-bold text-white">Modal</h2>
+
+        <div className="flex gap-4">
           <AnimatedButton
             variant="secondary"
             onClick={() => setModalOpen(true)}
           >
-            Simulate Modal
+            Open Enhanced Modal
           </AnimatedButton>
         </div>
       </section>
-    </>
+    </div>
   );
 }
