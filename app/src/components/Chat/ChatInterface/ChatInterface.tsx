@@ -389,17 +389,17 @@ export default function ChatInterface({
       variants={containerVariants}
     >
       <motion.div
-        className="p-4 border-b border-gray-700 bg-gray-800/50 backdrop-blur"
+        className="p-2 sm:p-3 md:p-4 border-b border-gray-700 bg-gray-800/50 backdrop-blur"
         variants={headerVariants}
       >
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
             <motion.div
-              className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center"
+              className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
             >
-              <FiMessageCircle className="text-white" />
+              <FiMessageCircle className="text-white text-sm sm:text-base" />
             </motion.div>
             {user && isEditingTitle ? (
               <Input
@@ -415,29 +415,30 @@ export default function ChatInterface({
                     handleUpdateTitle(sessionTitle);
                   }
                 }}
-                className="text-lg font-bold"
+                className="text-sm sm:text-lg font-bold min-w-0"
                 autoFocus
               />
             ) : (
               <h1
-                className={`text-xl font-bold text-white transition-colors ${
+                className={`text-sm sm:text-lg md:text-xl font-bold text-white transition-colors truncate min-w-0 ${
                   user ? "cursor-pointer hover:text-blue-300" : ""
                 }`}
                 onClick={() => user && setIsEditingTitle(true)}
+                title={sessionTitle}
               >
                 {sessionTitle}
               </h1>
             )}
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
             <motion.div
-              className="flex items-center gap-2"
+              className="flex items-center gap-1 sm:gap-2"
               variants={statusVariants}
             >
               {isAIHealthy === null ? (
                 <motion.div
-                  className="text-gray-400"
+                  className="text-gray-400 text-xs sm:text-sm hidden sm:block"
                   animate={{ opacity: [0.5, 1, 0.5] }}
                   transition={{ duration: 1.5, repeat: Infinity }}
                 >
@@ -445,7 +446,7 @@ export default function ChatInterface({
                 </motion.div>
               ) : isAIHealthy ? (
                 <motion.div
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-1 sm:gap-2"
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   transition={{
@@ -458,15 +459,15 @@ export default function ChatInterface({
                     animate={{ scale: [1, 1.2, 1] }}
                     transition={{ duration: 2, repeat: Infinity }}
                   >
-                    <FiWifi className="text-green-400" />
+                    <FiWifi className="text-green-400 text-sm sm:text-base" />
                   </motion.div>
-                  <span className="text-green-400 font-medium">
+                  <span className="text-green-400 font-medium text-xs sm:text-sm hidden sm:inline">
                     AI Connected
                   </span>
                 </motion.div>
               ) : (
                 <motion.div
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-1 sm:gap-2"
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   transition={{
@@ -475,8 +476,8 @@ export default function ChatInterface({
                     damping: 30,
                   }}
                 >
-                  <FiWifiOff className="text-red-400" />
-                  <span className="text-red-400 font-medium">
+                  <FiWifiOff className="text-red-400 text-sm sm:text-base" />
+                  <span className="text-red-400 font-medium text-xs sm:text-sm hidden sm:inline">
                     AI Disconnected
                   </span>
                 </motion.div>
@@ -484,26 +485,26 @@ export default function ChatInterface({
             </motion.div>
 
             {user && currentSession && (
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-0.5 sm:gap-1">
                 <AnimatedButton
                   onClick={() => setIsEditingTitle(true)}
                   variant="secondary"
                   icon={<FiEdit3 />}
-                  className="text-sm"
+                  className="text-xs sm:text-sm p-1 sm:p-2"
                   size="icon"
                 />
                 <AnimatedButton
                   onClick={handleShareSession}
                   variant="secondary"
                   icon={<FiShare2 />}
-                  className="text-sm"
+                  className="text-xs sm:text-sm p-1 sm:p-2"
                   size="icon"
                 />
                 <AnimatedButton
                   onClick={handleDeleteSession}
                   variant="danger"
                   icon={<FiTrash2 />}
-                  className="text-sm"
+                  className="text-xs sm:text-sm p-1 sm:p-2"
                   size="icon"
                 />
               </div>
@@ -515,7 +516,7 @@ export default function ChatInterface({
       <motion.div className="flex-1 overflow-hidden" variants={itemVariants}>
         <Card className="h-full rounded-none border-none">
           <div className="h-full flex flex-col">
-            <div className="flex-1 overflow-y-auto p-6 space-y-4">
+            <div className="flex-1 overflow-y-auto p-2 sm:p-4 md:p-6 space-y-2 sm:space-y-4">
               <AnimatePresence>
                 {messages.map((message) => (
                   <motion.div
@@ -534,14 +535,14 @@ export default function ChatInterface({
                     }`}
                   >
                     <div
-                      className={`flex items-start gap-3 max-w-[80%] ${
+                      className={`flex items-start gap-2 sm:gap-3 max-w-[85%] sm:max-w-[80%] md:max-w-[75%] ${
                         message.sender === "user"
                           ? "flex-row-reverse"
                           : "flex-row"
                       }`}
                     >
                       <motion.div
-                        className={`w-8 h-8 rounded-full flex items-center justify-center overflow-hidden ${
+                        className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center overflow-hidden flex-shrink-0 ${
                           message.sender === "user"
                             ? user?.profilePicture
                               ? ""
@@ -568,15 +569,15 @@ export default function ChatInterface({
                               className="w-full h-full object-cover rounded-full"
                             />
                           ) : (
-                            <FiUser size={16} />
+                            <FiUser size={14} className="sm:text-base" />
                           )
                         ) : (
-                          <BotIcon size={16} />
+                          <BotIcon size={14} className="sm:text-base" />
                         )}
                       </motion.div>
 
                       <motion.div
-                        className={`rounded-lg px-4 py-3 ${
+                        className={`rounded-lg px-2 py-2 sm:px-4 sm:py-3 text-sm sm:text-base ${
                           message.sender === "user"
                             ? "bg-blue-600 text-white"
                             : "bg-gray-700 text-gray-100"
@@ -653,13 +654,13 @@ export default function ChatInterface({
             </div>
 
             <motion.div
-              className="border-t border-gray-600 p-4"
+              className="border-t border-gray-600 p-2 sm:p-3 md:p-4"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5, duration: 0.6 }}
             >
-              <div className="flex items-end gap-3">
-                <div className="flex-1">
+              <div className="flex items-end gap-2 sm:gap-3">
+                <div className="flex-1 min-w-0">
                   <Input
                     placeholder={
                       isAIHealthy
@@ -670,14 +671,14 @@ export default function ChatInterface({
                     onChange={(e) => setInputMessage(e.target.value)}
                     onKeyPress={handleKeyPress}
                     disabled={isLoading || !isAIHealthy}
-                    className="resize-none border-gray-600 text-white placeholder-gray-400"
+                    className="resize-none border-gray-600 text-white placeholder-gray-400 text-sm sm:text-base min-h-[2.5rem] sm:min-h-[2.75rem]"
                   />
                 </div>
                 <AnimatedButton
                   onClick={handleSendMessage}
                   disabled={!inputMessage.trim() || isLoading || !isAIHealthy}
                   variant="primary"
-                  className="px-4 py-2 self-center"
+                  className="px-2 py-2 sm:px-4 sm:py-2 self-center text-sm sm:text-base flex-shrink-0"
                   icon={
                     <motion.div
                       animate={{ x: [0, 3, 0] }}
@@ -687,16 +688,16 @@ export default function ChatInterface({
                         repeatDelay: 2,
                       }}
                     >
-                      <FiSend />
+                      <FiSend className="text-sm sm:text-base" />
                     </motion.div>
                   }
                 >
-                  Send
+                  <span className="hidden sm:inline">Send</span>
                 </AnimatedButton>
               </div>
 
               {!isAIHealthy && (
-                <p className="text-red-400 text-sm mt-2 text-center">
+                <p className="text-red-400 text-xs sm:text-sm mt-2 text-center">
                   Unable to connect to AI service. Please check your connection
                   and try again.
                 </p>
@@ -707,16 +708,16 @@ export default function ChatInterface({
       </motion.div>
 
       <motion.div
-        className="p-4 border-t border-gray-700 bg-gray-800/30"
+        className="p-2 sm:p-3 md:p-4 border-t border-gray-700 bg-gray-800/30"
         variants={itemVariants}
       >
         <div className="text-center text-gray-300">
-          <p className="text-sm">
+          <p className="text-xs sm:text-sm">
             Shivaay is your AI guide for Uttarakhand tourism. Ask about places
             to visit, cultural insights, travel tips, and more!
           </p>
           {!user && (
-            <p className="text-xs mt-2 text-blue-400 bg-blue-400/10 px-3 py-2 rounded-lg border border-blue-400/20">
+            <p className="text-xs mt-2 text-blue-400 bg-blue-400/10 px-2 py-1 sm:px-3 sm:py-2 rounded-lg border border-blue-400/20">
               🎯 Guest mode: Chat freely with Shivaay! Your conversation will be
               saved locally and cleared when you close the browser.
             </p>
@@ -724,7 +725,7 @@ export default function ChatInterface({
           {user && (
             <p className="text-xs mt-2">
               Session ID:{" "}
-              <code className="bg-gray-700 text-gray-200 px-2 py-1 rounded text-xs">
+              <code className="bg-gray-700 text-gray-200 px-1 py-0.5 sm:px-2 sm:py-1 rounded text-xs">
                 {sessionId}
               </code>
             </p>

@@ -56,17 +56,28 @@ const AnimatedButton = forwardRef<HTMLButtonElement, ButtonProps>(
     const isIconOnly = !hasChildren && hasIcon;
     const paddingOverride = isIconOnly ? "px-0" : "";
 
-    // Fixed height override to ensure all buttons have the same height
-    const fixedHeightClass = "h-10";
+    // Fixed height override to ensure all buttons have the same height - responsive
+    const fixedHeightClass = "h-8 sm:h-9 md:h-10";
 
     const buttonContent = (
       <>
-        {loading && <Loader className="h-4 w-4 animate-spin" />}
-        {!loading && icon && iconPosition === "left" && icon}
-        {hasChildren && (
-          <span className={cn(hasIcon && "ml-2 first:ml-0")}>{children}</span>
+        {loading && <Loader className="h-3 w-3 sm:h-4 sm:w-4 animate-spin" />}
+        {!loading && icon && iconPosition === "left" && (
+          <span className="text-xs sm:text-sm md:text-base">{icon}</span>
         )}
-        {!loading && icon && iconPosition === "right" && icon}
+        {hasChildren && (
+          <span
+            className={cn(
+              hasIcon && "ml-1 sm:ml-2 first:ml-0",
+              "text-xs sm:text-sm md:text-base truncate"
+            )}
+          >
+            {children}
+          </span>
+        )}
+        {!loading && icon && iconPosition === "right" && (
+          <span className="text-xs sm:text-sm md:text-base">{icon}</span>
+        )}
       </>
     );
 

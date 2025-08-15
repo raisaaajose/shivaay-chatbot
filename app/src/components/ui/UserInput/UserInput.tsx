@@ -54,14 +54,14 @@ export interface BaseUserInputProps {
 }
 
 const baseInputStyles = [
-  // Layout & Sizing - Uniform across all input types
-  "w-full min-h-[2.75rem] px-3 py-2.5",
+  // Layout & Sizing - Responsive across all input types
+  "w-full min-h-[2.25rem] sm:min-h-[2.5rem] md:min-h-[2.75rem] px-2 py-2 sm:px-3 sm:py-2.5",
   // Border & Background - Consistent visual foundation
-  "rounded-lg border border-slate-700 bg-slate-900",
-  // Typography - Uniform text styling
-  "text-sm text-white placeholder:text-slate-400",
+  "rounded-md sm:rounded-lg border border-slate-700 bg-slate-900",
+  // Typography - Responsive text styling
+  "text-xs sm:text-sm md:text-base text-white placeholder:text-slate-400",
   // Focus States - Consistent interaction feedback
-  "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-950",
+  "focus:outline-none focus:ring-1 sm:focus:ring-2 focus:ring-offset-1 sm:focus:ring-offset-2 focus:ring-offset-slate-950",
   "focus:border-blue-500 focus:ring-blue-500/20",
   // Disabled States - Uniform disabled appearance
   "disabled:cursor-not-allowed disabled:opacity-50 disabled:bg-slate-800",
@@ -93,22 +93,22 @@ const UserInput = forwardRef<HTMLDivElement, BaseUserInputProps>(
      * Generates input styles based on current state and configuration
      */
     const getInputStyles = () => {
-      // Conditional padding for icons and password toggles
+      // Conditional padding for icons and password toggles - responsive
       const paddingStyles = cn({
-        "pl-10": hasIcon && !hasPasswordToggle, // Only left icon
-        "pr-10": hasPasswordToggle && !hasIcon, // Only password toggle
-        "px-10": hasIcon && hasPasswordToggle, // Both icon and toggle
+        "pl-8 sm:pl-10": hasIcon && !hasPasswordToggle, // Only left icon
+        "pr-8 sm:pr-10": hasPasswordToggle && !hasIcon, // Only password toggle
+        "px-8 sm:px-10": hasIcon && hasPasswordToggle, // Both icon and toggle
       });
 
-      // Resize styles for textarea elements
+      // Resize styles for textarea elements - responsive
       const resizeStyles = resize
         ? cn({
             "resize-none": resize === "none",
             "resize-y": resize === "vertical",
             "resize-x": resize === "horizontal",
             resize: resize === "both",
-            // Ensure appropriate height for textareas
-            "min-h-[4.5rem]": true, // Always apply minimum height for textareas
+            // Ensure appropriate height for textareas - responsive
+            "min-h-[3.5rem] sm:min-h-[4rem] md:min-h-[4.5rem]": true,
           })
         : "";
 

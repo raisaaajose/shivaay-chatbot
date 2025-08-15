@@ -40,17 +40,20 @@ export default function Hero() {
   };
 
   return (
-    <section className="relative flex flex-col items-center justify-center min-h-screen w-full px-6 py-20 text-white">
+    <section className="relative flex flex-col items-center justify-center min-h-screen w-full px-3 sm:px-4 md:px-6 lg:px-8 py-12 sm:py-16 md:py-20 text-white">
       <motion.div
-        className="max-w-4xl mx-auto text-center space-y-8"
+        className="max-w-2xl sm:max-w-3xl md:max-w-4xl lg:max-w-5xl mx-auto text-center space-y-4 sm:space-y-6 md:space-y-8"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
       >
         {/* Hero Title */}
-        <motion.div className="space-y-4" variants={itemVariants}>
+        <motion.div
+          className="space-y-2 sm:space-y-3 md:space-y-4"
+          variants={itemVariants}
+        >
           <motion.h1
-            className="text-5xl md:text-7xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent"
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent leading-tight"
             initial={{ opacity: 0, scale: 0.5 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{
@@ -62,7 +65,7 @@ export default function Hero() {
             Shivaay
           </motion.h1>
           <motion.p
-            className="text-xl md:text-2xl text-gray-300 font-light"
+            className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-gray-300 font-light px-2 sm:px-0"
             variants={itemVariants}
           >
             Your Multilingual AI Guide to Uttarakhand
@@ -71,11 +74,11 @@ export default function Hero() {
 
         {/* Introduction */}
         <motion.div
-          className="max-w-3xl mx-auto space-y-6"
+          className="max-w-xl sm:max-w-2xl md:max-w-3xl mx-auto space-y-4 sm:space-y-6"
           variants={itemVariants}
         >
           <motion.p
-            className="text-lg md:text-xl text-gray-200 leading-relaxed"
+            className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-200 leading-relaxed px-2 sm:px-0"
             variants={itemVariants}
           >
             Discover the rich cultural heritage, spiritual significance, and
@@ -85,11 +88,11 @@ export default function Hero() {
           </motion.p>
 
           <motion.div
-            className="grid md:grid-cols-3 gap-6 mt-12"
+            className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 md:gap-6 mt-6 sm:mt-8 md:mt-12"
             variants={containerVariants}
           >
             <motion.div
-              className="text-center p-6 rounded-lg bg-white/5 backdrop-blur-sm"
+              className="text-center p-3 sm:p-4 md:p-6 rounded-lg bg-white/5 backdrop-blur-sm"
               variants={featureVariants}
               whileHover={{
                 scale: 1.05,
