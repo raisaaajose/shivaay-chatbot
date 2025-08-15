@@ -91,7 +91,7 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
               {/* Select Button */}
               <ListboxButton
                 className={cn(
-                  "relative cursor-default text-left w-full min-h-[2.75rem] flex items-center",
+                  "relative cursor-default text-left w-full min-h-input flex items-center",
                   !selectedOption && "text-slate-400"
                 )}
               >
