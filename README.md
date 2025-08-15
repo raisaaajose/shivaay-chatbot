@@ -1,9 +1,8 @@
-# Deep-Shiva Chatbot
+# Shivaay Chatbot
+
 > Conversational AI for Tourism in Uttarakhand, India
 
-<p align="center">
-  <img src="./app/public/icon-full.svg" alt="Deep-Shiva Full Logo" width="360" />
-</p>
+![Shivaay Full Logo](./app/public/icon-full.svg)
 
 A conversational AI assistant focused on tourism in Uttarakhand, India. Built with FastAPI, LangChain, LangGraph, and Groq LLM, it leverages Pinecone for vector search and BAAI/bge-m3 embeddings. The project consists of two backends: a main Node.js/TypeScript backend for data management and authentication, and a Python AI backend for conversational AI functionality.
 
@@ -19,7 +18,7 @@ A conversational AI assistant focused on tourism in Uttarakhand, India. Built wi
 - [API Usage](#api-usage)
 - [Environment Variables](#environment-variables)
 - [Notes on Unused Libraries](#notes-on-unused-libraries)
-- [License](#license)
+- [Notes on Unused Libraries](#notes-on-unused-libraries)
 
 ---
 
@@ -35,8 +34,8 @@ A conversational AI assistant focused on tourism in Uttarakhand, India. Built wi
 
 ## Project Structure
 
-```
-deep-shiva-chatbot/
+```text
+shivaay-chatbot/
   ai/
     app.py                # FastAPI backend for chatbot
     pinecone_utils.py     # Pinecone & Hugging Face utilities
@@ -55,7 +54,7 @@ deep-shiva-chatbot/
 ### Python Backend (ai/)
 
 - **[FastAPI](https://fastapi.tiangolo.com/)**: Web framework for building APIs.
-- **[Uvicorn](https://www.uvicorn.org/)**: ASGI server for running FastAPI.
+- **[Uvicorn](https://www.uvicorn.org/)**: ASGI <!-- cspell:ignore ASGI --> server for running FastAPI.
 - **[LangChain Core](https://python.langchain.com/docs/get_started/introduction)**: Framework for LLM applications.
 - **[LangChain Groq](https://python.langchain.com/docs/integrations/llms/groq/)**: Integration for Groq LLMs.
 - **[LangGraph](https://github.com/langchain-ai/langgraph)**: Graph-based orchestration for LLM workflows.
@@ -101,14 +100,16 @@ deep-shiva-chatbot/
 ## Setup Instructions
 
 ### 1. Clone the Repository
-```bash
-git clone <repo-url>
-cd deep-shiva-chatbot
 
+```bash
+git clone https://github.com/raisaaajose/shivaay-chatbot
+cd shivaay-chatbot
 ```
+
 ### 2. Set Up Environment Variables
 
 Copy the example file and fill in your API keys:
+
 ```bash
 cp example.env .env
 ```
@@ -121,6 +122,7 @@ Edit .env and set:
 - Other keys as needed for Node.js backend and frontend
 
 ### 3. Install Python Dependencies
+
 ```bash
 cd ai
 pip install -r requirements.txt
@@ -131,10 +133,12 @@ pip install -r requirements.txt
 ## Running the Application
 
 ### Start the FastAPI Backend
+
 ```bash
 cd ai
 python app.py
 ```
+
 Or, for hot-reload during development:
 
 ```bash
@@ -154,7 +158,7 @@ The API will be available at [http://localhost:8000](http://localhost:8000).
   json
   {
     "session_id": "your_session_id",
-    "user_message": "Tell me about Kedarnath temple"
+    "user_message": "Tell me about Kedarnath temple" <!-- cspell:ignore Kedarnath -->
   }
   
 - *Response*: Chatbot reply as a string.
@@ -198,5 +202,5 @@ See example.env for all options.
 
 ---
 
-*Enjoy exploring Uttarakhand with Deep-Shiva!*  
+*Enjoy exploring Uttarakhand with Shivaay!*  
 For any questions, open an issue or contact the maintainer.
