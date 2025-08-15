@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import api from "../../../utils/api";
 import useNotification from "../../ui/Notification/Notification";
+import { Loader, Card } from "../../ui";
 
 export default function VerifyEmailPage() {
   const [status, setStatus] = useState<"pending" | "success" | "error">(
@@ -63,11 +64,16 @@ export default function VerifyEmailPage() {
 
   return (
     <div className="max-w-md mx-auto p-8 mt-16 text-center text-white">
-      {status === "pending" && (
-        <p className="text-zinc-300">Verifying your email...</p>
-      )}
-      {status === "success" && <p className="text-emerald-400">{message}</p>}
-      {status === "error" && <p className="text-rose-400">{message}</p>}
+      <Card className="p-6 text-center">
+        {status === "pending" && (
+          <div className="flex flex-col items-center space-y-4">
+            <Loader />
+            <p className="text-zinc-300">Verifying your email...</p>
+          </div>
+        )}
+        {status === "success" && <p className="text-emerald-400">{message}</p>}
+        {status === "error" && <p className="text-rose-400">{message}</p>}
+      </Card>
     </div>
   );
 }

@@ -1,8 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
-import Input from "../../../ui/Input/Input";
+import { Input, AnimatedButton, Loader } from "../../../ui";
 import { FaEnvelope, FaLock, FaUser, FaUserCircle } from "react-icons/fa";
-import AnimatedButton from "../../../ui/AnimatedButton/AnimatedButton";
-import Loader from "../../../ui/Loader/Loader";
 
 type AuthFormProps = {
   isLogin: boolean;

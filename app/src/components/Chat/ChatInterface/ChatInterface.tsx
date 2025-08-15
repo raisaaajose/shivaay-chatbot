@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
+import Image from "next/image";
 import { motion, AnimatePresence, Variants } from "framer-motion";
 import { useAuth } from "@/components/Auth/AuthProvider/AuthProvider";
 import {
@@ -540,9 +541,11 @@ export default function ChatInterface({
                       }`}
                     >
                       <motion.div
-                        className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                        className={`w-8 h-8 rounded-full flex items-center justify-center overflow-hidden ${
                           message.sender === "user"
-                            ? "bg-indigo-500 text-white"
+                            ? user?.profilePicture
+                              ? ""
+                              : "bg-indigo-500 text-white"
                             : "text-white"
                         }`}
                         initial={{ scale: 0, rotate: -180 }}
@@ -556,7 +559,17 @@ export default function ChatInterface({
                         whileHover={{ scale: 1.1 }}
                       >
                         {message.sender === "user" ? (
-                          <FiUser size={16} />
+                          user?.profilePicture ? (
+                            <Image
+                              src={user.profilePicture}
+                              alt="User profile"
+                              width={32}
+                              height={32}
+                              className="w-full h-full object-cover rounded-full"
+                            />
+                          ) : (
+                            <FiUser size={16} />
+                          )
                         ) : (
                           <BotIcon size={16} />
                         )}

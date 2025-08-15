@@ -13,7 +13,7 @@ export default function Branding() {
           <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full blur-xl opacity-20 animate-pulse" />
           <Image
             src="/icon.svg"
-            alt="Deep Shiva Chatbot Logo"
+            alt="Shivaay Logo"
             width={120}
             height={120}
             className="w-24 h-24 xl:w-30 xl:h-30 relative z-10"
@@ -22,7 +22,7 @@ export default function Branding() {
         </div>
         <div className="text-center space-y-4">
           <h2 className="text-3xl xl:text-4xl font-bold tracking-tight bg-gradient-to-r from-white via-gray-200 to-gray-300 bg-clip-text text-transparent">
-            Welcome to Deep Shiva Chatbot
+            Welcome to Shivaay
           </h2>
           <p className="text-lg xl:text-xl text-gray-300 text-center max-w-sm leading-relaxed">
             Your intelligent AI companion for seamless conversations and smart
@@ -50,7 +50,7 @@ export default function Branding() {
       </div>
 
       <div className="absolute bottom-6 left-0 w-full text-center text-xs text-gray-400 opacity-70 z-10">
-        © {new Date().getFullYear()} Deep Shiva Chatbot. All rights reserved.
+        © {new Date().getFullYear()} Shivaay. All rights reserved.
       </div>
     </div>
   );

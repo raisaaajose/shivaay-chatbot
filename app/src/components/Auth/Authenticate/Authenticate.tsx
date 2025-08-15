@@ -9,6 +9,7 @@ import { useAuth } from "../AuthProvider/AuthProvider";
 import useNotification from "../../ui/Notification/Notification";
 import { baseURL } from "../../../utils/api";
 import { useRouter } from "next/navigation";
+import { Card } from "../../ui";
 
 export default function Authenticate() {
   const [isLogin, setIsLogin] = useState(true);
@@ -121,7 +122,7 @@ export default function Authenticate() {
 
   return (
     <section className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8">
-      <div className="w-full max-w-5xl bg-gray-950 border border-gray-800 rounded-2xl shadow-2xl p-0 flex flex-col lg:flex-row overflow-hidden backdrop-blur-sm">
+      <Card className="w-full max-w-5xl p-0 flex flex-col lg:flex-row overflow-hidden shadow-2xl">
         <Branding />
         <div className="w-full lg:w-1/2 p-6 sm:p-8 lg:p-12 flex flex-col justify-center min-h-[600px] lg:min-h-[700px]">
           <AuthTabs isLogin={isLogin} setIsLogin={setIsLogin} />
@@ -150,7 +151,7 @@ export default function Authenticate() {
 
           <OAuthButtons googleLogin={googleLogin} oauthLoading={oauthLoading} />
         </div>
-      </div>
+      </Card>
     </section>
   );
 }
