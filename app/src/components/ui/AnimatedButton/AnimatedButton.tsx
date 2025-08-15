@@ -57,7 +57,7 @@ const AnimatedButton = forwardRef<HTMLButtonElement, ButtonProps>(
     const paddingOverride = isIconOnly ? "px-0" : "";
 
     // Fixed height override to ensure all buttons have the same height - responsive
-    // Height is now controlled by the variant system's size prop.
+    const fixedHeightClass = "h-8 sm:h-9 md:h-10";
 
     const buttonContent = (
       <>
