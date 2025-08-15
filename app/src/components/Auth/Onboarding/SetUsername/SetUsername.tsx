@@ -8,6 +8,7 @@ import useNotification, {
   NotificationProvider,
 } from "../../../ui/Notification/Notification";
 import { baseURL } from "../../../../utils/api";
+import { Input, AnimatedButton, Card } from "../../../ui";
 
 const SetUsername: React.FC = () => {
   const [username, setUsername] = useState("");
@@ -70,30 +71,37 @@ const SetUsername: React.FC = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="max-w-md w-fullspace-y-5"
+          className="max-w-md w-full"
         >
-          <h2 className="text-2xl font-bold text-center text-white">
-            Choose a Username
-          </h2>
+          <Card className="p-8 space-y-6">
+            <h2 className="text-2xl font-bold text-center text-white">
+              Choose a Username
+            </h2>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <input
-              type="text"
-              className="bg-neutral-800 border border-neutral-700 text-white p-3 w-full rounded placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter your username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-            />
-            {error && <div className="text-red-400 text-sm">{error}</div>}
-            <button
-              type="submit"
-              className="w-full py-3 rounded-xl font-medium bg-white text-neutral-950 hover:bg-neutral-200 transition duration-300 disabled:opacity-50"
-              disabled={loading}
-            >
-              {loading ? "Setting..." : "Set Username"}
-            </button>
-          </form>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <Input
+                type="text"
+                placeholder="Enter your username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                error={error}
+                label="Username"
+                required
+                disabled={loading}
+              />
+
+              <AnimatedButton
+                type="submit"
+                variant="primary"
+                size="lg"
+                loading={loading}
+                disabled={loading}
+                className="w-full"
+              >
+                {loading ? "Setting..." : "Set Username"}
+              </AnimatedButton>
+            </form>
+          </Card>
         </motion.div>
       </section>
     </NotificationProvider>

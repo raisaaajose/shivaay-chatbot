@@ -43,6 +43,26 @@
   --font-mono: var(--font-geist-mono);
 }
 
+:root {
+  --padding-tiny: 0.25rem 0.5rem;
+  --padding-small: 0.5rem 1rem;
+  --padding-medium: 1rem 1.5rem;
+  --padding-large: 1.5rem 2rem;
+  --padding-huge: 2rem 2.5rem;
+
+  --margin-tiny: 0.25rem 0.5rem;
+  --margin-small: 0.5rem 1rem;
+  --margin-medium: 1rem 1.5rem;
+  --margin-large: 1.5rem 2rem;
+  --margin-huge: 2rem 2.5rem;
+
+  --border-radius-tiny: 0.0625rem;
+  --border-radius-small: 0.125rem;
+  --border-radius-medium: 0.25rem;
+  --border-radius-large: 0.5rem;
+  --border-radius-huge: 1rem;
+}
+
 html,
 body {
   background: var(--background);
@@ -72,7 +92,14 @@ main {
 
 @media (max-width: 768px) {
   main {
-    padding-bottom: 4.5rem;
+    padding: 0.5em 1em 4.5rem 1em;
+  }
+}
+
+/* Tablet adjustments */
+@media (min-width: 769px) and (max-width: 1024px) {
+  main {
+    padding: 1em 1.5em;
   }
 }
 
@@ -96,11 +123,13 @@ select {
   color: var(--foreground);
   width: 100%;
   padding: var(--padding-tiny) var(--padding-small);
-  border: 2px solid #7b8191;
-  ::placeholder {
-    color: #a0aec0;
-    opacity: 1;
-  }
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border: none;
 }
 
 input:-webkit-autofill,
@@ -263,15 +292,22 @@ section table {
   height: auto;
 }
 
+/* Enhanced responsive utilities */
 .responsive-flex-row {
   display: flex;
   flex-wrap: wrap;
   gap: 16px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 640px) {
   .responsive-flex-row {
     flex-direction: column;
+    gap: 8px;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 768px) {
+  .responsive-flex-row {
     gap: 12px;
   }
 }
@@ -282,10 +318,57 @@ section table {
   align-items: center;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 640px) {
   .responsive-flex-center {
     flex-direction: column;
     align-items: stretch;
+    gap: 12px;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 768px) {
+  .responsive-flex-center {
+    gap: 8px;
+  }
+}
+
+/* Enhanced mobile-first responsive design */
+@media (max-width: 480px) {
+  section {
+    padding: var(--padding-tiny) 0;
+    margin: var(--margin-tiny) 0;
+    border-radius: var(--border-radius-small);
+  }
+  section h1 {
+    font-size: 1.1rem;
+  }
+  section h2 {
+    font-size: 0.95rem;
+  }
+  section h3 {
+    font-size: 0.9rem;
+  }
+
+  /* Reduce margins and padding for very small screens */
+  main {
+    padding: 0.25em 0.5em 4.5rem 0.5em;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 640px) {
+  section {
+    padding: var(--padding-small) 0;
+    margin: var(--margin-small) 0;
+    border-radius: var(--border-radius-small);
+  }
+  section h1 {
+    font-size: 1.15rem;
+  }
+  section h2 {
+    font-size: 1rem;
+  }
+  section h3 {
+    font-size: 0.92rem;
   }
 }
 
@@ -329,4 +412,180 @@ section table {
 
 .shivaay-blue:hover {
   color: var(--shivaay-blue-hover);
+}
+
+/* Additional responsive utility classes */
+.mobile-hide {
+  display: block;
+}
+
+@media (max-width: 640px) {
+  .mobile-hide {
+    display: none;
+  }
+}
+
+.mobile-only {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .mobile-only {
+    display: block;
+  }
+}
+
+.tablet-hide {
+  display: block;
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+  .tablet-hide {
+    display: none;
+  }
+}
+
+.tablet-only {
+  display: none;
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+  .tablet-only {
+    display: block;
+  }
+}
+
+.desktop-only {
+  display: none;
+}
+
+@media (min-width: 1025px) {
+  .desktop-only {
+    display: block;
+  }
+}
+
+/* Responsive text sizes */
+.text-responsive-xs {
+  font-size: 0.625rem; /* 10px */
+  line-height: 1rem; /* 16px */
+}
+
+@media (min-width: 640px) {
+  .text-responsive-xs {
+    font-size: 0.75rem; /* 12px */
+    line-height: 1rem; /* 16px */
+  }
+}
+
+.text-responsive-sm {
+  font-size: 0.75rem; /* 12px */
+  line-height: 1rem; /* 16px */
+}
+
+@media (min-width: 640px) {
+  .text-responsive-sm {
+    font-size: 0.875rem; /* 14px */
+    line-height: 1.25rem; /* 20px */
+  }
+}
+
+.text-responsive-base {
+  font-size: 0.875rem; /* 14px */
+  line-height: 1.25rem; /* 20px */
+}
+
+@media (min-width: 640px) {
+  .text-responsive-base {
+    font-size: 1rem; /* 16px */
+    line-height: 1.5rem; /* 24px */
+  }
+}
+
+.text-responsive-lg {
+  font-size: 1rem; /* 16px */
+  line-height: 1.5rem; /* 24px */
+}
+
+@media (min-width: 640px) {
+  .text-responsive-lg {
+    font-size: 1.125rem; /* 18px */
+    line-height: 1.75rem; /* 28px */
+  }
+}
+
+.text-responsive-xl {
+  font-size: 1.125rem; /* 18px */
+  line-height: 1.75rem; /* 28px */
+}
+
+@media (min-width: 640px) {
+  .text-responsive-xl {
+    font-size: 1.25rem; /* 20px */
+    line-height: 1.75rem; /* 28px */
+  }
+}
+
+/* Responsive spacing utilities */
+.spacing-responsive-sm {
+  padding: 0.5rem;
+}
+
+@media (min-width: 640px) {
+  .spacing-responsive-sm {
+    padding: 0.75rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .spacing-responsive-sm {
+    padding: 1rem;
+  }
+}
+
+.spacing-responsive-md {
+  padding: 0.75rem;
+}
+
+@media (min-width: 640px) {
+  .spacing-responsive-md {
+    padding: 1rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .spacing-responsive-md {
+    padding: 1.5rem;
+  }
+}
+
+.spacing-responsive-lg {
+  padding: 1rem;
+}
+
+@media (min-width: 640px) {
+  .spacing-responsive-lg {
+    padding: 1.5rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .spacing-responsive-lg {
+    padding: 2rem;
+  }
+}
+
+/* Touch-friendly button sizes */
+.btn-touch {
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0.75rem 1rem;
+}
+
+@media (min-width: 640px) {
+  .btn-touch {
+    min-height: auto;
+    min-width: auto;
+    padding: 0.5rem 0.75rem;
+  }
 }

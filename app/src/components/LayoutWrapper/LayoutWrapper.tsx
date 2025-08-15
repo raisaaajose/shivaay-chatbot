@@ -23,10 +23,10 @@ export default function LayoutWrapper({
 
   return (
     <div
-      className={clsx("transition-all", {
+      className={clsx("transition-all duration-300 ease-in-out", {
         "m-0": !isMobile && user,
         "mx-[var(--screen-horizontal-margin)]": isMobile || !user,
-        "md:ml-80": !isMobile && user, // Always use wider margin since sidebar shows chats
+        "md:ml-64 lg:ml-72 xl:ml-80": !isMobile && user, // Responsive sidebar margins
       })}
       style={{
         display: "flex",
