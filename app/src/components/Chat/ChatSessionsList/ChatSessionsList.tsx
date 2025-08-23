@@ -17,6 +17,7 @@ import useNotification from "@/components/ui/Notification/Notification";
 import AnimatedButton from "@/components/ui/AnimatedButton/AnimatedButton";
 import Input from "@/components/ui/Input/Input";
 import Modal from "@/components/ui/Modal/Modal";
+import Dropdown from "@/components/ui/Dropdown/Dropdown";
 import {
   FiMessageSquare,
   FiPlus,
@@ -26,6 +27,7 @@ import {
   FiCopy,
   FiEyeOff,
   FiSearch,
+  FiMoreHorizontal,
 } from "react-icons/fi";
 import type { ChatSession } from "@/types/Chat/chat.types";
 
@@ -55,6 +57,7 @@ export default function ChatSessionsList({
     sessionId: string;
     title: string;
   } | null>(null);
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
 
   useEffect(() => {
     const loadSessionsOnMount = async () => {
@@ -93,6 +96,18 @@ export default function ChatSessionsList({
 
     loadSessionsOnMount();
   }, [user, notify]);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = () => {
+      setActiveDropdown(null);
+    };
+
+    if (activeDropdown) {
+      document.addEventListener("click", handleClickOutside);
+      return () => document.removeEventListener("click", handleClickOutside);
+    }
+  }, [activeDropdown]);
 
   const handleCreateNewSession = async () => {
     try {
@@ -305,124 +320,167 @@ export default function ChatSessionsList({
   }
 
   return (
-    <div className="h-full flex flex-col bg-transparent">
-      <div className="px-4 pb-3">
-        <div className="flex items-center gap-2 mb-3">
-          <Input
-            placeholder="Search chats..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            icon={<FiSearch />}
-          />
+    <div className="flex flex-col h-full">
+      {/* Header Section */}
+      <div className="flex-shrink-0 p-4 border-b border-gray-700/50">
+        <div className="flex gap-2">
+          <div className="flex-1">
+            <Input
+              placeholder="Search chats..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              icon={<FiSearch />}
+              className="text-sm h-9"
+            />
+          </div>
           <AnimatedButton
             onClick={handleCreateNewSession}
             variant="primary"
             icon={<FiPlus />}
-            size="icon"
+            size="icon-sm"
+            className="h-9 w-9 flex-shrink-0"
           />
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-4 space-y-2">
+      {/* Sessions List */}
+      <div className="flex-1 overflow-y-auto">
         {loading ? (
-          <div className="text-center py-4 text-gray-400 text-xs">
-            Loading...
+          <div className="flex items-center justify-center h-32">
+            <div className="text-gray-400 text-sm">Loading...</div>
           </div>
         ) : filteredSessions.length === 0 ? (
-          <div className="text-center py-4 text-gray-400 text-xs">
-            {searchQuery ? "No sessions found" : "No chats yet"}
+          <div className="flex items-center justify-center h-32">
+            <div className="text-center text-gray-400 text-sm">
+              <FiMessageSquare className="mx-auto mb-2 text-xl opacity-50" />
+              <p>{searchQuery ? "No sessions found" : "No chats yet"}</p>
+            </div>
           </div>
         ) : (
-          <AnimatePresence>
-            {filteredSessions.map((session) => (
-              <motion.div
-                key={session._id}
-                layout
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.2 }}
-              >
-                <div
-                  onClick={() => {
-                    if (onSelectSession) {
-                      onSelectSession(session.sessionId);
-                    } else {
-                      router.push(`/chat/${session.sessionId}`);
-                    }
-                  }}
-                  className="group flex items-center justify-between px-3 py-2 text-sm rounded-md transition cursor-pointer hover:bg-gray-700 hover:text-white text-white"
-                  style={{ opacity: 0.8 }}
+          <div className="p-2">
+            <AnimatePresence>
+              {filteredSessions.map((session) => (
+                <motion.div
+                  key={session._id}
+                  layout
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.2 }}
+                  className="mb-1"
                 >
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1">
-                      <FiMessageSquare className="text-xs text-gray-400 shrink-0" />
-                      <h4 className="font-medium text-white text-xs truncate">
-                        {session.title}
-                      </h4>
-                      {session.isShared && (
-                        <FiShare2 className="text-green-400 text-xs shrink-0" />
-                      )}
+                  <div
+                    onClick={() => {
+                      if (onSelectSession) {
+                        onSelectSession(session.sessionId);
+                      } else {
+                        router.push(`/chat/${session.sessionId}`);
+                      }
+                    }}
+                    className="group relative p-3 rounded-lg transition-all duration-200 cursor-pointer hover:bg-gray-700/40 border border-transparent hover:border-gray-600/30"
+                  >
+                    {/* Main Content */}
+                    <div className="flex gap-3">
+                      {/* Icon */}
+                      <div className="flex-shrink-0 mt-0.5">
+                        <FiMessageSquare className="text-gray-400 text-base" />
+                      </div>
+
+                      {/* Session Info */}
+                      <div className="flex-1 min-w-0">
+                        {/* Title Row */}
+                        <div className="flex items-start justify-between gap-2 mb-1">
+                          <div className="flex-1 min-w-0">
+                            <h3 className="text-white font-medium text-sm leading-tight break-words">
+                              {session.title}
+                            </h3>
+                          </div>
+                          {session.isShared && (
+                            <FiShare2 className="text-green-400 text-sm flex-shrink-0 mt-0.5" />
+                          )}
+                        </div>
+
+                        {/* Meta Info */}
+                        <div className="text-xs text-gray-400 mb-2">
+                          {getMessageCount(session)} message
+                          {getMessageCount(session) !== 1 ? "s" : ""} •{" "}
+                          {formatDate(session.lastActivity)}
+                        </div>
+                      </div>
                     </div>
-                    <p className="text-xs text-gray-500 ml-4">
-                      {getMessageCount(session)} message
-                      {getMessageCount(session) !== 1 ? "s" : ""} •{" "}
-                      {formatDate(session.lastActivity)}
-                    </p>
-                  </div>
 
-                  <div className="flex items-center gap-0.5 ml-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <AnimatedButton
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setEditingSession(session);
-                        setNewTitle(session.title);
-                      }}
-                      variant="secondary"
-                      icon={<FiEdit3 />}
-                      className="text-xs p-0.5"
-                      size="icon"
-                    />
-
-                    {session.isShared ? (
-                      <AnimatedButton
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleUnshareSession(session);
-                        }}
-                        variant="warning"
-                        icon={<FiEyeOff />}
-                        className="text-xs p-0.5"
-                        size="icon"
+                    {/* Action Menu */}
+                    <div className="absolute top-2 right-2">
+                      <Dropdown
+                        isOpen={activeDropdown === session._id}
+                        onClose={() => setActiveDropdown(null)}
+                        trigger={
+                          <AnimatedButton
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setActiveDropdown(
+                                activeDropdown === session._id
+                                  ? null
+                                  : session._id
+                              );
+                            }}
+                            variant="ghost"
+                            icon={<FiMoreHorizontal />}
+                            size="icon-sm"
+                            className="h-8 w-8 opacity-60 md:opacity-0 md:group-hover:opacity-100 hover:opacity-100 transition-opacity duration-200 hover:bg-gray-600/50"
+                          />
+                        }
+                        items={[
+                          {
+                            id: "edit",
+                            label: "Edit",
+                            icon: <FiEdit3 />,
+                            onClick: () => {
+                              setEditingSession(session);
+                              setNewTitle(session.title);
+                            },
+                          },
+                          {
+                            id: session.isShared ? "unshare" : "share",
+                            label: session.isShared ? "Unshare" : "Share",
+                            icon: session.isShared ? (
+                              <FiEyeOff />
+                            ) : (
+                              <FiShare2 />
+                            ),
+                            variant: session.isShared ? "amber" : "blue",
+                            onClick: () => {
+                              if (session.isShared) {
+                                handleUnshareSession(session);
+                              } else {
+                                handleShareSession(session);
+                              }
+                            },
+                          },
+                          {
+                            id: "divider",
+                            label: "",
+                            onClick: () => {},
+                          },
+                          {
+                            id: "delete",
+                            label: "Delete",
+                            icon: <FiTrash2 />,
+                            variant: "red",
+                            onClick: () => {
+                              handleDeleteSession(session.sessionId);
+                            },
+                          },
+                        ]}
+                        position="bottom-right"
+                        width="w-36"
                       />
-                    ) : (
-                      <AnimatedButton
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleShareSession(session);
-                        }}
-                        variant="secondary"
-                        icon={<FiShare2 />}
-                        className="text-xs p-0.5"
-                        size="icon"
-                      />
-                    )}
-
-                    <AnimatedButton
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleDeleteSession(session.sessionId);
-                      }}
-                      variant="danger"
-                      icon={<FiTrash2 />}
-                      className="text-xs p-0.5"
-                      size="icon"
-                    />
+                    </div>
                   </div>
-                </div>
-              </motion.div>
-            ))}
-          </AnimatePresence>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </div>
         )}
       </div>
 
@@ -444,14 +502,15 @@ export default function ChatSessionsList({
               if (e.key === "Enter") handleEditTitle();
             }}
           />
-          <div className="flex gap-2 justify-end">
+          <div className="flex gap-3 justify-end">
             <AnimatedButton
               onClick={() => {
                 setEditingSession(null);
                 setNewTitle("");
               }}
               variant="secondary"
-              size="icon"
+              size="md"
+              className="px-4 py-2"
             >
               Cancel
             </AnimatedButton>
@@ -459,7 +518,8 @@ export default function ChatSessionsList({
               onClick={handleEditTitle}
               variant="primary"
               disabled={!newTitle.trim()}
-              size="icon"
+              size="md"
+              className="px-4 py-2"
             >
               Save
             </AnimatedButton>
@@ -480,12 +540,14 @@ export default function ChatSessionsList({
             <Input
               value={shareModal?.shareUrl || ""}
               readOnly
-              className="flex-1"
+              className="flex-1 text-sm"
             />
             <AnimatedButton
               onClick={handleCopyShareUrl}
               variant="primary"
               icon={<FiCopy />}
+              size="md"
+              className="px-3 py-2"
             >
               Copy
             </AnimatedButton>
@@ -511,14 +573,21 @@ export default function ChatSessionsList({
             This action cannot be undone. All messages in this session will be
             permanently deleted.
           </p>
-          <div className="flex gap-2 justify-end">
+          <div className="flex gap-3 justify-end">
             <AnimatedButton
               onClick={() => setDeleteModal(null)}
               variant="secondary"
+              size="md"
+              className="px-4 py-2"
             >
               Cancel
             </AnimatedButton>
-            <AnimatedButton onClick={confirmDeleteSession} variant="danger">
+            <AnimatedButton
+              onClick={confirmDeleteSession}
+              variant="danger"
+              size="md"
+              className="px-4 py-2"
+            >
               Delete Session
             </AnimatedButton>
           </div>

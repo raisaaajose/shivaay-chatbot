@@ -33,13 +33,11 @@ const Breadcrumbs: React.FC = () => {
               <MdArrowForwardIos className="text-xs mx-1.5 sm:mx-2 text-[#9DA3B3]/60 flex-shrink-0 transition-colors duration-200" />
               <Link
                 href={href}
-                className={`max-w-[80px] sm:max-w-[120px] md:max-w-[200px] group ${
-                  isLast ? "pointer-events-none" : ""
-                }`}
+                className={`group ${isLast ? "pointer-events-none" : ""}`}
                 aria-current={isLast ? "page" : undefined}
               >
                 <span
-                  className={`text-sm md:text-base font-normal select-none flex items-center h-full tracking-wide truncate transition-all duration-200 ${
+                  className={`text-sm md:text-base font-normal select-none flex items-center h-full tracking-wide transition-all duration-200 ${
                     isLast
                       ? "text-white font-medium"
                       : "text-[#9DA3B3] hover:text-white group-hover:scale-105 transform"

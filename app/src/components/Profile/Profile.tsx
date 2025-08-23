@@ -7,6 +7,7 @@ import {
   FaUserCircle as FaUserIcon,
 } from "react-icons/fa";
 import { useAuth } from "../Auth/AuthProvider/AuthProvider";
+import { useUserStats } from "../../hooks/useUserStats";
 import Loader from "../ui/Loader/Loader";
 import useNotification from "../ui/Notification/Notification";
 import Card from "../ui/Card/Card";
@@ -14,6 +15,7 @@ import AnimatedButton from "../ui/AnimatedButton/AnimatedButton";
 
 const Profile: React.FC = () => {
   const { user, loading, logout } = useAuth();
+  const { stats, loading: statsLoading, error: statsError } = useUserStats();
   const { notify } = useNotification();
   const [imageError, setImageError] = useState(false);
 
@@ -55,6 +57,11 @@ const Profile: React.FC = () => {
         </Card>
       </div>
     );
+  }
+
+  // Show error notification if stats failed to load
+  if (statsError) {
+    notify("Failed to load profile statistics", "error");
   }
 
   return (
@@ -107,27 +114,29 @@ const Profile: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-3 gap-4 mt-6">
+                  <div className="grid grid-cols-2 gap-4 mt-6">
                     <div className="text-center p-3 bg-zinc-800/30 rounded-lg border border-zinc-700/20">
-                      <div className="text-2xl font-bold text-sky-400">42</div>
+                      <div className="text-2xl font-bold text-sky-400">
+                        {statsLoading ? "..." : stats?.totalConversations || 0}
+                      </div>
                       <div className="text-xs text-zinc-400 uppercase tracking-wide">
-                        Conversations
+                        {statsLoading
+                          ? "Conversations"
+                          : stats?.totalConversations === 1
+                          ? "Conversation"
+                          : "Conversations"}
                       </div>
                     </div>
                     <div className="text-center p-3 bg-zinc-800/30 rounded-lg border border-zinc-700/20">
                       <div className="text-2xl font-bold text-emerald-400">
-                        18
+                        {statsLoading ? "..." : stats?.daysActive || 0}
                       </div>
                       <div className="text-xs text-zinc-400 uppercase tracking-wide">
-                        Days Active
-                      </div>
-                    </div>
-                    <div className="text-center p-3 bg-zinc-800/30 rounded-lg border border-zinc-700/20">
-                      <div className="text-2xl font-bold text-purple-400">
-                        95%
-                      </div>
-                      <div className="text-xs text-zinc-400 uppercase tracking-wide">
-                        Satisfaction
+                        {statsLoading
+                          ? "Days Active"
+                          : stats?.daysActive === 1
+                          ? "Day Active"
+                          : "Days Active"}
                       </div>
                     </div>
                   </div>
@@ -145,17 +154,23 @@ const Profile: React.FC = () => {
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between items-center py-2 border-b border-zinc-700/30">
                   <span className="text-zinc-400">Member since</span>
-                  <span className="text-zinc-200 font-medium">Jan 2024</span>
+                  <span className="text-zinc-200 font-medium">
+                    {statsLoading ? "..." : stats?.memberSince || "N/A"}
+                  </span>
                 </div>
                 <div className="flex justify-between items-center py-2 border-b border-zinc-700/30">
                   <span className="text-zinc-400">Account type</span>
-                  <span className="text-sky-400 font-medium">Premium</span>
+                  <span className="text-sky-400 font-medium">
+                    {statsLoading ? "..." : stats?.accountType || "User"}
+                  </span>
                 </div>
                 <div className="flex justify-between items-center py-2">
                   <span className="text-zinc-400">Status</span>
                   <div className="flex items-center gap-2">
                     <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                    <span className="text-green-400 font-medium">Active</span>
+                    <span className="text-green-400 font-medium">
+                      {statsLoading ? "..." : stats?.status || "Active"}
+                    </span>
                   </div>
                 </div>
               </div>

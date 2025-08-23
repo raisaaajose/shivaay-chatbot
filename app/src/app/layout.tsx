@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { AuthProvider } from "../components/Auth/AuthProvider/AuthProvider";
 import { NotificationProvider } from "../components/ui/Notification/Notification";
-import Header from "../components/Header/Header";
-import Footer from "../components/Footer/Footer";
-import Sidebar from "../components/Sidebar/Sidebar";
+import Header from "../components/ui/Header/Header";
+import Footer from "../components/ui/Footer/Footer";
+import Sidebar from "../components/ui/Sidebar/Sidebar";
 import AcceptCookies from "../components/AcceptCookies/AcceptCookies";
-import LayoutWrapper from "../components/LayoutWrapper/LayoutWrapper";
+import LayoutWrapper from "../components/ui/LayoutWrapper/LayoutWrapper";
 // import ServiceWorkerRegister from "../components/ServiceWorkerRegister/ServiceWorkerRegister";
 
 export const metadata: Metadata = {
@@ -119,7 +119,7 @@ export default function RootLayout({
       <head>
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="manifest" href="/manifest.json" />
+        <link rel="manifest" href="/manifest.webmanifest" />
         <link
           rel="apple-touch-icon"
           sizes="180x180"

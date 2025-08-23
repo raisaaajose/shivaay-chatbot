@@ -1,5 +1,5 @@
 import React from "react";
-import { baseURL, aiBaseURL } from "../../utils/api";
+import { baseURL, aiBaseURL } from "../../../utils/api";
 
 const Footer: React.FC = () => {
   return (

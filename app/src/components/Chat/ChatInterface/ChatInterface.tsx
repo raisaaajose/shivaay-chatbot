@@ -15,7 +15,6 @@ import {
   updateChatSession,
   shareChatSession,
   deleteChatSession,
-  addMessage,
 } from "@/utils/chatApi";
 import Card from "@/components/ui/Card/Card";
 import Input from "@/components/ui/Input/Input";
@@ -285,10 +284,9 @@ export default function ChatInterface({
       const finalMessages = [...newMessages, aiMessage];
       setMessages(finalMessages);
 
-      if (user && session) {
-        await addMessage(session.sessionId, userMessage);
-        await addMessage(session.sessionId, aiMessage);
-      } else if (!user) {
+      // Note: When user is authenticated, the AI backend already syncs messages with the API
+      // via the /api/chat/{sessionId}/messages/ai/batch endpoint, so we don't need to add them manually
+      if (!user) {
         saveMessagesToSession(finalMessages, sessionId);
       }
     } catch (error) {

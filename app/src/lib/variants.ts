@@ -6,6 +6,7 @@ export const buttonVariants = cva(
     "transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
     "disabled:pointer-events-none disabled:opacity-50",
     "relative overflow-hidden",
+    "w-auto max-w-full flex-shrink min-w-0",
   ],
   {
     variants: {

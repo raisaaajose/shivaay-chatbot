@@ -1,7 +1,8 @@
 "use client";
 
-import { useAuth } from "../../Auth/AuthProvider/AuthProvider";
-import Loader from "../../ui/Loader/Loader";
+import { useAuth } from "../../../Auth/AuthProvider/AuthProvider";
+import Loader from "../../Loader/Loader";
+import AnimatedButton from "../../AnimatedButton/AnimatedButton";
 import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -118,16 +119,17 @@ export default function Auth() {
                   {user.email}
                 </div>
               </div>
-              <button
+              <AnimatedButton
                 onClick={async () => {
                   setOpen(false);
                   await logout();
                   window.location.href = "/auth";
                 }}
-                className="w-full px-4 py-2.5 text-sm bg-red-600/20 hover:bg-red-600/30 text-red-400 hover:text-red-300 rounded-lg transition-all duration-200 border border-red-600/30 hover:border-red-500/50 font-medium"
+                variant="danger"
+                size="sm"
               >
                 Sign Out
-              </button>
+              </AnimatedButton>
             </motion.div>
           ) : null}
         </AnimatePresence>

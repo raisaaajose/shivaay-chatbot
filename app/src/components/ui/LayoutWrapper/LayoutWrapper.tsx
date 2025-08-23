@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
-import { useAuth } from "../Auth/AuthProvider/AuthProvider";
+import { useAuth } from "../../Auth/AuthProvider/AuthProvider";
 
 export default function LayoutWrapper({
   children,
@@ -26,7 +26,7 @@ export default function LayoutWrapper({
       className={clsx("transition-all duration-300 ease-in-out", {
         "m-0": !isMobile && user,
         "mx-[var(--screen-horizontal-margin)]": isMobile || !user,
-        "md:ml-64 lg:ml-72 xl:ml-80": !isMobile && user, // Responsive sidebar margins
+        "md:ml-64": !isMobile && user, // Fixed sidebar margin
       })}
       style={{
         display: "flex",

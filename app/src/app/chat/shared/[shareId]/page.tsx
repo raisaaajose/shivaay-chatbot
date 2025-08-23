@@ -7,15 +7,9 @@ import { getSharedChatSession } from "@/utils/chatApi";
 import Card from "@/components/ui/Card/Card";
 import AnimatedButton from "@/components/ui/AnimatedButton/AnimatedButton";
 import FormattedMessage from "@/components/Chat/FormattedMessage/FormattedMessage";
-import {
-  FiShare2,
-  FiUser,
-  FiCpu,
-  FiEye,
-  FiHome,
-  FiAlertCircle,
-} from "react-icons/fi";
+import { FiShare2, FiUser, FiEye, FiHome, FiAlertCircle } from "react-icons/fi";
 import type { ChatSession, Message } from "@/types/Chat/chat.types";
+import { BotIcon } from "@/components/Icons/BotIcon";
 
 export default function SharedChatPage() {
   const params = useParams();
@@ -395,13 +389,13 @@ export default function SharedChatPage() {
                           className={`w-8 h-8 rounded-full flex items-center justify-center ${
                             message.sender === "user"
                               ? "bg-indigo-500 text-white"
-                              : "bg-emerald-600 text-white"
+                              : ""
                           }`}
                         >
                           {message.sender === "user" ? (
                             <FiUser size={16} />
                           ) : (
-                            <FiCpu size={16} />
+                            <BotIcon />
                           )}
                         </div>
 

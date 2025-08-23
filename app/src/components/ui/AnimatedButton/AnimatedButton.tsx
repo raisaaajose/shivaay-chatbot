@@ -49,34 +49,36 @@ const AnimatedButton = forwardRef<HTMLButtonElement, ButtonProps>(
     const hasIcon = !!icon || loading;
     const hasChildren = !!children;
 
-    // Use the provided size, but enforce fixed height for consistency
     const buttonSize = size;
-
-    // For icon-only buttons, we need to override padding to center the icon properly
     const isIconOnly = !hasChildren && hasIcon;
     const paddingOverride = isIconOnly ? "px-0" : "";
 
-    // Fixed height override to ensure all buttons have the same height - responsive
-    const fixedHeightClass = "h-8 sm:h-9 md:h-10";
+    const fixedHeightClass = "h-8 sm:h-9 md:h-10 max-w-full w-auto"; // ✅ responsive height & width
 
     const buttonContent = (
       <>
-        {loading && <Loader className="h-3 w-3 sm:h-4 sm:w-4 animate-spin" />}
+        {loading && (
+          <Loader className="h-3 w-3 sm:h-4 sm:w-4 animate-spin shrink-0" />
+        )}
         {!loading && icon && iconPosition === "left" && (
-          <span className="text-xs sm:text-sm md:text-base">{icon}</span>
+          <span className="text-xs sm:text-sm md:text-base shrink-0">
+            {icon}
+          </span>
         )}
         {hasChildren && (
           <span
             className={cn(
               hasIcon && "ml-1 sm:ml-2 first:ml-0",
-              "text-xs sm:text-sm md:text-base truncate"
+              "text-xs sm:text-sm md:text-base truncate min-w-0"
             )}
           >
             {children}
           </span>
         )}
         {!loading && icon && iconPosition === "right" && (
-          <span className="text-xs sm:text-sm md:text-base">{icon}</span>
+          <span className="text-xs sm:text-sm md:text-base shrink-0">
+            {icon}
+          </span>
         )}
       </>
     );
@@ -88,7 +90,8 @@ const AnimatedButton = forwardRef<HTMLButtonElement, ButtonProps>(
           className={cn(
             buttonVariants({ variant, size: buttonSize, className }),
             paddingOverride,
-            fixedHeightClass
+            fixedHeightClass,
+            "flex items-center justify-center gap-1 sm:gap-2 overflow-hidden"
           )}
           {...props}
         >
@@ -103,7 +106,8 @@ const AnimatedButton = forwardRef<HTMLButtonElement, ButtonProps>(
         className={cn(
           buttonVariants({ variant, size: buttonSize, className }),
           paddingOverride,
-          fixedHeightClass
+          fixedHeightClass,
+          "flex items-center justify-center gap-1 sm:gap-2 overflow-hidden"
         )}
         disabled={isDisabled}
         whileHover={!isDisabled ? { scale: 1.02 } : undefined}

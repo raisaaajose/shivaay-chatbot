@@ -1,6 +1,8 @@
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import clsx from "clsx";
+import AnimatedButton from "../AnimatedButton/AnimatedButton";
+import { X } from "lucide-react";
 
 interface ModalProps {
   open: boolean;
@@ -46,21 +48,14 @@ const Modal: React.FC<ModalProps> = ({
             aria-modal="true"
           >
             {showCloseButton && (
-              <button
+              <AnimatedButton
                 onClick={onClose}
-                className="absolute top-2 right-2 sm:top-4 sm:right-4 text-zinc-400 hover:text-white focus:outline-none rounded-full p-1 transition-all duration-200 focus:ring-2 focus:ring-[var(--text-link-color)] hover:bg-[var(--background)]/30 hover:scale-110"
+                className="absolute top-2 right-2 sm:top-4 sm:right-4 !p-2 z-10"
+                variant="ghost"
+                size="sm"
                 aria-label="Close modal"
-              >
-                <svg width="22" height="22" fill="none" viewBox="0 0 24 24">
-                  <path
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M18 6L6 18M6 6l12 12"
-                  />
-                </svg>
-              </button>
+                icon={<X size={18} />}
+              />
             )}
             {title && (
               <h2 className="text-lg sm:text-xl font-bold text-[var(--foreground)] mb-3 sm:mb-5 tracking-tight drop-shadow-sm">

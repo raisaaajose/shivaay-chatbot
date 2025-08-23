@@ -6,7 +6,8 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/server.js",
-    "dev": "nodemon --watch \"src/**/*.ts\" --exec ts-node src/server.ts"
+    "dev": "nodemon --watch \"src/**/*.ts\" --exec ts-node src/server.ts",
+    "cleanup:duplicates": "ts-node src/scripts/cleanup-duplicates.ts"
   },
   "keywords": [],
   "author": "",

@@ -4,10 +4,10 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Branding from "./Branding/Branding";
 import { FiShield, FiUser, FiHome, FiMessageSquare } from "react-icons/fi";
-import { useAuth } from "../Auth/AuthProvider/AuthProvider";
+import { useAuth } from "../../Auth/AuthProvider/AuthProvider";
 import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import ChatSessionsList from "../Chat/ChatSessionsList/ChatSessionsList";
+import ChatSessionsList from "../../Chat/ChatSessionsList/ChatSessionsList";
 
 export default function Sidebar() {
   const { user, loading } = useAuth();
@@ -52,7 +52,7 @@ export default function Sidebar() {
 
   if (loading || !user) return null;
 
-  const sidebarWidth = "w-64 sm:w-72 md:w-80";
+  const sidebarWidth = "w-64";
 
   return (
     <>
