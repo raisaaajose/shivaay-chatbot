@@ -23,19 +23,23 @@ export default function LayoutWrapper({
 
   return (
     <div
-      className={clsx("transition-all duration-300 ease-in-out", {
-        "m-0": !isMobile && user,
-        "mx-[var(--screen-horizontal-margin)]": isMobile || !user,
-        "md:ml-64": !isMobile && user, // Fixed sidebar margin
-      })}
+      className={clsx(
+        "w-full max-w-full overflow-x-hidden transition-all duration-300 ease-in-out",
+        {
+          "m-0": !isMobile && user,
+          "mx-auto px-4 sm:px-6 lg:px-8": isMobile || !user,
+          "md:ml-64": !isMobile && user, // Fixed sidebar margin
+        }
+      )}
       style={{
         display: "flex",
         flexDirection: "column",
         minHeight: "100vh",
         justifyContent: "space-between",
+        boxSizing: "border-box",
       }}
     >
-      {children}
+      <div className="w-full max-w-full overflow-x-hidden">{children}</div>
     </div>
   );
 }
