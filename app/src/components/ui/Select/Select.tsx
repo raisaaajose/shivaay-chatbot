@@ -92,7 +92,7 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
               <ListboxButton
                 className={cn(
                   "relative cursor-default text-left w-full min-h-input flex items-center",
-                  !selectedOption && "text-slate-400"
+                  !selectedOption && "text-white/50"
                 )}
               >
                 <span className="block truncate">
@@ -101,7 +101,7 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
                 <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
                   <ChevronDown
                     className={cn(
-                      "h-4 w-4 text-slate-400 transition-transform duration-200",
+                      "h-4 w-4 text-purple-300/70 transition-transform duration-200",
                       { "rotate-180": open }
                     )}
                   />
@@ -118,7 +118,7 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
                     transition={{ duration: 0.15 }}
                     className="absolute z-50 mt-1 w-full"
                   >
-                    <ListboxOptions className="max-h-60 overflow-auto rounded-lg border border-slate-600 bg-slate-800 py-1.5 shadow-xl shadow-black/20 focus:outline-none sm:text-sm">
+                    <ListboxOptions className="max-h-60 overflow-auto rounded-lg border border-white/10 bg-white/5 backdrop-blur-md py-1.5 shadow-xl shadow-purple-500/20 focus:outline-none sm:text-sm">
                       {options.map((option) => (
                         <ListboxOption
                           key={option.value}
@@ -130,15 +130,15 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
                             disabled: optDisabled,
                           }) =>
                             cn(
-                              "relative cursor-default select-none py-2.5 pl-3 pr-9 transition-colors duration-150",
+                              "relative cursor-default select-none py-2.5 pl-3 pr-9 transition-all duration-150",
                               {
-                                "bg-blue-600 text-white":
+                                "bg-gradient-to-r from-purple-500/20 to-blue-500/20 text-white backdrop-blur-sm":
                                   active && !optDisabled,
-                                "text-slate-300":
+                                "text-white/80 hover:text-white":
                                   !active && !selected && !optDisabled,
-                                "text-white font-medium bg-slate-700/50":
+                                "text-white font-medium bg-gradient-to-r from-purple-600/30 to-blue-600/30 backdrop-blur-sm":
                                   selected && !optDisabled,
-                                "text-slate-500 cursor-not-allowed bg-slate-800/50":
+                                "text-white/30 cursor-not-allowed bg-white/5":
                                   optDisabled,
                               }
                             )
@@ -150,7 +150,7 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
                                 {option.label}
                               </span>
                               {selected && (
-                                <span className="absolute inset-y-0 right-0 flex items-center pr-3 text-blue-400">
+                                <span className="absolute inset-y-0 right-0 flex items-center pr-3 text-purple-300">
                                   <Check className="h-4 w-4" />
                                 </span>
                               )}

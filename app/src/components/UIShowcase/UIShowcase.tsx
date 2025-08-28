@@ -31,7 +31,7 @@ export default function UIPage() {
   const [selectedOption4, setSelectedOption4] = React.useState("");
 
   return (
-    <div className="max-w-6xl mx-auto p-6 space-y-12">
+    <div className="container-sidebar-aware p-6 space-y-12">
       {loading && <Loader variant="overlay" text="Loading components..." />}
 
       <Modal

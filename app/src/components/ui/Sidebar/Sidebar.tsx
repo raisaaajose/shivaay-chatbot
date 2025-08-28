@@ -52,23 +52,21 @@ export default function Sidebar() {
 
   if (loading || !user) return null;
 
-  const sidebarWidth = "w-64";
-
   return (
     <>
       {/* DESKTOP SIDEBAR */}
       <AnimatePresence>
         {user && (
           <motion.aside
-            initial={{ x: -60, opacity: 0 }}
+            initial={{ x: -256, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
-            exit={{ x: -60, opacity: 0 }}
-            transition={{ type: "tween", duration: 0.8, ease: "easeInOut" }}
-            className={`hidden md:flex fixed top-0 left-0 z-40 h-full ${sidebarWidth} bg-[#1a1a1a] border-r border-[#333333] shadow-sm flex-col`}
+            exit={{ x: -256, opacity: 0 }}
+            transition={{ type: "spring", stiffness: 100, damping: 20 }}
+            className="hidden md:flex fixed top-0 left-0 z-40 h-full w-64 bg-gradient-to-b from-slate-900/95 via-purple-900/10 to-slate-900/95 backdrop-blur-xl border-r border-white/10 shadow-2xl shadow-purple-500/10 flex-col"
           >
-            <div className="px-3 sm:px-4 py-4 sm:py-6 border-b border-[#333333]">
+            <div className="px-4 py-6 border-b border-white/10">
               <Branding />
-              <nav className="mt-6 sm:mt-8 flex flex-col space-y-2 sm:space-y-4">
+              <nav className="mt-8 flex flex-col space-y-2">
                 {navItems.map(({ href, label, icon, admin }) => {
                   const isActive =
                     href === "/"
@@ -78,26 +76,20 @@ export default function Sidebar() {
                     <Link
                       key={label}
                       href={href}
-                      className={`sidebar-link flex items-center gap-2 sm:gap-3 px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm rounded-md transition
+                      className={`flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg transition-all duration-200 group
                         ${
                           isActive
-                            ? "bg-gray-700 text-white"
+                            ? "bg-gradient-to-r from-blue-600/20 to-purple-600/20 border border-blue-500/30 text-white"
                             : admin
-                            ? "text-amber-400 hover:bg-amber-500/20 hover:text-white"
-                            : "text-white"
+                            ? "text-amber-400 hover:bg-amber-500/10 hover:text-amber-300 border border-transparent hover:border-amber-500/20"
+                            : "text-gray-300 hover:bg-white/5 hover:text-white border border-transparent hover:border-white/10"
                         }
-                        hover:bg-gray-700 hover:text-white
                       `}
-                      style={
-                        !isActive && !admin
-                          ? { opacity: 0.7 }
-                          : !isActive && admin
-                          ? { opacity: 0.7 }
-                          : undefined
-                      }
                     >
-                      <span className="text-base sm:text-lg">{icon}</span>
-                      <span className="truncate">{label}</span>
+                      <span className="text-lg group-hover:scale-110 transition-transform duration-200">
+                        {icon}
+                      </span>
+                      <span className="truncate font-medium">{label}</span>
                     </Link>
                   );
                 })}
@@ -108,7 +100,7 @@ export default function Sidebar() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 0.5 }}
-              className="flex-1 overflow-hidden"
+              className="flex-1 overflow-hidden px-2"
             >
               <ChatSessionsList onSelectSession={handleSelectSession} />
             </motion.div>
@@ -120,11 +112,11 @@ export default function Sidebar() {
       <AnimatePresence>
         {user && (
           <motion.div
-            initial={{ y: 30, opacity: 0 }}
+            initial={{ y: 60, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            exit={{ y: 30, opacity: 0 }}
+            exit={{ y: 60, opacity: 0 }}
             transition={{ type: "spring", stiffness: 200, damping: 25 }}
-            className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#1a1a1a] border-t border-[#333333] flex h-14"
+            className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-gradient-to-r from-slate-900/95 via-purple-900/10 to-slate-900/95 backdrop-blur-xl border-t border-white/10 flex h-16 shadow-2xl shadow-purple-500/10"
           >
             {mobileNavItems.map(({ href, icon, label, onClick }) => {
               const isActive =
@@ -135,14 +127,11 @@ export default function Sidebar() {
                   <button
                     key={label}
                     onClick={onClick}
-                    className={`flex-1 flex items-center justify-center h-full text-2xl text-white ${
+                    className={`flex-1 flex items-center justify-center h-full text-xl transition-all duration-200 ${
                       showMobileChatSessions
-                        ? "bg-gray-700"
-                        : "hover:bg-gray-700"
+                        ? "bg-blue-600/20 text-blue-300 border-t-2 border-blue-400"
+                        : "text-gray-400 hover:text-white hover:bg-white/5"
                     }`}
-                    style={
-                      !showMobileChatSessions ? { opacity: 0.7 } : undefined
-                    }
                   >
                     {icon}
                   </button>
@@ -153,10 +142,11 @@ export default function Sidebar() {
                 <Link
                   key={label}
                   href={href}
-                  className={`flex-1 flex items-center justify-center h-full text-2xl text-white ${
-                    isActive ? "bg-gray-700" : "hover:bg-gray-700"
+                  className={`flex-1 flex items-center justify-center h-full text-xl transition-all duration-200 ${
+                    isActive
+                      ? "bg-purple-600/20 text-purple-300 border-t-2 border-purple-400"
+                      : "text-gray-400 hover:text-white hover:bg-white/5"
                   }`}
-                  style={!isActive ? { opacity: 0.7 } : undefined}
                 >
                   {icon}
                 </Link>
@@ -182,19 +172,19 @@ export default function Sidebar() {
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="absolute bottom-14 left-0 right-0 bg-[#1a1a1a] border-t border-[#333333] max-h-[60vh] overflow-hidden"
+              className="absolute bottom-16 left-0 right-0 bg-gradient-to-b from-slate-900/95 to-slate-800/95 backdrop-blur-xl border-t border-white/10 max-h-[60vh] overflow-hidden shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="px-4 py-3 border-b border-[#333333] flex justify-between items-center">
-                <h3 className="text-white font-medium">Chat Sessions</h3>
+              <div className="px-4 py-4 border-b border-white/10 flex justify-between items-center">
+                <h3 className="text-white font-semibold">Chat Sessions</h3>
                 <button
                   onClick={() => setShowMobileChatSessions(false)}
-                  className="text-gray-400 hover:text-white"
+                  className="text-gray-400 hover:text-white text-lg w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/10 transition-all duration-200"
                 >
                   ✕
                 </button>
               </div>
-              <div className="overflow-y-auto max-h-[calc(60vh-60px)]">
+              <div className="overflow-y-auto max-h-[calc(60vh-80px)] px-2 pb-2">
                 <ChatSessionsList
                   onSelectSession={(sessionId) => {
                     handleSelectSession(sessionId);

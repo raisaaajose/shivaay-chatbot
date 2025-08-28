@@ -55,20 +55,23 @@ export interface BaseUserInputProps {
 
 const baseInputStyles = [
   // Layout & Sizing - Responsive across all input types
-  "w-full min-h-[2.25rem] sm:min-h-[2.5rem] md:min-h-[2.75rem] px-2 py-2 sm:px-3 sm:py-2.5",
-  // Border & Background - Consistent visual foundation
-  "rounded-md sm:rounded-lg border border-slate-700 bg-slate-900",
+  "w-full min-h-[2.25rem] sm:min-h-[2.5rem] md:min-h-[2.75rem] px-3 py-2.5 sm:px-4 sm:py-3",
+  // Border & Background - Glassmorphism foundation
+  "rounded-xl border backdrop-blur-sm transition-all duration-300",
+  "bg-white/5 border-white/10",
   // Typography - Responsive text styling
-  "text-xs sm:text-sm md:text-base text-white placeholder:text-slate-400",
-  // Focus States - Consistent interaction feedback
-  "focus:outline-none focus:ring-1 sm:focus:ring-2 focus:ring-offset-1 sm:focus:ring-offset-2 focus:ring-offset-slate-950",
-  "focus:border-blue-500 focus:ring-blue-500/20",
-  // Disabled States - Uniform disabled appearance
-  "disabled:cursor-not-allowed disabled:opacity-50 disabled:bg-slate-800",
-  // Transitions - Smooth state changes
-  "transition-all duration-200 ease-in-out",
+  "text-sm sm:text-base text-white placeholder:text-white/50",
+  // Focus States - Enhanced with glassmorphism
+  "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-950",
+  "focus:bg-white/10 focus:border-white/20 focus:ring-purple-500/20",
+  // Hover States - Subtle interaction feedback
+  "hover:bg-white/8 hover:border-white/15",
+  // Disabled States - Consistent disabled appearance
+  "disabled:cursor-not-allowed disabled:opacity-50 disabled:bg-white/5",
   // Selection & Interaction
-  "selection:bg-blue-500/30",
+  "selection:bg-purple-500/30",
+  // Performance
+  "transform-gpu will-change-transform",
 ];
 
 const UserInput = forwardRef<HTMLDivElement, BaseUserInputProps>(
@@ -112,10 +115,10 @@ const UserInput = forwardRef<HTMLDivElement, BaseUserInputProps>(
           })
         : "";
 
-      // Error state styling - consistent red theme
+      // Error state styling - Enhanced with glassmorphism
       const stateStyles = error
-        ? "border-red-500 focus:border-red-500 focus:ring-red-500/20 bg-red-950/20"
-        : "border-slate-700 hover:border-slate-600 focus:border-blue-500 focus:ring-blue-500/20";
+        ? "border-red-500/50 focus:border-red-500/70 focus:ring-red-500/20 bg-red-950/20 backdrop-blur-md"
+        : "border-white/10 hover:border-white/20 focus:border-purple-400/50 focus:ring-purple-500/20";
 
       return cn(
         baseInputStyles,
@@ -143,9 +146,9 @@ const UserInput = forwardRef<HTMLDivElement, BaseUserInputProps>(
           <label
             htmlFor={id}
             className={cn(
-              "text-sm font-medium text-slate-200 block leading-5",
+              "text-sm font-medium block leading-5 text-gradient-primary",
               {
-                "text-slate-500": disabled,
+                "opacity-50": disabled,
               }
             )}
           >
@@ -199,7 +202,7 @@ const UserInput = forwardRef<HTMLDivElement, BaseUserInputProps>(
         {/* Helper Text */}
         {helperText && !error && (
           <p
-            className="text-sm sm:text-xs md:text-sm text-slate-400 leading-5 mt-1.5"
+            className="text-sm sm:text-xs md:text-sm text-white/60 leading-5 mt-1.5"
             id={id ? `${id}-description` : undefined}
           >
             {helperText}
