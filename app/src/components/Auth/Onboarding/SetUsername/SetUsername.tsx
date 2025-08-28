@@ -66,7 +66,7 @@ const SetUsername: React.FC = () => {
 
   return (
     <NotificationProvider>
-      <section className="flex items-center justify-center px-4">
+      <div className="flex items-center justify-center px-4">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -103,7 +103,7 @@ const SetUsername: React.FC = () => {
             </form>
           </Card>
         </motion.div>
-      </section>
+      </div>
     </NotificationProvider>
   );
 };

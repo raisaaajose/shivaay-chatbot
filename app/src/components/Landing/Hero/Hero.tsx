@@ -22,8 +22,8 @@ export default function Hero() {
           >
             <motion.span
               className="mr-3 text-lg"
-              animate={{ rotate: [0, 10, -10, 0] }}
-              transition={{ duration: 2, repeat: Infinity }}
+              animate={{ rotate: [0, 5, -5, 0] }}
+              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
             >
               🏆
             </motion.span>
@@ -36,15 +36,15 @@ export default function Hero() {
           <motion.div className="space-y-6" variants={itemVariants}>
             <motion.h1
               className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent leading-tight tracking-tight"
-              initial={{ opacity: 0, scale: 0.5, rotateX: -20 }}
-              animate={{ opacity: 1, scale: 1, rotateX: 0 }}
+              initial={{ opacity: 0, scale: 0.8, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
               transition={{
-                duration: 1.2,
-                ease: [0.25, 0.46, 0.45, 0.94],
-                delay: 0.5,
+                duration: 1.5,
+                ease: [0.16, 1, 0.3, 1],
+                delay: 0.3,
               }}
               style={{
-                textShadow: "0 0 80px rgba(168, 85, 247, 0.4)",
+                textShadow: "0 0 60px rgba(168, 85, 247, 0.3)",
               }}
             >
               Shivaay
@@ -90,11 +90,12 @@ export default function Hero() {
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
-                  animate={{ x: [0, 5, 0] }}
+                  animate={{ x: [0, 3, 0] }}
                   transition={{
-                    duration: 1.5,
+                    duration: 2,
                     repeat: Infinity,
-                    repeatDelay: 2,
+                    repeatDelay: 3,
+                    ease: "easeInOut",
                   }}
                 >
                   <path

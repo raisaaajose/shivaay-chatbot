@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import Branding from "./Branding/Branding";
 import { FiShield, FiUser, FiHome, FiMessageSquare } from "react-icons/fi";
@@ -13,6 +13,8 @@ export default function Sidebar() {
   const { user, loading } = useAuth();
   const [isAdmin, setIsAdmin] = useState(false);
   const [showMobileChatSessions, setShowMobileChatSessions] = useState(false);
+  const [modalHeight, setModalHeight] = useState(60); // percentage of viewport height
+  const [isDragging, setIsDragging] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
 
@@ -49,6 +51,45 @@ export default function Sidebar() {
   const handleSelectSession = (sessionId: string) => {
     router.push(`/chat/${sessionId}`);
   };
+
+  const handleDragMove = useCallback(
+    (e: TouchEvent) => {
+      if (!isDragging) return;
+
+      const clientY = e.touches[0].clientY;
+      const windowHeight = window.innerHeight;
+      const newHeight = Math.max(
+        30,
+        Math.min(85, ((windowHeight - clientY) / windowHeight) * 100)
+      );
+      setModalHeight(newHeight);
+    },
+    [isDragging]
+  );
+
+  const handleDragStart = (e: React.TouchEvent) => {
+    setIsDragging(true);
+    e.preventDefault();
+  };
+
+  const handleDragEnd = useCallback(() => {
+    setIsDragging(false);
+  }, []);
+
+  // Add event listeners for drag
+  useEffect(() => {
+    if (isDragging) {
+      document.addEventListener("touchmove", handleDragMove, {
+        passive: false,
+      });
+      document.addEventListener("touchend", handleDragEnd);
+
+      return () => {
+        document.removeEventListener("touchmove", handleDragMove);
+        document.removeEventListener("touchend", handleDragEnd);
+      };
+    }
+  }, [isDragging, handleDragMove, handleDragEnd]);
 
   if (loading || !user) return null;
 
@@ -172,11 +213,19 @@ export default function Sidebar() {
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="absolute bottom-16 left-0 right-0 bg-gradient-to-b from-slate-900/95 to-slate-800/95 backdrop-blur-xl border-t border-white/10 max-h-[60vh] overflow-hidden shadow-2xl"
+              className="absolute bottom-16 left-0 right-0 bg-gradient-to-b from-slate-900/95 to-slate-800/95 backdrop-blur-xl border-t border-white/10 shadow-2xl"
+              style={{ height: `${modalHeight}vh` }}
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="px-4 py-4 border-b border-white/10 flex justify-between items-center">
-                <h3 className="text-white font-semibold">Chat Sessions</h3>
+              {/* Drag Handle */}
+              <div
+                className="px-4 py-3 border-b border-white/10 flex justify-between items-center cursor-grab active:cursor-grabbing touch-none select-none"
+                onTouchStart={handleDragStart}
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-1 bg-gray-500 rounded-full mx-auto"></div>
+                  <h3 className="text-white font-semibold">Chat Sessions</h3>
+                </div>
                 <button
                   onClick={() => setShowMobileChatSessions(false)}
                   className="text-gray-400 hover:text-white text-lg w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/10 transition-all duration-200"
@@ -184,7 +233,10 @@ export default function Sidebar() {
                   ✕
                 </button>
               </div>
-              <div className="overflow-y-auto max-h-[calc(60vh-80px)] px-2 pb-2">
+              <div
+                className="overflow-y-auto px-2 pb-2"
+                style={{ height: `calc(${modalHeight}vh - 80px)` }}
+              >
                 <ChatSessionsList
                   onSelectSession={(sessionId) => {
                     handleSelectSession(sessionId);

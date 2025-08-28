@@ -83,16 +83,17 @@ export default function TourismFocus() {
                 <motion.div
                   className={`inline-flex items-center justify-center w-20 h-20 bg-white/10 backdrop-blur-sm rounded-2xl mb-6 text-5xl ${item.iconColor} relative z-10`}
                   animate={{
-                    rotate: [0, 5, -5, 0],
-                    scale: [1, 1.05, 1],
+                    rotate: [0, 2, -2, 0],
+                    scale: [1, 1.02, 1],
                   }}
                   transition={{
-                    duration: 4,
+                    duration: 6,
                     repeat: Infinity,
-                    repeatDelay: 2,
-                    delay: index * 0.5,
+                    repeatDelay: 4,
+                    delay: index * 0.3,
+                    ease: "easeInOut",
                   }}
-                  whileHover={{ scale: 1.1, rotate: 10 }}
+                  whileHover={{ scale: 1.1, rotate: 5 }}
                 >
                   {item.icon}
                 </motion.div>

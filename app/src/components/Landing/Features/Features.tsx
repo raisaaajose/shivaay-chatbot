@@ -79,15 +79,10 @@ export default function Features() {
         >
           <motion.div className="text-center mb-20" variants={itemVariants}>
             <motion.h2
-              className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-6"
-              whileInView={{
-                backgroundImage: [
-                  "linear-gradient(45deg, #ffffff, #ffffff)",
-                  "linear-gradient(45deg, #8b5cf6, #06b6d4, #8b5cf6)",
-                  "linear-gradient(45deg, #ffffff, #ffffff)",
-                ],
-              }}
-              transition={{ duration: 3, repeat: Infinity }}
+              className="text-4xl sm:text-5xl md:text-6xl font-bold bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent mb-6"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
             >
               Key Features & Capabilities
             </motion.h2>

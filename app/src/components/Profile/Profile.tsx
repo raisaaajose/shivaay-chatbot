@@ -8,10 +8,8 @@ import {
 } from "react-icons/fa";
 import { useAuth } from "../Auth/AuthProvider/AuthProvider";
 import { useUserStats } from "../../hooks/useUserStats";
-import Loader from "../ui/Loader/Loader";
+import { Loader, Card, AnimatedButton, Badge } from "../ui";
 import useNotification from "../ui/Notification/Notification";
-import Card from "../ui/Card/Card";
-import AnimatedButton from "../ui/AnimatedButton/AnimatedButton";
 
 const Profile: React.FC = () => {
   const { user, loading, logout } = useAuth();
@@ -87,7 +85,12 @@ const Profile: React.FC = () => {
                       </div>
                     )}
 
-                    <div className="absolute bottom-2 right-2 w-6 h-6 bg-green-500 rounded-full border-4 border-zinc-900 shadow-lg"></div>
+                    <Badge
+                      variant="success"
+                      className="absolute bottom-2 right-2 px-2 py-1 text-xs font-medium"
+                    >
+                      Online
+                    </Badge>
                   </div>
 
                   <div className="absolute inset-0 rounded-full bg-sky-500/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
@@ -95,13 +98,23 @@ const Profile: React.FC = () => {
 
                 <div className="flex-1 text-center sm:text-left space-y-4">
                   <div>
-                    <h2 className="text-3xl font-bold text-white mb-1 break-words">
-                      {user.name}
-                    </h2>
+                    <div className="flex items-center gap-3 mb-1">
+                      <h2 className="text-3xl font-bold text-white break-words">
+                        {user.name}
+                      </h2>
+                      <Badge variant="success" className="text-xs">
+                        Verified
+                      </Badge>
+                    </div>
                     {user.username && (
-                      <p className="text-sky-400 text-lg font-medium">
-                        @{user.username}
-                      </p>
+                      <div className="flex items-center gap-2">
+                        <Badge
+                          variant="outline"
+                          className="text-sky-400 border-sky-400/30"
+                        >
+                          @{user.username}
+                        </Badge>
+                      </div>
                     )}
                   </div>
 
@@ -115,7 +128,7 @@ const Profile: React.FC = () => {
                   </div>
 
                   <div className="grid grid-cols-2 gap-4 mt-6">
-                    <div className="text-center p-3 bg-zinc-800/30 rounded-lg border border-zinc-700/20">
+                    <div className="text-center p-3 bg-zinc-800/30 rounded-lg border border-zinc-700/20 relative">
                       <div className="text-2xl font-bold text-sky-400">
                         {statsLoading ? "..." : stats?.totalConversations || 0}
                       </div>
@@ -127,7 +140,7 @@ const Profile: React.FC = () => {
                           : "Conversations"}
                       </div>
                     </div>
-                    <div className="text-center p-3 bg-zinc-800/30 rounded-lg border border-zinc-700/20">
+                    <div className="text-center p-3 bg-zinc-800/30 rounded-lg border border-zinc-700/20 relative">
                       <div className="text-2xl font-bold text-emerald-400">
                         {statsLoading ? "..." : stats?.daysActive || 0}
                       </div>
@@ -147,37 +160,48 @@ const Profile: React.FC = () => {
 
           <div className="space-y-6">
             <Card className="p-6 bg-gradient-to-br from-zinc-900/50 to-zinc-800/30 border border-zinc-700/50 backdrop-blur-xl">
-              <h3 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
-                <div className="w-2 h-2 bg-emerald-400 rounded-full"></div>
+              <h3 className="text-xl font-semibold text-white mb-4 flex items-center gap-3">
+                <Badge
+                  variant="success"
+                  className="w-2 h-2 p-0 rounded-full"
+                ></Badge>
                 Account Info
               </h3>
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between items-center py-2 border-b border-zinc-700/30">
                   <span className="text-zinc-400">Member since</span>
-                  <span className="text-zinc-200 font-medium">
-                    {statsLoading ? "..." : stats?.memberSince || "N/A"}
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-zinc-200 font-medium">
+                      {statsLoading ? "..." : stats?.memberSince || "N/A"}
+                    </span>
+                    {!statsLoading && stats?.memberSince && (
+                      <Badge variant="warning" className="text-xs">
+                        Member
+                      </Badge>
+                    )}
+                  </div>
                 </div>
                 <div className="flex justify-between items-center py-2 border-b border-zinc-700/30">
                   <span className="text-zinc-400">Account type</span>
-                  <span className="text-sky-400 font-medium">
+                  <Badge variant="primary">
                     {statsLoading ? "..." : stats?.accountType || "User"}
-                  </span>
+                  </Badge>
                 </div>
                 <div className="flex justify-between items-center py-2">
                   <span className="text-zinc-400">Status</span>
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                    <span className="text-green-400 font-medium">
-                      {statsLoading ? "..." : stats?.status || "Active"}
-                    </span>
-                  </div>
+                  <Badge variant="success" className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                    {statsLoading ? "..." : stats?.status || "Active"}
+                  </Badge>
                 </div>
               </div>
             </Card>
             <Card className="p-6 bg-gradient-to-br from-zinc-900/50 to-zinc-800/30 border border-zinc-700/50 backdrop-blur-xl">
-              <h3 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
-                <div className="w-2 h-2 bg-sky-400 rounded-full"></div>
+              <h3 className="text-xl font-semibold text-white mb-4 flex items-center gap-3">
+                <Badge
+                  variant="primary"
+                  className="w-2 h-2 p-0 rounded-full"
+                ></Badge>
                 Quick Actions
               </h3>
               <div className="space-y-3 py-4">

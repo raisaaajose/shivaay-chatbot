@@ -322,8 +322,8 @@ export default function ChatSessionsList({
   return (
     <div className="flex flex-col h-full">
       {/* Header Section */}
-      <div className="flex-shrink-0 p-4 border-b border-gray-700/50">
-        <div className="flex gap-2">
+      <div className="flex-shrink-0 p-3 md:p-4 border-b border-gray-700/50">
+        <div className="flex items-center gap-2">
           <div className="flex-1">
             <Input
               placeholder="Search chats..."
@@ -338,7 +338,7 @@ export default function ChatSessionsList({
             variant="primary"
             icon={<FiPlus />}
             size="icon-sm"
-            className="h-9 w-9 flex-shrink-0"
+            className="h-9 w-9 flex-shrink-0 flex items-center justify-center"
           />
         </div>
       </div>
@@ -357,7 +357,7 @@ export default function ChatSessionsList({
             </div>
           </div>
         ) : (
-          <div className="p-2">
+          <div className="p-1 md:p-2">
             <AnimatePresence>
               {filteredSessions.map((session) => (
                 <motion.div
@@ -377,31 +377,38 @@ export default function ChatSessionsList({
                         router.push(`/chat/${session.sessionId}`);
                       }
                     }}
-                    className="group relative p-3 rounded-lg transition-all duration-200 cursor-pointer hover:bg-gray-700/40 border border-transparent hover:border-gray-600/30"
+                    className="group relative p-2 md:p-3 rounded-lg transition-all duration-200 cursor-pointer hover:bg-gray-700/40 border border-transparent hover:border-gray-600/30"
                   >
                     {/* Main Content */}
-                    <div className="flex gap-3">
+                    <div className="flex gap-2 md:gap-3">
                       {/* Icon */}
                       <div className="flex-shrink-0 mt-0.5">
-                        <FiMessageSquare className="text-gray-400 text-base" />
+                        <FiMessageSquare className="text-gray-400 text-sm md:text-base" />
                       </div>
 
                       {/* Session Info */}
                       <div className="flex-1 min-w-0">
                         {/* Title Row */}
                         <div className="flex items-start justify-between gap-2 mb-1">
-                          <div className="flex-1 min-w-0">
-                            <h3 className="text-white font-medium text-sm leading-tight break-words">
+                          <div className="flex-1 min-w-0 pr-6 md:pr-0">
+                            <h3
+                              className="text-white font-medium text-sm leading-tight break-words overflow-hidden"
+                              style={{
+                                display: "-webkit-box",
+                                WebkitLineClamp: 2,
+                                WebkitBoxOrient: "vertical",
+                              }}
+                            >
                               {session.title}
                             </h3>
                           </div>
                           {session.isShared && (
-                            <FiShare2 className="text-green-400 text-sm flex-shrink-0 mt-0.5" />
+                            <FiShare2 className="text-green-400 text-xs md:text-sm flex-shrink-0 mt-0.5" />
                           )}
                         </div>
 
                         {/* Meta Info */}
-                        <div className="text-xs text-gray-400 mb-2">
+                        <div className="text-xs text-gray-400 mb-1 md:mb-2">
                           {getMessageCount(session)} message
                           {getMessageCount(session) !== 1 ? "s" : ""} •{" "}
                           {formatDate(session.lastActivity)}
@@ -410,7 +417,7 @@ export default function ChatSessionsList({
                     </div>
 
                     {/* Action Menu */}
-                    <div className="absolute top-2 right-2">
+                    <div className="absolute top-1 right-1 md:top-2 md:right-2">
                       <Dropdown
                         isOpen={activeDropdown === session._id}
                         onClose={() => setActiveDropdown(null)}
@@ -427,7 +434,7 @@ export default function ChatSessionsList({
                             variant="ghost"
                             icon={<FiMoreHorizontal />}
                             size="icon-sm"
-                            className="h-8 w-8 opacity-60 md:opacity-0 md:group-hover:opacity-100 hover:opacity-100 transition-opacity duration-200 hover:bg-gray-600/50"
+                            className="h-6 w-6 md:h-8 md:w-8 opacity-70 md:opacity-60 md:group-hover:opacity-100 hover:opacity-100 transition-opacity duration-200 hover:bg-gray-600/50"
                           />
                         }
                         items={[

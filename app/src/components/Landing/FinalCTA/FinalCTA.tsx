@@ -17,16 +17,11 @@ export default function FinalCTA() {
           viewport={{ once: true }}
         >
           <motion.h2
-            className="text-5xl sm:text-6xl md:text-7xl font-bold text-white mb-8 leading-tight"
+            className="text-5xl sm:text-6xl md:text-7xl font-bold bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent mb-8 leading-tight"
             variants={itemVariants}
-            whileInView={{
-              backgroundImage: [
-                "linear-gradient(45deg, #ffffff, #ffffff)",
-                "linear-gradient(45deg, #8b5cf6, #06b6d4, #f59e0b, #8b5cf6)",
-                "linear-gradient(45deg, #ffffff, #ffffff)",
-              ],
-            }}
-            transition={{ duration: 4, repeat: Infinity }}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, ease: "easeOut" }}
           >
             Experience the Future of Tourism
           </motion.h2>
@@ -55,23 +50,31 @@ export default function FinalCTA() {
               whileTap={{ scale: 0.95 }}
               className="relative group"
             >
-              <div className="absolute -inset-2 bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 rounded-full blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt" />
+              <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 rounded-full blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt" />
               <Link
                 href="/chat"
-                className="relative inline-flex items-center px-12 py-6 text-xl font-bold text-white bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 rounded-full shadow-2xl transition-all duration-300 hover:shadow-purple-500/25"
+                className="relative inline-flex items-center px-12 py-6 text-xl font-bold text-white bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 rounded-full shadow-sm transition-all duration-300 hover:shadow-purple-500/25"
               >
                 <motion.span
                   className="mr-4 text-2xl"
-                  animate={{ rotate: [0, 10, -10, 0] }}
-                  transition={{ duration: 2, repeat: Infinity }}
+                  animate={{ rotate: [0, 3, -3, 0] }}
+                  transition={{
+                    duration: 4,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
                 >
                   🚀
                 </motion.span>
                 Start Chatting Now
                 <motion.span
                   className="ml-4 text-2xl"
-                  animate={{ x: [0, 5, 0] }}
-                  transition={{ duration: 1.5, repeat: Infinity }}
+                  animate={{ x: [0, 2, 0] }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
                 >
                   →
                 </motion.span>
