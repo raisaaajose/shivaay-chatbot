@@ -2,7 +2,7 @@ name: Build and Push Docker image to GHCR
 
 on:
   push:
-    branches: [main]
+    branches: ["**"]
   workflow_dispatch:
 
 jobs:
@@ -26,7 +26,12 @@ jobs:
       - name: Set lowercase image name
         id: meta
         run: |
-          IMAGE_NAME="ghcr.io/${GITHUB_REPOSITORY,,}:latest"
+          if [ "${{ github.ref_name }}" = "main" ]; then
+            TAG="latest"
+          else
+            TAG="${{ github.ref_name }}"
+          fi
+          IMAGE_NAME="ghcr.io/${GITHUB_REPOSITORY,,}:${TAG}"
           echo "image=$IMAGE_NAME" >> $GITHUB_OUTPUT
 
       - name: Build and push Docker image
