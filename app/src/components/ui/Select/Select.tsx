@@ -38,16 +38,7 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
     },
     ref
   ) => {
-    const {
-      label,
-      error,
-      helperText,
-      wrapperClassName,
-      id,
-      required,
-      disabled,
-      inputClassName,
-    } = props;
+    const { disabled } = props;
 
     const selectedOption = options.find((opt) => opt.value === value);
 

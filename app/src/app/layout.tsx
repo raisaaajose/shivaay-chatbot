@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { AuthProvider } from "../components/Auth/AuthProvider/AuthProvider";
 import { NotificationProvider } from "../components/ui/Notification/Notification";
@@ -7,7 +7,7 @@ import Footer from "../components/ui/Footer/Footer";
 import Sidebar from "../components/ui/Sidebar/Sidebar";
 import AcceptCookies from "../components/AcceptCookies/AcceptCookies";
 import LayoutWrapper from "../components/ui/LayoutWrapper/LayoutWrapper";
-// import ServiceWorkerRegister from "../components/ServiceWorkerRegister/ServiceWorkerRegister";
+import ServiceWorkerRegister from "../components/ServiceWorkerRegister/ServiceWorkerRegister";
 
 export const metadata: Metadata = {
   title: "Shivaay",
@@ -107,6 +107,9 @@ export const metadata: Metadata = {
   ],
   applicationName: "Shivaay",
   category: "Entertainment",
+};
+
+export const viewport: Viewport = {
   themeColor: "#361d56",
 };
 
@@ -135,7 +138,7 @@ export default function RootLayout({
               <Header />
               {children}
               <Footer />
-              {/* <ServiceWorkerRegister /> */}
+              <ServiceWorkerRegister />
             </LayoutWrapper>
             <AcceptCookies />
           </AuthProvider>
