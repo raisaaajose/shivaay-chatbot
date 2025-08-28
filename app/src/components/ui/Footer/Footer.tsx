@@ -27,6 +27,14 @@ const Footer: React.FC = () => {
           AI
         </a>
         <a
+          className="text-gray-400 hover:text-purple-400 transition-colors duration-200 hover:scale-105 transform"
+          href="/ui"
+          rel="noopener noreferrer"
+        >
+          UI
+        </a>
+
+        <a
           href="https://github.com/raisaaajose/shivaay-chatbot"
           target="_blank"
           rel="noopener noreferrer"

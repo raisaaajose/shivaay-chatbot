@@ -19,6 +19,7 @@ import {
 import Card from "@/components/ui/Card/Card";
 import Input from "@/components/ui/Input/Input";
 import AnimatedButton from "@/components/ui/AnimatedButton/AnimatedButton";
+import Badge from "@/components/ui/Badge/Badge";
 import Modal from "@/components/ui/Modal/Modal";
 import useNotification from "@/components/ui/Notification/Notification";
 import {
@@ -709,24 +710,40 @@ export default function ChatInterface({
         className="p-2 sm:p-3 md:p-4 border-t border-white/10 glass backdrop-blur-xl"
         variants={itemVariants}
       >
-        <div className="text-center text-gray-200">
-          <p className="text-xs sm:text-sm">
-            Shivaay is your AI guide for Uttarakhand tourism. Ask about places
-            to visit, cultural insights, travel tips, and more!
+        <div className="text-center space-y-3">
+          <div className="flex flex-wrap justify-center gap-2">
+            <Badge variant="primary" className="text-xs sm:text-sm">
+              🧭 AI Tourism Guide
+            </Badge>
+            <Badge variant="secondary" className="text-xs sm:text-sm">
+              🏔️ Uttarakhand Expert
+            </Badge>
+            <Badge variant="success" className="text-xs sm:text-sm">
+              ✨ Cultural Insights
+            </Badge>
+            <Badge variant="warning" className="text-xs sm:text-sm">
+              🗺️ Travel Tips
+            </Badge>
+          </div>
+
+          <p className="text-xs sm:text-sm text-gray-200">
+            Ask about places to visit, cultural insights, travel tips, and more!
           </p>
+
           {!user && (
-            <p className="text-xs mt-2 text-blue-300 glass border border-blue-400/30 px-2 py-1 sm:px-3 sm:py-2 rounded-xl backdrop-blur-xl animate-shimmer">
-              🎯 Guest mode: Chat freely with Shivaay! Your conversation will be
-              saved locally and cleared when you close the browser.
-            </p>
+            <div className="flex justify-center">
+              <Badge variant="primary" className="text-xs animate-shimmer">
+                🎯 Guest Mode: Chat saved locally
+              </Badge>
+            </div>
           )}
+
           {user && (
-            <p className="text-xs mt-2">
-              Session ID:{" "}
-              <code className="glass border border-purple-400/30 text-gray-200 px-1 py-0.5 sm:px-2 sm:py-1 rounded text-xs backdrop-blur-xl">
-                {sessionId}
-              </code>
-            </p>
+            <div className="flex justify-center items-center gap-2">
+              <Badge variant="default" className="text-xs font-mono">
+                Session ID: {sessionId}
+              </Badge>
+            </div>
           )}
         </div>
       </motion.div>

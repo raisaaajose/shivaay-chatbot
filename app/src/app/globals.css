@@ -528,8 +528,12 @@ section .grid > * {
   }
 }
 
-/* Custom scrollbar */
 ::-webkit-scrollbar {
+  display: none;
+}
+
+/* Custom scrollbar */
+/* ::-webkit-scrollbar {
   width: 8px;
 }
 
@@ -552,7 +556,7 @@ section .grid > * {
     var(--primary-gradient-end) 0%,
     var(--primary-gradient-start) 100%
   );
-}
+} */
 
 /* Enhanced animations from Landing page */
 @keyframes tilt {
