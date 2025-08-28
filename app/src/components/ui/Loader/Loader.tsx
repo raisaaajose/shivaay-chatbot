@@ -22,13 +22,15 @@ const Loader = forwardRef<HTMLDivElement, LoaderProps>(
   ({ className, size = "md", variant = "default", text }, ref) => {
     const loaderContent = (
       <div className="flex flex-col items-center gap-3">
-        <Loader2 className={cn("animate-spin text-blue-500", sizeMap[size])} />
+        <Loader2
+          className={cn("animate-spin text-purple-400", sizeMap[size])}
+        />
         {text && (
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
-            className="text-sm text-slate-400"
+            className="text-sm text-white/70"
           >
             {text}
           </motion.p>
@@ -44,11 +46,11 @@ const Loader = forwardRef<HTMLDivElement, LoaderProps>(
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           className={cn(
-            "fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm",
+            "fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-md",
             className
           )}
         >
-          <div className="rounded-lg bg-slate-900 p-6 shadow-xl border border-slate-700">
+          <div className="rounded-lg bg-white/10 backdrop-blur-xl p-6 shadow-xl border border-white/20 shadow-purple-500/20">
             {loaderContent}
           </div>
         </motion.div>
@@ -74,7 +76,7 @@ const Loader = forwardRef<HTMLDivElement, LoaderProps>(
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         className={cn(
-          "flex items-center justify-center min-h-screen bg-slate-950",
+          "flex items-center justify-center min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900",
           className
         )}
       >

@@ -49,7 +49,7 @@ class ErrorBoundary extends Component<Props, State> {
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ delay: 0.1 }}
-            className="rounded-full bg-red-500/10 p-6 mb-6"
+            className="rounded-full bg-red-500/20 backdrop-blur-sm border border-red-500/30 p-6 mb-6"
           >
             <AlertTriangle className="h-12 w-12 text-red-500" />
           </motion.div>
@@ -67,7 +67,7 @@ class ErrorBoundary extends Component<Props, State> {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3 }}
-            className="text-slate-400 mb-6 max-w-md"
+            className="text-white/70 mb-6 max-w-md"
           >
             An unexpected error occurred. You can try refreshing the page or
             contact support if the problem persists.
@@ -80,10 +80,10 @@ class ErrorBoundary extends Component<Props, State> {
               transition={{ delay: 0.4 }}
               className="mb-6 text-left w-full max-w-2xl"
             >
-              <summary className="cursor-pointer text-sm text-slate-400 hover:text-slate-300 mb-2">
+              <summary className="cursor-pointer text-sm text-white/60 hover:text-white/80 mb-2">
                 Error Details (Development Only)
               </summary>
-              <pre className="text-xs text-red-400 bg-slate-900 p-4 rounded-lg overflow-auto">
+              <pre className="text-xs text-red-300 bg-white/5 backdrop-blur-sm border border-red-500/20 p-4 rounded-lg overflow-auto">
                 {this.state.error.stack}
               </pre>
             </motion.details>
@@ -96,7 +96,7 @@ class ErrorBoundary extends Component<Props, State> {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={this.handleReset}
-            className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-slate-950"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:ring-offset-2 focus:ring-offset-transparent backdrop-blur-sm shadow-lg hover:shadow-purple-500/20"
           >
             <RefreshCw className="h-4 w-4" />
             Try Again

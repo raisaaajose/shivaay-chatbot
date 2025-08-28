@@ -11,12 +11,13 @@ export type { TextareaProps } from "./Textarea/Textarea";
 export { default as UserInput } from "./UserInput/UserInput";
 export type { BaseUserInputProps } from "./UserInput/UserInput";
 
-// Button Components - Interactive UI elements
+// Button Components - Interactive UI elements with enhanced animations
 export { default as AnimatedButton } from "./AnimatedButton/AnimatedButton";
 export type { ButtonProps } from "./AnimatedButton/AnimatedButton";
 
-// Layout Components - Structure and organization
+// Layout Components - Structure and organization with glassmorphism
 export { default as Card } from "./Card/Card";
+export type { CardProps } from "./Card/Card";
 
 // Feedback Components - User feedback and notifications
 export { default as Loader } from "./Loader/Loader";

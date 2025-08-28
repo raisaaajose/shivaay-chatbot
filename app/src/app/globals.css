@@ -34,13 +34,38 @@
   --foreground: #ededed;
   --shivaay-blue: #002c7e;
   --shivaay-blue-hover: #023696;
-}
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Landing Page Inspired Color System */
+  --primary-gradient-start: #667eea;
+  --primary-gradient-end: #764ba2;
+  --secondary-gradient-start: #f093fb;
+  --secondary-gradient-end: #f5576c;
+  --accent-gradient-start: #4facfe;
+  --accent-gradient-end: #00f2fe;
+
+  /* Semantic Colors */
+  --blue-400: #60a5fa;
+  --blue-500: #3b82f6;
+  --blue-600: #2563eb;
+  --purple-400: #c084fc;
+  --purple-500: #a855f7;
+  --purple-600: #9333ea;
+  --cyan-400: #22d3ee;
+  --emerald-400: #34d399;
+  --orange-400: #fb923c;
+  --rose-400: #fb7185;
+
+  /* Glass Effects */
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-strong-bg: rgba(255, 255, 255, 0.1);
+  --glass-strong-border: rgba(255, 255, 255, 0.2);
+
+  /* Shadows and Glows */
+  --glow-primary: 0 0 20px rgba(139, 92, 246, 0.3);
+  --glow-primary-strong: 0 0 40px rgba(139, 92, 246, 0.6);
+  --shadow-primary: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  --shadow-glow: 0 0 80px rgba(168, 85, 247, 0.4);
 }
 
 :root {
@@ -70,46 +95,122 @@ body {
   font-family: "Red Hat Display", Arial, Helvetica, sans-serif;
   scroll-behavior: smooth;
   overflow-y: scroll;
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   font-size: var(--font-size-medium);
   font-weight: var(--font-weight-normal);
   min-height: 100vh;
+  width: 100%;
+  max-width: 100vw;
+  box-sizing: border-box;
+}
+
+* {
+  box-sizing: border-box;
 }
 
 main {
   margin: auto;
-  padding: 1em 2.3em;
+  padding: 0;
   display: flex;
   flex-direction: column;
   justify-content: baseline;
   align-items: stretch;
   min-height: calc(100vh - 64px);
-  width: -webkit-fill-available;
+  width: 100%;
   max-width: 100vw;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 @media (max-width: 768px) {
   main {
-    padding: 0.5em 1em 4.5rem 1em;
+    padding: 0;
   }
 }
 
 /* Tablet adjustments */
 @media (min-width: 769px) and (max-width: 1024px) {
   main {
-    padding: 1em 1.5em;
+    padding: 0;
   }
 }
 
 button {
   text-decoration: none;
   margin: var(--margin-tiny) 0;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 button:hover {
   cursor: pointer;
+  transform: translateY(-1px);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+/* Enhanced button variants matching landing aesthetics */
+.btn-primary {
+  background: linear-gradient(
+    135deg,
+    var(--blue-600) 0%,
+    var(--purple-600) 100%
+  );
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 24px;
+  font-weight: 600;
+  box-shadow: var(--shadow-primary);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: left 0.5s;
+}
+
+.btn-primary:hover::before {
+  left: 100%;
+}
+
+.btn-primary:hover {
+  box-shadow: var(--glow-primary-strong), var(--shadow-primary);
+  transform: translateY(-2px) scale(1.02);
+}
+
+.btn-glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  color: var(--foreground);
+  border-radius: 12px;
+  padding: 12px 24px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.btn-glass:hover {
+  background: var(--glass-strong-bg);
+  border-color: var(--glass-strong-border);
+  transform: translateY(-1px);
+  box-shadow: var(--glow-primary);
 }
 
 label {
@@ -263,13 +364,14 @@ th {
 }
 
 section {
-  width: 100%;
   color: var(--foreground);
   border-radius: var(--border-radius-medium);
   margin: var(--margin-medium) 0;
-  padding: var(--padding-small) 0;
+  padding: var(--padding-small);
   transition: background var(--transition-fast);
   box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
 }
 
 section h1,
@@ -290,6 +392,20 @@ section img,
 section table {
   max-width: 100%;
   height: auto;
+}
+
+/* Responsive grid layouts within sections */
+section .grid {
+  width: 100%;
+  max-width: 100%;
+  display: grid;
+  gap: 1rem;
+}
+
+section .grid > * {
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
 }
 
 /* Enhanced responsive utilities */
@@ -335,9 +451,11 @@ section table {
 /* Enhanced mobile-first responsive design */
 @media (max-width: 480px) {
   section {
-    padding: var(--padding-tiny) 0;
+    padding: var(--padding-tiny);
     margin: var(--margin-tiny) 0;
     border-radius: var(--border-radius-small);
+    width: 100%;
+    max-width: 100%;
   }
   section h1 {
     font-size: 1.1rem;
@@ -352,14 +470,18 @@ section table {
   /* Reduce margins and padding for very small screens */
   main {
     padding: 0.25em 0.5em 4.5rem 0.5em;
+    width: 100%;
+    max-width: 100%;
   }
 }
 
 @media (min-width: 481px) and (max-width: 640px) {
   section {
-    padding: var(--padding-small) 0;
+    padding: var(--padding-small);
     margin: var(--margin-small) 0;
     border-radius: var(--border-radius-small);
+    width: 100%;
+    max-width: 100%;
   }
   section h1 {
     font-size: 1.15rem;
@@ -374,8 +496,10 @@ section table {
 
 @media (max-width: 1024px) {
   section {
-    padding: var(--padding-medium) 0;
+    padding: var(--padding-medium);
     margin: var(--margin-medium) 0;
+    width: 100%;
+    max-width: 100%;
   }
   section h1 {
     font-size: 1.5rem;
@@ -387,9 +511,11 @@ section table {
 
 @media (max-width: 600px) {
   section {
-    padding: var(--padding-small) 0;
+    padding: var(--padding-small);
     margin: var(--margin-small) 0;
     border-radius: var(--border-radius-small);
+    width: 100%;
+    max-width: 100%;
   }
   section h1 {
     font-size: 1.2rem;
@@ -404,6 +530,227 @@ section table {
 
 ::-webkit-scrollbar {
   display: none;
+}
+
+/* Custom scrollbar */
+/* ::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(30, 41, 59, 0.3);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(
+    135deg,
+    var(--primary-gradient-start) 0%,
+    var(--primary-gradient-end) 100%
+  );
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(
+    135deg,
+    var(--primary-gradient-end) 0%,
+    var(--primary-gradient-start) 100%
+  );
+} */
+
+/* Enhanced animations from Landing page */
+@keyframes tilt {
+  0%,
+  50%,
+  100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(0.5deg);
+  }
+  75% {
+    transform: rotate(-0.5deg);
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes glow {
+  0%,
+  100% {
+    box-shadow: var(--glow-primary);
+  }
+  50% {
+    box-shadow: var(--glow-primary-strong);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+/* Animation utility classes */
+.animate-tilt {
+  animation: tilt 10s infinite linear;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-glow {
+  animation: glow 3s ease-in-out infinite alternate;
+}
+
+.animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* Glassmorphism effects */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+}
+
+.glass-strong {
+  background: var(--glass-strong-bg);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-strong-border);
+}
+
+/* Enhanced gradients */
+.gradient-primary {
+  background: linear-gradient(
+    135deg,
+    var(--primary-gradient-start) 0%,
+    var(--primary-gradient-end) 100%
+  );
+}
+
+.gradient-secondary {
+  background: linear-gradient(
+    135deg,
+    var(--secondary-gradient-start) 0%,
+    var(--secondary-gradient-end) 100%
+  );
+}
+
+.gradient-accent {
+  background: linear-gradient(
+    135deg,
+    var(--accent-gradient-start) 0%,
+    var(--accent-gradient-end) 100%
+  );
+}
+
+/* Text gradient effects */
+.text-gradient-primary {
+  background: linear-gradient(
+    135deg,
+    var(--primary-gradient-start) 0%,
+    var(--primary-gradient-end) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-gradient-secondary {
+  background: linear-gradient(
+    135deg,
+    var(--secondary-gradient-start) 0%,
+    var(--secondary-gradient-end) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-gradient-accent {
+  background: linear-gradient(
+    135deg,
+    var(--accent-gradient-start) 0%,
+    var(--accent-gradient-end) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-gradient-hero {
+  background: linear-gradient(
+    135deg,
+    var(--blue-400) 0%,
+    var(--purple-400) 50%,
+    var(--cyan-400) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: var(--shadow-glow);
+}
+
+/* Performance optimizations */
+.will-change-transform {
+  will-change: transform;
+}
+
+.will-change-opacity {
+  will-change: opacity;
+}
+
+.gpu-accelerated {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Responsive glassmorphism adjustments */
+@media (max-width: 768px) {
+  .glass {
+    backdrop-filter: blur(8px);
+  }
+
+  .glass-strong {
+    backdrop-filter: blur(15px);
+  }
 }
 
 .shivaay-blue {
@@ -587,5 +934,145 @@ section table {
     min-height: auto;
     min-width: auto;
     padding: 0.5rem 0.75rem;
+  }
+}
+
+/* Responsive container utilities for sidebar-aware layouts */
+.container-responsive {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0 1rem;
+  box-sizing: border-box;
+}
+
+@media (min-width: 640px) {
+  .container-responsive {
+    padding: 0 1.5rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .container-responsive {
+    padding: 0 2rem;
+  }
+}
+
+/* Sidebar-aware container that removes max-width when sidebar is present */
+.container-sidebar-aware {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+/* Content area that adapts to sidebar */
+.content-area {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+/* Grid layouts that adapt to available space */
+.grid-responsive {
+  display: grid;
+  gap: 1rem;
+  width: 100%;
+  max-width: 100%;
+}
+
+@media (min-width: 640px) {
+  .grid-responsive {
+    gap: 1.5rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .grid-responsive {
+    gap: 2rem;
+  }
+}
+
+/* Ensure sections within responsive containers behave properly */
+.container-sidebar-aware section,
+.container-responsive section {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Prevent horizontal overflow in responsive containers */
+.container-sidebar-aware *,
+.container-responsive * {
+  box-sizing: border-box;
+}
+
+/* Override any fixed max-widths that might cause issues with sidebar */
+@media (min-width: 768px) {
+  .container-sidebar-aware .max-w-xl,
+  .container-sidebar-aware .max-w-2xl,
+  .container-sidebar-aware .max-w-3xl,
+  .container-sidebar-aware .max-w-4xl,
+  .container-sidebar-aware .max-w-5xl,
+  .container-sidebar-aware .max-w-6xl,
+  .container-sidebar-aware .max-w-7xl {
+    max-width: none !important;
+  }
+
+  /* Only override max-width for direct children that would cause horizontal clipping */
+  .content-area > div.max-w-xl,
+  .content-area > div.max-w-2xl,
+  .content-area > div.max-w-3xl,
+  .content-area > div.max-w-4xl,
+  .content-area > div.max-w-5xl,
+  .content-area > div.max-w-6xl,
+  .content-area > div.max-w-7xl {
+    max-width: 100% !important;
+  }
+
+  /* Ensure elements with mx-auto and max-width overrides maintain proper centering */
+  .content-area > div.mx-auto.max-w-xl,
+  .content-area > div.mx-auto.max-w-2xl,
+  .content-area > div.mx-auto.max-w-3xl,
+  .content-area > div.mx-auto.max-w-4xl,
+  .content-area > div.mx-auto.max-w-5xl,
+  .content-area > div.mx-auto.max-w-6xl,
+  .content-area > div.mx-auto.max-w-7xl {
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  /* Ensure any component containers respect the content area width */
+  .content-area > div > div {
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+}
+
+/* Special responsive handling for page sections */
+@media (min-width: 768px) {
+  .content-area section {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .content-area .grid {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  /* Ensure grid items don't overflow */
+  .content-area .grid > * {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  /* Ensure component containers never exceed their parent container width */
+  .content-area > div {
+    max-width: 100%;
+    overflow-x: hidden;
+    box-sizing: border-box;
   }
 }
