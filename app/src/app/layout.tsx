@@ -107,6 +107,7 @@ export const metadata: Metadata = {
   ],
   applicationName: "Shivaay",
   category: "Entertainment",
+  themeColor: "#361d56",
 };
 
 export default function RootLayout({

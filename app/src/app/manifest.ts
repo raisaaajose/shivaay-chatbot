@@ -8,8 +8,8 @@ export default function manifest(): MetadataRoute.Manifest {
       "Shivaay is a multilingual, context-aware AI chatbot designed to address the unique challenges faced by tourists in Uttarakhand. Our mission is to bridge the information gap by providing a seamless, interactive guide that connects travelers with the region's rich cultural heritage, spiritual significance, and natural beauty. Shivaay serves as a personal travel assistant, a cultural expert, and a wellness guide, all in one.",
     start_url: "/",
     display: "standalone",
-    background_color: "#ffffff",
-    theme_color: "#e35a33",
+    background_color: "#361d56",
+    theme_color: "#361d56",
     orientation: "portrait",
     scope: "/",
     icons: [
