@@ -105,7 +105,7 @@ export default function AdminUsersDashboard() {
   }
 
   return (
-    <div className="container-sidebar-aware py-8">
+    <div className="max-w-6xl mx-auto py-8">
       {loading ? (
         <Loader />
       ) : error ? (

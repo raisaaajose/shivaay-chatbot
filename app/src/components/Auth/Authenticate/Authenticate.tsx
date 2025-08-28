@@ -121,7 +121,7 @@ export default function Authenticate() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8">
+    <section className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8">
       <Card className="w-full max-w-5xl p-0 flex flex-col lg:flex-row overflow-hidden shadow-2xl">
         <Branding />
         <div className="w-full lg:w-1/2 p-6 sm:p-8 lg:p-12 flex flex-col justify-center min-h-[600px] lg:min-h-[700px]">
@@ -152,6 +152,6 @@ export default function Authenticate() {
           <OAuthButtons googleLogin={googleLogin} oauthLoading={oauthLoading} />
         </div>
       </Card>
-    </div>
+    </section>
   );
 }

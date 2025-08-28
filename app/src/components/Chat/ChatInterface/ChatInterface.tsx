@@ -19,7 +19,6 @@ import {
 import Card from "@/components/ui/Card/Card";
 import Input from "@/components/ui/Input/Input";
 import AnimatedButton from "@/components/ui/AnimatedButton/AnimatedButton";
-import Badge from "@/components/ui/Badge/Badge";
 import Modal from "@/components/ui/Modal/Modal";
 import useNotification from "@/components/ui/Notification/Notification";
 import {
@@ -382,19 +381,19 @@ export default function ChatInterface({
 
   return (
     <motion.div
-      className="h-full flex flex-col bg-gradient-to-br from-gray-900/20 via-indigo-900/10 to-purple-900/20 backdrop-blur-3xl"
+      className="h-full flex flex-col bg-gradient-to-br from-gray-900 via-gray-800 to-indigo-900"
       initial="hidden"
       animate="visible"
       variants={containerVariants}
     >
       <motion.div
-        className="p-2 sm:p-3 md:p-4 border-b border-white/10 glass-strong backdrop-blur-xl animate-glow"
+        className="p-2 sm:p-3 md:p-4 border-b border-gray-700 bg-gray-800/50 backdrop-blur"
         variants={headerVariants}
       >
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
             <motion.div
-              className="w-8 h-8 sm:w-10 sm:h-10 glass-strong border border-purple-400/30 rounded-full flex items-center justify-center flex-shrink-0 backdrop-blur-xl animate-glow"
+              className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -437,7 +436,7 @@ export default function ChatInterface({
             >
               {isAIHealthy === null ? (
                 <motion.div
-                  className="text-purple-300/80 text-xs sm:text-sm hidden sm:block"
+                  className="text-gray-400 text-xs sm:text-sm hidden sm:block"
                   animate={{ opacity: [0.5, 1, 0.5] }}
                   transition={{ duration: 1.5, repeat: Infinity }}
                 >
@@ -458,9 +457,9 @@ export default function ChatInterface({
                     animate={{ scale: [1, 1.2, 1] }}
                     transition={{ duration: 2, repeat: Infinity }}
                   >
-                    <FiWifi className="text-emerald-300 text-sm sm:text-base animate-glow" />
+                    <FiWifi className="text-green-400 text-sm sm:text-base" />
                   </motion.div>
-                  <span className="text-emerald-300 font-medium text-xs sm:text-sm hidden sm:inline">
+                  <span className="text-green-400 font-medium text-xs sm:text-sm hidden sm:inline">
                     AI Connected
                   </span>
                 </motion.div>
@@ -475,8 +474,8 @@ export default function ChatInterface({
                     damping: 30,
                   }}
                 >
-                  <FiWifiOff className="text-rose-300 text-sm sm:text-base animate-pulse-glow" />
-                  <span className="text-rose-300 font-medium text-xs sm:text-sm hidden sm:inline">
+                  <FiWifiOff className="text-red-400 text-sm sm:text-base" />
+                  <span className="text-red-400 font-medium text-xs sm:text-sm hidden sm:inline">
                     AI Disconnected
                   </span>
                 </motion.div>
@@ -513,7 +512,7 @@ export default function ChatInterface({
       </motion.div>
 
       <motion.div className="flex-1 overflow-hidden" variants={itemVariants}>
-        <Card className="h-full rounded-none border-none glass backdrop-blur-2xl">
+        <Card className="h-full rounded-none border-none">
           <div className="h-full flex flex-col">
             <div className="flex-1 overflow-y-auto p-2 sm:p-4 md:p-6 space-y-2 sm:space-y-4">
               <AnimatePresence>
@@ -541,12 +540,12 @@ export default function ChatInterface({
                       }`}
                     >
                       <motion.div
-                        className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center overflow-hidden flex-shrink-0 backdrop-blur-xl ${
+                        className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center overflow-hidden flex-shrink-0 ${
                           message.sender === "user"
                             ? user?.profilePicture
                               ? ""
-                              : "glass-strong border border-blue-400/30 text-white animate-glow"
-                            : "glass border border-purple-400/20 text-white animate-float"
+                              : "bg-indigo-500 text-white"
+                            : "text-white"
                         }`}
                         initial={{ scale: 0, rotate: -180 }}
                         animate={{ scale: 1, rotate: 0 }}
@@ -576,10 +575,10 @@ export default function ChatInterface({
                       </motion.div>
 
                       <motion.div
-                        className={`rounded-2xl px-3 py-3 sm:px-4 sm:py-3 text-sm sm:text-base backdrop-blur-xl ${
+                        className={`rounded-lg px-2 py-2 sm:px-4 sm:py-3 text-sm sm:text-base ${
                           message.sender === "user"
-                            ? "glass-strong border border-blue-400/30 text-white shadow-lg animate-pulse-glow"
-                            : "glass border border-purple-400/20 text-gray-100 shadow-lg"
+                            ? "bg-blue-600 text-white"
+                            : "bg-gray-700 text-gray-100"
                         }`}
                         initial={{ scale: 0.8, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
@@ -601,8 +600,8 @@ export default function ChatInterface({
                         <p
                           className={`text-xs mt-2 ${
                             message.sender === "user"
-                              ? "text-blue-200/80"
-                              : "text-purple-300/80"
+                              ? "text-blue-200"
+                              : "text-gray-400"
                           }`}
                         >
                           {formatTime(message.timestamp)}
@@ -620,27 +619,27 @@ export default function ChatInterface({
                   className="flex justify-start"
                 >
                   <div className="flex items-start gap-3 max-w-[80%]">
-                    <div className="w-8 h-8 rounded-full glass border border-emerald-400/30 flex items-center justify-center animate-pulse-glow">
+                    <div className="w-8 h-8 rounded-full bg-emerald-600 flex items-center justify-center">
                       <BotIcon size={16} />
                     </div>
                     <motion.div
-                      className="glass-strong border border-purple-400/20 text-gray-100 rounded-2xl px-4 py-3 backdrop-blur-xl"
+                      className="bg-gray-700 text-gray-100 rounded-lg px-4 py-3"
                       animate={{ scale: [1, 1.02, 1] }}
                       transition={{ duration: 2, repeat: Infinity }}
                     >
                       <div className="flex items-center gap-2">
                         <div className="flex space-x-1">
-                          <div className="w-2 h-2 bg-purple-300/80 rounded-full animate-bounce"></div>
+                          <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
                           <div
-                            className="w-2 h-2 bg-blue-300/80 rounded-full animate-bounce"
+                            className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
                             style={{ animationDelay: "0.1s" }}
                           ></div>
                           <div
-                            className="w-2 h-2 bg-cyan-300/80 rounded-full animate-bounce"
+                            className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
                             style={{ animationDelay: "0.2s" }}
                           ></div>
                         </div>
-                        <span className="text-sm text-gray-200">
+                        <span className="text-sm text-gray-300">
                           Shivaay is thinking...
                         </span>
                       </div>
@@ -653,7 +652,7 @@ export default function ChatInterface({
             </div>
 
             <motion.div
-              className="p-2 sm:p-3 md:p-4"
+              className="border-t border-gray-600 p-2 sm:p-3 md:p-4"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5, duration: 0.6 }}
@@ -696,7 +695,7 @@ export default function ChatInterface({
               </div>
 
               {!isAIHealthy && (
-                <p className="text-rose-300 text-xs sm:text-sm mt-2 text-center glass border border-rose-400/30 rounded-xl px-3 py-2 backdrop-blur-xl animate-pulse-glow">
+                <p className="text-red-400 text-xs sm:text-sm mt-2 text-center">
                   Unable to connect to AI service. Please check your connection
                   and try again.
                 </p>
@@ -707,43 +706,27 @@ export default function ChatInterface({
       </motion.div>
 
       <motion.div
-        className="p-2 sm:p-3 md:p-4 border-t border-white/10 glass backdrop-blur-xl"
+        className="p-2 sm:p-3 md:p-4 border-t border-gray-700 bg-gray-800/30"
         variants={itemVariants}
       >
-        <div className="text-center space-y-3">
-          <div className="flex flex-wrap justify-center gap-2">
-            <Badge variant="primary" className="text-xs sm:text-sm">
-              🧭 AI Tourism Guide
-            </Badge>
-            <Badge variant="secondary" className="text-xs sm:text-sm">
-              🏔️ Uttarakhand Expert
-            </Badge>
-            <Badge variant="success" className="text-xs sm:text-sm">
-              ✨ Cultural Insights
-            </Badge>
-            <Badge variant="warning" className="text-xs sm:text-sm">
-              🗺️ Travel Tips
-            </Badge>
-          </div>
-
-          <p className="text-xs sm:text-sm text-gray-200">
-            Ask about places to visit, cultural insights, travel tips, and more!
+        <div className="text-center text-gray-300">
+          <p className="text-xs sm:text-sm">
+            Shivaay is your AI guide for Uttarakhand tourism. Ask about places
+            to visit, cultural insights, travel tips, and more!
           </p>
-
           {!user && (
-            <div className="flex justify-center">
-              <Badge variant="primary" className="text-xs animate-shimmer">
-                🎯 Guest Mode: Chat saved locally
-              </Badge>
-            </div>
+            <p className="text-xs mt-2 text-blue-400 bg-blue-400/10 px-2 py-1 sm:px-3 sm:py-2 rounded-lg border border-blue-400/20">
+              🎯 Guest mode: Chat freely with Shivaay! Your conversation will be
+              saved locally and cleared when you close the browser.
+            </p>
           )}
-
           {user && (
-            <div className="flex justify-center items-center gap-2">
-              <Badge variant="default" className="text-xs font-mono">
-                Session ID: {sessionId}
-              </Badge>
-            </div>
+            <p className="text-xs mt-2">
+              Session ID:{" "}
+              <code className="bg-gray-700 text-gray-200 px-1 py-0.5 sm:px-2 sm:py-1 rounded text-xs">
+                {sessionId}
+              </code>
+            </p>
           )}
         </div>
       </motion.div>

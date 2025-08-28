@@ -55,7 +55,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         <div className="relative">
           {/* Left Icon */}
           {icon && (
-            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-purple-300/70 z-10">
+            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 z-10">
               {icon}
             </div>
           )}
@@ -68,7 +68,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-purple-300/70 hover:text-purple-200 transition-colors z-10"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-300 transition-colors z-10"
               tabIndex={-1}
               disabled={disabled}
               aria-label={showPassword ? "Hide password" : "Show password"}

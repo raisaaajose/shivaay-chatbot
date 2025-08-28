@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Branding from "./Branding/Branding";
 import { FiShield, FiUser, FiHome, FiMessageSquare } from "react-icons/fi";
@@ -13,8 +13,6 @@ export default function Sidebar() {
   const { user, loading } = useAuth();
   const [isAdmin, setIsAdmin] = useState(false);
   const [showMobileChatSessions, setShowMobileChatSessions] = useState(false);
-  const [modalHeight, setModalHeight] = useState(60); // percentage of viewport height
-  const [isDragging, setIsDragging] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
 
@@ -52,46 +50,9 @@ export default function Sidebar() {
     router.push(`/chat/${sessionId}`);
   };
 
-  const handleDragMove = useCallback(
-    (e: TouchEvent) => {
-      if (!isDragging) return;
-
-      const clientY = e.touches[0].clientY;
-      const windowHeight = window.innerHeight;
-      const newHeight = Math.max(
-        30,
-        Math.min(85, ((windowHeight - clientY) / windowHeight) * 100)
-      );
-      setModalHeight(newHeight);
-    },
-    [isDragging]
-  );
-
-  const handleDragStart = (e: React.TouchEvent) => {
-    setIsDragging(true);
-    e.preventDefault();
-  };
-
-  const handleDragEnd = useCallback(() => {
-    setIsDragging(false);
-  }, []);
-
-  // Add event listeners for drag
-  useEffect(() => {
-    if (isDragging) {
-      document.addEventListener("touchmove", handleDragMove, {
-        passive: false,
-      });
-      document.addEventListener("touchend", handleDragEnd);
-
-      return () => {
-        document.removeEventListener("touchmove", handleDragMove);
-        document.removeEventListener("touchend", handleDragEnd);
-      };
-    }
-  }, [isDragging, handleDragMove, handleDragEnd]);
-
   if (loading || !user) return null;
+
+  const sidebarWidth = "w-64";
 
   return (
     <>
@@ -99,15 +60,15 @@ export default function Sidebar() {
       <AnimatePresence>
         {user && (
           <motion.aside
-            initial={{ x: -256, opacity: 0 }}
+            initial={{ x: -60, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
-            exit={{ x: -256, opacity: 0 }}
-            transition={{ type: "spring", stiffness: 100, damping: 20 }}
-            className="hidden md:flex fixed top-0 left-0 z-40 h-full w-64 bg-gradient-to-b from-slate-900/95 via-purple-900/10 to-slate-900/95 backdrop-blur-xl border-r border-white/10 shadow-2xl shadow-purple-500/10 flex-col"
+            exit={{ x: -60, opacity: 0 }}
+            transition={{ type: "tween", duration: 0.8, ease: "easeInOut" }}
+            className={`hidden md:flex fixed top-0 left-0 z-40 h-full ${sidebarWidth} bg-[#1a1a1a] border-r border-[#333333] shadow-sm flex-col`}
           >
-            <div className="px-4 py-6 border-b border-white/10">
+            <div className="px-3 sm:px-4 py-4 sm:py-6 border-b border-[#333333]">
               <Branding />
-              <nav className="mt-8 flex flex-col space-y-2">
+              <nav className="mt-6 sm:mt-8 flex flex-col space-y-2 sm:space-y-4">
                 {navItems.map(({ href, label, icon, admin }) => {
                   const isActive =
                     href === "/"
@@ -117,20 +78,26 @@ export default function Sidebar() {
                     <Link
                       key={label}
                       href={href}
-                      className={`flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg transition-all duration-200 group
+                      className={`sidebar-link flex items-center gap-2 sm:gap-3 px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm rounded-md transition
                         ${
                           isActive
-                            ? "bg-gradient-to-r from-blue-600/20 to-purple-600/20 border border-blue-500/30 text-white"
+                            ? "bg-gray-700 text-white"
                             : admin
-                            ? "text-amber-400 hover:bg-amber-500/10 hover:text-amber-300 border border-transparent hover:border-amber-500/20"
-                            : "text-gray-300 hover:bg-white/5 hover:text-white border border-transparent hover:border-white/10"
+                            ? "text-amber-400 hover:bg-amber-500/20 hover:text-white"
+                            : "text-white"
                         }
+                        hover:bg-gray-700 hover:text-white
                       `}
+                      style={
+                        !isActive && !admin
+                          ? { opacity: 0.7 }
+                          : !isActive && admin
+                          ? { opacity: 0.7 }
+                          : undefined
+                      }
                     >
-                      <span className="text-lg group-hover:scale-110 transition-transform duration-200">
-                        {icon}
-                      </span>
-                      <span className="truncate font-medium">{label}</span>
+                      <span className="text-base sm:text-lg">{icon}</span>
+                      <span className="truncate">{label}</span>
                     </Link>
                   );
                 })}
@@ -141,7 +108,7 @@ export default function Sidebar() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 0.5 }}
-              className="flex-1 overflow-hidden px-2"
+              className="flex-1 overflow-hidden"
             >
               <ChatSessionsList onSelectSession={handleSelectSession} />
             </motion.div>
@@ -153,11 +120,11 @@ export default function Sidebar() {
       <AnimatePresence>
         {user && (
           <motion.div
-            initial={{ y: 60, opacity: 0 }}
+            initial={{ y: 30, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            exit={{ y: 60, opacity: 0 }}
+            exit={{ y: 30, opacity: 0 }}
             transition={{ type: "spring", stiffness: 200, damping: 25 }}
-            className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-gradient-to-r from-slate-900/95 via-purple-900/10 to-slate-900/95 backdrop-blur-xl border-t border-white/10 flex h-16 shadow-2xl shadow-purple-500/10"
+            className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#1a1a1a] border-t border-[#333333] flex h-14"
           >
             {mobileNavItems.map(({ href, icon, label, onClick }) => {
               const isActive =
@@ -168,11 +135,14 @@ export default function Sidebar() {
                   <button
                     key={label}
                     onClick={onClick}
-                    className={`flex-1 flex items-center justify-center h-full text-xl transition-all duration-200 ${
+                    className={`flex-1 flex items-center justify-center h-full text-2xl text-white ${
                       showMobileChatSessions
-                        ? "bg-blue-600/20 text-blue-300 border-t-2 border-blue-400"
-                        : "text-gray-400 hover:text-white hover:bg-white/5"
+                        ? "bg-gray-700"
+                        : "hover:bg-gray-700"
                     }`}
+                    style={
+                      !showMobileChatSessions ? { opacity: 0.7 } : undefined
+                    }
                   >
                     {icon}
                   </button>
@@ -183,11 +153,10 @@ export default function Sidebar() {
                 <Link
                   key={label}
                   href={href}
-                  className={`flex-1 flex items-center justify-center h-full text-xl transition-all duration-200 ${
-                    isActive
-                      ? "bg-purple-600/20 text-purple-300 border-t-2 border-purple-400"
-                      : "text-gray-400 hover:text-white hover:bg-white/5"
+                  className={`flex-1 flex items-center justify-center h-full text-2xl text-white ${
+                    isActive ? "bg-gray-700" : "hover:bg-gray-700"
                   }`}
+                  style={!isActive ? { opacity: 0.7 } : undefined}
                 >
                   {icon}
                 </Link>
@@ -213,30 +182,19 @@ export default function Sidebar() {
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="absolute bottom-16 left-0 right-0 bg-gradient-to-b from-slate-900/95 to-slate-800/95 backdrop-blur-xl border-t border-white/10 shadow-2xl"
-              style={{ height: `${modalHeight}vh` }}
+              className="absolute bottom-14 left-0 right-0 bg-[#1a1a1a] border-t border-[#333333] max-h-[60vh] overflow-hidden"
               onClick={(e) => e.stopPropagation()}
             >
-              {/* Drag Handle */}
-              <div
-                className="px-4 py-3 border-b border-white/10 flex justify-between items-center cursor-grab active:cursor-grabbing touch-none select-none"
-                onTouchStart={handleDragStart}
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-1 bg-gray-500 rounded-full mx-auto"></div>
-                  <h3 className="text-white font-semibold">Chat Sessions</h3>
-                </div>
+              <div className="px-4 py-3 border-b border-[#333333] flex justify-between items-center">
+                <h3 className="text-white font-medium">Chat Sessions</h3>
                 <button
                   onClick={() => setShowMobileChatSessions(false)}
-                  className="text-gray-400 hover:text-white text-lg w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/10 transition-all duration-200"
+                  className="text-gray-400 hover:text-white"
                 >
                   ✕
                 </button>
               </div>
-              <div
-                className="overflow-y-auto px-2 pb-2"
-                style={{ height: `calc(${modalHeight}vh - 80px)` }}
-              >
+              <div className="overflow-y-auto max-h-[calc(60vh-60px)]">
                 <ChatSessionsList
                   onSelectSession={(sessionId) => {
                     handleSelectSession(sessionId);

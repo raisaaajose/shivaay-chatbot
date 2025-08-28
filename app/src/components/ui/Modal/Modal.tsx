@@ -25,14 +25,14 @@ const Modal: React.FC<ModalProps> = ({
     <AnimatePresence>
       {open && (
         <motion.div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-md px-2 sm:px-0"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--background)]/70 backdrop-blur-[3px] px-2 sm:px-0"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
         >
           <motion.div
             className={clsx(
-              "bg-white/10 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 p-4 sm:p-8 w-full max-w-[95vw] sm:max-w-lg relative flex flex-col max-h-[90vh] overflow-y-auto shadow-purple-500/20",
+              "bg-gray-600/20 backdrop-blur-sm rounded-2xl shadow-2xl border border-[var(--foreground)]/10 p-4 sm:p-8 w-full max-w-[95vw] sm:max-w-lg relative flex flex-col max-h-[90vh] overflow-y-auto",
               className
             )}
             initial={{ scale: 0.92, opacity: 0 }}
@@ -58,11 +58,11 @@ const Modal: React.FC<ModalProps> = ({
               />
             )}
             {title && (
-              <h2 className="text-lg sm:text-xl font-bold text-white mb-3 sm:mb-5 tracking-tight drop-shadow-sm">
+              <h2 className="text-lg sm:text-xl font-bold text-[var(--foreground)] mb-3 sm:mb-5 tracking-tight drop-shadow-sm">
                 {title}
               </h2>
             )}
-            <div className="text-white/90">{children}</div>
+            <div className="text-[var(--foreground)]">{children}</div>
           </motion.div>
         </motion.div>
       )}

@@ -5,7 +5,6 @@ import { motion } from "framer-motion";
 import { Slot } from "@radix-ui/react-slot";
 import { cn } from "../../../lib/utils";
 import { cardVariants, type CardVariants } from "../../../lib/variants";
-import { cardHoverVariants } from "../../../lib/animations";
 
 export interface CardProps
   extends React.HTMLAttributes<HTMLDivElement>,
@@ -14,8 +13,6 @@ export interface CardProps
   hoverable?: boolean;
   clickable?: boolean;
   disabled?: boolean;
-  animate?: boolean;
-  glow?: boolean;
 }
 
 const Card = forwardRef<HTMLDivElement, CardProps>(
@@ -28,8 +25,6 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
       hoverable = false,
       clickable = false,
       disabled = false,
-      animate = true,
-      glow = false,
       children,
       onClick,
       ...props
@@ -54,8 +49,7 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
         <Slot
           ref={ref}
           className={cn(
-            cardVariants({ variant: cardVariant, padding, className }),
-            glow && "animate-glow"
+            cardVariants({ variant: cardVariant, padding, className })
           )}
           {...props}
         >
@@ -69,7 +63,6 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
         ref={ref}
         className={cn(
           cardVariants({ variant: cardVariant, padding, className }),
-          glow && "animate-glow",
           {
             "opacity-60 pointer-events-none": isDisabled,
             "cursor-pointer": isInteractive && !isDisabled,
@@ -80,20 +73,18 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
         tabIndex={isInteractive && !isDisabled ? 0 : undefined}
         role={isInteractive && !isDisabled ? "button" : undefined}
         style={props.style}
-        initial={animate ? { opacity: 0, y: 20, scale: 0.95 } : false}
-        animate={animate ? { opacity: 1, y: 0, scale: 1 } : false}
-        variants={
-          (hoverable || isInteractive) && !isDisabled
-            ? cardHoverVariants
-            : undefined
-        }
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
         whileHover={
-          (hoverable || isInteractive) && !isDisabled ? "hover" : undefined
+          (hoverable || isInteractive) && !isDisabled
+            ? { y: -2, boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1)" }
+            : undefined
         }
         whileTap={isInteractive && !isDisabled ? { scale: 0.98 } : undefined}
         transition={{
-          duration: 0.3,
-          ease: [0.25, 0.46, 0.45, 0.94],
+          type: "spring",
+          stiffness: 260,
+          damping: 20,
         }}
       >
         {children}

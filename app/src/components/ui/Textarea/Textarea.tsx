@@ -48,7 +48,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
         <div className="relative">
           {/* Left Icon */}
           {icon && (
-            <div className="absolute left-3 top-3 text-purple-300/70 z-10">
+            <div className="absolute left-3 top-3 text-slate-400 z-10">
               {icon}
             </div>
           )}

@@ -19,7 +19,7 @@ const Breadcrumbs: React.FC = () => {
     <nav className="flex items-center overflow-hidden" aria-label="Breadcrumbs">
       {/* Home Link */}
       <Link href="/" className="flex items-center group" aria-label="Home">
-        <MdHome className="text-gray-400 group-hover:text-cyan-400 text-sm transition-colors duration-200" />
+        <MdHome className="text-[#9DA3B3] group-hover:text-white text-sm transition-colors duration-200" />
       </Link>
 
       {/* Path Segments */}
@@ -30,7 +30,7 @@ const Breadcrumbs: React.FC = () => {
 
           return (
             <React.Fragment key={idx}>
-              <MdArrowForwardIos className="text-xs mx-1.5 sm:mx-2 text-gray-500/60 flex-shrink-0 transition-colors duration-200" />
+              <MdArrowForwardIos className="text-xs mx-1.5 sm:mx-2 text-[#9DA3B3]/60 flex-shrink-0 transition-colors duration-200" />
               <Link
                 href={href}
                 className={`group ${isLast ? "pointer-events-none" : ""}`}
@@ -40,7 +40,7 @@ const Breadcrumbs: React.FC = () => {
                   className={`text-sm md:text-base font-normal select-none flex items-center h-full tracking-wide transition-all duration-200 ${
                     isLast
                       ? "text-white font-medium"
-                      : "text-gray-400 hover:text-cyan-400 group-hover:scale-105 transform"
+                      : "text-[#9DA3B3] hover:text-white group-hover:scale-105 transform"
                   }`}
                 >
                   {segment

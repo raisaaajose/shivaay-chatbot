@@ -64,13 +64,13 @@ const Dropdown: React.FC<DropdownProps> = ({
   const getVariantClasses = (variant?: string) => {
     switch (variant) {
       case "amber":
-        return "text-amber-300";
+        return "text-amber-400";
       case "blue":
-        return "text-blue-300";
+        return "text-blue-400";
       case "red":
-        return "text-red-300";
+        return "text-red-400";
       default:
-        return "text-white/90";
+        return "text-gray-200";
     }
   };
 
@@ -95,14 +95,14 @@ const Dropdown: React.FC<DropdownProps> = ({
               y: position.startsWith("top") ? 10 : -10,
             }}
             transition={{ duration: 0.18 }}
-            className={`absolute ${getPositionClasses()} z-50 ${width} bg-white/10 backdrop-blur-xl border border-white/20 rounded-xl shadow-lg shadow-purple-500/20 py-1`}
+            className={`absolute ${getPositionClasses()} z-50 ${width} bg-gray-800 border border-gray-700 rounded-xl shadow-lg py-1`}
             style={{ transformOrigin: getTransformOrigin() }}
             onClick={(e) => e.stopPropagation()}
           >
             {items.map((item) => (
               <React.Fragment key={item.id}>
                 {item.id === "divider" ? (
-                  <div className="border-t border-white/20 my-1" />
+                  <div className="border-t border-gray-700 my-1" />
                 ) : (
                   <button
                     onClick={(e) => {
@@ -113,12 +113,12 @@ const Dropdown: React.FC<DropdownProps> = ({
                       }
                     }}
                     disabled={item.disabled}
-                    className={`flex items-center gap-3 px-4 py-2 text-sm text-left hover:bg-white/10 transition-all duration-200 rounded-md ${getVariantClasses(
+                    className={`flex items-center gap-3 px-4 py-2 text-sm text-left hover:bg-gray-700/70 transition-colors rounded-md ${getVariantClasses(
                       item.variant
                     )} ${
                       item.disabled
                         ? "opacity-50 cursor-not-allowed"
-                        : "cursor-pointer hover:backdrop-blur-sm"
+                        : "cursor-pointer"
                     }`}
                     style={{ width: "calc(100% - 0.5rem)", margin: "0 auto" }}
                   >

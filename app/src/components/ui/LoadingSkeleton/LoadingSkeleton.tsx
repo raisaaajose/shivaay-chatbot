@@ -19,7 +19,7 @@ const LoadingSkeleton = forwardRef<HTMLDivElement, LoadingSkeletonProps>(
     ref
   ) => {
     const baseClasses =
-      "bg-white/10 backdrop-blur-sm bg-gradient-to-r from-white/10 via-white/20 to-white/10";
+      "bg-slate-700 bg-gradient-to-r from-slate-700 via-slate-600 to-slate-700";
 
     const variantClasses = {
       text: "h-4 rounded",

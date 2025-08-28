@@ -5,7 +5,6 @@ import React, { forwardRef } from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cn } from "../../../lib/utils";
 import { buttonVariants, type ButtonVariants } from "../../../lib/variants";
-import { buttonHoverVariants, shimmerVariants } from "../../../lib/animations";
 import { Loader } from "lucide-react";
 
 export interface ButtonProps
@@ -28,8 +27,6 @@ export interface ButtonProps
   loading?: boolean;
   icon?: React.ReactNode;
   iconPosition?: "left" | "right";
-  shimmer?: boolean;
-  glow?: boolean;
 }
 
 const AnimatedButton = forwardRef<HTMLButtonElement, ButtonProps>(
@@ -44,8 +41,6 @@ const AnimatedButton = forwardRef<HTMLButtonElement, ButtonProps>(
       children,
       icon,
       iconPosition = "left",
-      shimmer = false,
-      glow = false,
       ...props
     },
     ref
@@ -58,7 +53,7 @@ const AnimatedButton = forwardRef<HTMLButtonElement, ButtonProps>(
     const isIconOnly = !hasChildren && hasIcon;
     const paddingOverride = isIconOnly ? "px-0" : "";
 
-    const fixedHeightClass = "h-8 sm:h-9 md:h-10 max-w-full w-auto";
+    const fixedHeightClass = "h-8 sm:h-9 md:h-10 max-w-full w-auto"; // ✅ responsive height & width
 
     const buttonContent = (
       <>
@@ -85,14 +80,6 @@ const AnimatedButton = forwardRef<HTMLButtonElement, ButtonProps>(
             {icon}
           </span>
         )}
-        {shimmer && variant === "primary" && (
-          <motion.div
-            className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
-            variants={shimmerVariants}
-            initial="initial"
-            animate="animate"
-          />
-        )}
       </>
     );
 
@@ -104,8 +91,7 @@ const AnimatedButton = forwardRef<HTMLButtonElement, ButtonProps>(
             buttonVariants({ variant, size: buttonSize, className }),
             paddingOverride,
             fixedHeightClass,
-            "flex items-center justify-center gap-1 sm:gap-2 overflow-hidden",
-            glow && "animate-glow"
+            "flex items-center justify-center gap-1 sm:gap-2 overflow-hidden"
           )}
           {...props}
         >
@@ -121,14 +107,17 @@ const AnimatedButton = forwardRef<HTMLButtonElement, ButtonProps>(
           buttonVariants({ variant, size: buttonSize, className }),
           paddingOverride,
           fixedHeightClass,
-          "flex items-center justify-center gap-1 sm:gap-2 overflow-hidden",
-          glow && "animate-glow"
+          "flex items-center justify-center gap-1 sm:gap-2 overflow-hidden"
         )}
         disabled={isDisabled}
-        variants={buttonHoverVariants}
-        initial="initial"
-        whileHover={!isDisabled ? "hover" : undefined}
-        whileTap={!isDisabled ? "tap" : undefined}
+        whileHover={!isDisabled ? { scale: 1.02 } : undefined}
+        whileTap={!isDisabled ? { scale: 0.98 } : undefined}
+        transition={{
+          type: "spring",
+          stiffness: 400,
+          damping: 30,
+          duration: 0.1,
+        }}
         {...props}
       >
         {buttonContent}

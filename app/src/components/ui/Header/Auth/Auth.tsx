@@ -32,7 +32,7 @@ export default function Auth() {
     return (
       <div className="relative" ref={dropdownRef} style={{ height: "100%" }}>
         <div
-          className="flex items-center gap-1 sm:gap-2 cursor-pointer px-2 sm:px-3 hover:bg-white/5 rounded-lg transition-all duration-200 h-full group border border-transparent hover:border-purple-500/20"
+          className="flex items-center gap-1 sm:gap-2 cursor-pointer px-2 sm:px-3 hover:bg-[#11131887] rounded-lg transition-all duration-200 h-full group"
           onClick={() => (window.location.href = "/profile")}
         >
           {user.profilePicture && !imageError && (
@@ -40,15 +40,15 @@ export default function Auth() {
             <img
               src={user.profilePicture}
               alt={user.name || user.username || "User"}
-              className="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover ring-2 ring-transparent group-hover:ring-purple-400/50 transition-all duration-200"
+              className="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover ring-2 ring-transparent group-hover:ring-[#9DA3B3]/30 transition-all duration-200"
               onError={() => setImageError(true)}
             />
           )}
-          <span className="hidden sm:block text-sm font-medium whitespace-nowrap text-gray-300 group-hover:text-white transition-colors duration-200 max-w-[120px] lg:max-w-[160px] truncate">
+          <span className="hidden sm:block text-sm font-medium whitespace-nowrap text-[#E4E6EA] group-hover:text-white transition-colors duration-200 max-w-[120px] lg:max-w-[160px] truncate">
             {user.name || user.username || user.email}
           </span>
           <span
-            className="ml-1 flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7 rounded-full hover:bg-white/10 transition-all duration-200"
+            className="ml-1 flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7 rounded-full hover:bg-[#333333] transition-all duration-200"
             onClick={(e) => {
               e.stopPropagation();
               setOpen((v) => !v);
@@ -75,7 +75,7 @@ export default function Auth() {
                 strokeLinejoin="round"
                 initial={false}
                 animate={{
-                  stroke: open ? "#fff" : "#9CA3AF",
+                  stroke: open ? "#fff" : "#9DA3B3",
                 }}
                 transition={{ duration: 0.2 }}
               />
@@ -90,21 +90,21 @@ export default function Auth() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -10, scale: 0.95 }}
               transition={{ duration: 0.18, ease: "easeOut" }}
-              className="absolute right-0 mt-2 w-64 sm:w-72 min-w-[200px] max-w-[90vw] bg-slate-900/95 backdrop-blur-xl border border-white/20 rounded-xl shadow-2xl z-50 p-4 flex flex-col gap-3"
+              className="absolute right-0 mt-2 w-64 sm:w-72 min-w-[200px] max-w-[90vw] bg-[#1a1a1a]/95 backdrop-blur-md border border-[#444444]/60 rounded-xl shadow-2xl z-50 p-4 flex flex-col gap-3"
               style={{
                 color: "var(--foreground)",
                 boxShadow:
                   "0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
               }}
             >
-              <div className="mb-1 flex flex-col gap-2 pb-3 border-b border-white/20">
+              <div className="mb-1 flex flex-col gap-2 pb-3 border-b border-[#333333]/50">
                 <div className="font-semibold text-white text-base break-all flex items-center gap-2">
                   {user.profilePicture && !imageError && (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
                       src={user.profilePicture}
                       alt={user.name || user.username || "User"}
-                      className="w-10 h-10 rounded-full object-cover ring-2 ring-purple-500/30"
+                      className="w-10 h-10 rounded-full object-cover ring-2 ring-[#444444]"
                       onError={() => setImageError(true)}
                     />
                   )}
@@ -140,7 +140,7 @@ export default function Auth() {
   return (
     <button
       onClick={() => (window.location.href = "/auth")}
-      className="px-3 sm:px-4 py-2 text-sm font-medium rounded-lg bg-gradient-to-r from-blue-600/20 to-purple-600/20 hover:from-blue-600/30 hover:to-purple-600/30 border border-blue-500/30 hover:border-blue-400/50 text-blue-300 hover:text-blue-200 transition-all duration-200 backdrop-blur-sm shadow-lg hover:shadow-blue-500/20"
+      className="px-3 sm:px-4 py-2 text-sm font-medium rounded-lg bg-gradient-to-r from-blue-600/20 to-purple-600/20 hover:from-blue-600/30 hover:to-purple-600/30 border border-blue-500/30 hover:border-blue-400/50 text-blue-300 hover:text-blue-200 transition-all duration-200 backdrop-blur-sm"
     >
       Sign In
     </button>

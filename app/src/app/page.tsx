@@ -1,9 +1,9 @@
-import Landing from "../components/Landing";
+import Hero from "../components/Hero/Hero";
 
 export default function Home() {
   return (
-    <div className="font-sans min-h-screen pb-10">
-      <Landing />
+    <div className="font-sans min-h-screen">
+      <Hero />
     </div>
   );
 }
